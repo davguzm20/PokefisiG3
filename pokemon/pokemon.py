@@ -1,0 +1,23 @@
+from pokemon_type import PokemonType
+from ability import Ability
+from move import Move
+
+class Pokemon:
+    def __init__(self, name: str, types: list[PokemonType], abilities: list[Ability],
+                    hp: int, attack: int, defense: int, special_attack: int, 
+                    special_defense: int, speed: int, weight: int, moves: list[Move]):
+        self.name = name
+        self.types = types
+        self.abilities = abilities
+        self.moves = moves
+        self.hp = hp
+        self.current_hp = hp
+        self.attack = attack
+        self.defense = defense
+        self.special_attack = special_attack
+        self.special_defense = special_defense
+        self.speed = speed
+        self.weight = weight
+
+    def is_alive(self) -> bool:
+        return self.current_hp > 0

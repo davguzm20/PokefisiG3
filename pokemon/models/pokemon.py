@@ -1,6 +1,6 @@
-from pokemon_type import PokemonType
-from ability import Ability
-from move import Move
+from pokemon.enums.pokemon_type import PokemonType
+from pokemon.models.ability import Ability
+from pokemon.models.move import Move
 
 class Pokemon:
     def __init__(self, name: str, types: list[PokemonType], abilities: list[Ability],

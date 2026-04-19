@@ -1,5 +1,5 @@
-from damage_class import DamageClass
-from pokemon_type import PokemonType
+from pokemon.enums.damage_class import DamageClass
+from pokemon.enums.pokemon_type import PokemonType
 
 class Move:
     def __init__(self, accuracy: int, name: str, damage_class: DamageClass, description: str, 

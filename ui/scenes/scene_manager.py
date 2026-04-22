@@ -1,6 +1,6 @@
 import pygame
 from ui.scenes.enums.scene_type import SceneType
-from ui.scenes.models.menu_scene import MenuScene
+from ui.scenes.menu_scene import MenuScene
 
 class SceneManager:
     def __init__(self, screen):

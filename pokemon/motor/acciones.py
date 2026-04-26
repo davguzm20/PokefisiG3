@@ -52,3 +52,12 @@ def calcular_daño(atacante, defensor, movimiento):
 
     daño_final = daño_base*multiplicador
     return daño_final
+
+def establecer_vida(defensor, dañofinal):
+    defensor.hp = defensor.hp - dañofinal
+    if defensor.hp < 0: defensor.hp = 0
+    return defensor.hp
+
+
+def probar_efecto(efecto, probabilidad, defensor):
+    return 0

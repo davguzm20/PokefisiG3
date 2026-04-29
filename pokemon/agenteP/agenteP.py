@@ -25,9 +25,10 @@ class AgenteP:
 #=============== Las siguientes funciones pueden usarse independientemente para los agentes de diferentes niveles. Podrían ser operadores para pasar de un estado a otro
 
 #Este sería el agente de nivel 0
-def elegirMovimientoAleatorio(movimientos):
-    return movimientos[math.ceil(random.random()*len(movimientos)-1)]
- 
+
+#def elegirMovimientoAleatorio(movimientos):
+    #return movimientos[math.ceil(random.random()*len(movimientos)-1)] 
+
 #Devuelve daño causado y el objeto movimiento (en ese orden)
 def movimiento_en_base_a_mayor_daño(pokemonActivoP1, pokemonActivoP2, movimientos):
     valMax = -999
@@ -65,4 +66,52 @@ def movimiento_en_base_a_difHP(estado_juego, movimientos, agenteP):
 
 
     return movimientos[1]
+
+#-----------------------------------------------------------------------------------
+
+
+#Niv 1
+#Ajuste para eleccion random en base a la lista de movimientos
+def elegirMovimientoAleatorio(movimientos):
+    return random.choice(movimientos)
+
+#Niv 2
+#Heuristica incial basada en diferencia de HP
+#maximizar diferencia a favor de IA y minimizarla a favor del jugador
+
+def heuristica_difHP(estado_juego, movimientos):
+    mejor = None
+    mejor_valor = -float("inf")
+
+    hp_player = estado_juego.pokemonActivoP2.hp
+    hp_ia = estado_juego.pokemonActivoP1.hp
+    max_hp = max(hp_player, hp_ia, 1)
+
+    for movimiento in movimientos:
+        dano_ia = calcular_daño(estado_juego.pokemonActivoP1, estado_juego.pokemonActivoP2, movimiento)
+        valor = (hp_player - dano_ia) - hp_ia
+        valor_normalizado = valor / max_hp
+
+        if valor_normalizado > mejor_valor:
+            mejor_valor = valor_normalizado
+            mejor = movimiento
+
+    return mejor
+
+#Inicio de Heuristica avanzada para nivel 3
+#funcion base para considerar pesos
+
+def heuristica_avanzada(estado_juego, movimiento, pesos):
+    # Normalizar cada componente entre 0 y 1
+    hp_ratio = (estado_juego.pokemonActivoP2.hp - estado_juego.pokemonActivoP1.hp) / max(estado_juego.pokemonActivoP2.hp + estado_juego.pokemonActivoP1.hp, 1)
+    velocidad = (estado_juego.pokemonActivoP1.speed - estado_juego.pokemonActivoP2.speed) / max(estado_juego.pokemonActivoP1.speed + estado_juego.pokemonActivoP2.speed, 1)
+    ventaja_tipo = calcular_ventaja_tipo(estado_juego.pokemonActivoP1, estado_juego.pokemonActivoP2, movimiento)
+    pokemons_vivos = (conteo_vivos(estado_juego.equipoP2) - conteo_vivos(estado_juego.equipoP1)) / max(len(estado_juego.equipoP1), len(estado_juego.equipoP2), 1)
+
+    return (
+        pesos["hp"] * hp_ratio +
+        pesos["velocidad"] * velocidad +
+        pesos["tipo"] * ventaja_tipo +
+        pesos["vivos"] * pokemons_vivos
+    )
 

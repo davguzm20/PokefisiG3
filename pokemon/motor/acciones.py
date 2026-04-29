@@ -46,6 +46,11 @@ def calcular_daño(atacante, defensor, movimiento):
 
     poder = movimiento.power
     nivel = 75  #Esto podría ponerse en otro lugar
+    
+    if not poder: #Pequeño parche para evitar por el momento que un movimiento de status trabe el programa
+        poder = 0 
+        ataque = 0
+        defensa = 1
 
     daño_base = ((( (2 * nivel / 5) + 2 ) * poder * (ataque / defensa)) / 50) + 2
     multiplicador = obtener_multiplicador_tipos(movimiento.type, defensor.types)

@@ -4,6 +4,7 @@ from pokemon.motor.acciones import calcular_daño
 from pokemon.motor.acciones import establecer_vida
 from pokemon.motor.combate import Combate
 from pokemon.motor.estado_juego import EstadoJuego
+from pokemon.agenteP.agenteP import AgenteP, elegirMovimientoAleatorio, movimiento_en_base_a_mayor_daño
 
 import math
 import random
@@ -26,8 +27,8 @@ turno = 1
 while True:
     print(f"\n>>> TURNO {turno}")
     
-    accionP1 = estado.pokemonActivoP1.moves[0]
-    accionP2 = estado.pokemonActivoP2.moves[0]
+    accionP1 = elegirMovimientoAleatorio(estado.pokemonActivoP1.moves)
+    accionP2 = movimiento_en_base_a_mayor_daño(estado.pokemonActivoP1, estado.pokemonActivoP2, estado.pokemonActivoP2.moves)[1] #Cuidado aquí
 
     print(accionP2.damage_class)
 
@@ -35,8 +36,9 @@ while True:
         estado.pokemonActivoP1, accionP1, 
         estado.pokemonActivoP2, accionP2
     )
-    
-    print(estado.pokemonActivoP1.hp, estado.pokemonActivoP2.hp )
+    print(f'Jugador 1 usa: {accionP1.name}')
+    print(f'Jugador 2 usa: {accionP2.name}')
+    print(f'{estado.pokemonActivoP1.name}: {estado.pokemonActivoP1.hp} ||||| {estado.pokemonActivoP1.name}: {estado.pokemonActivoP2.hp}')
 
     resultado = motor.verificar_ganador()
     if resultado: 

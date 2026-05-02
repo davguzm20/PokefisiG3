@@ -22,7 +22,7 @@ efectividad_base = {
     PokemonType.FAIRY: {PokemonType.FIRE: 0.5, PokemonType.FIGHTING: 2.0, PokemonType.POISON: 0.5, PokemonType.DRAGON: 2.0, PokemonType.STEEL: 0.5, PokemonType.DARK: 2.0}
 }
 
-def obtener_multiplicador_tipos(tipo_ataque, tipos_defensor):
+def obtener_multiplicador_tipos(tipo_ataque, tipos_defensor, tipos_atacante):
     multiplicador = 1.0
     
     if tipo_ataque not in efectividad_base:
@@ -33,7 +33,8 @@ def obtener_multiplicador_tipos(tipo_ataque, tipos_defensor):
     for t_def in tipos_defensor:
         if t_def in tabla_atacante:
             multiplicador *= tabla_atacante[t_def]
-            
+    
+    if tipo_ataque in tipos_atacante: multiplicador *= 1.5
     return multiplicador
 
 def calcular_daño(atacante, defensor, movimiento):
@@ -53,7 +54,7 @@ def calcular_daño(atacante, defensor, movimiento):
         defensa = 1
 
     daño_base = ((( (2 * nivel / 5) + 2 ) * poder * (ataque / defensa)) / 50) + 2
-    multiplicador = obtener_multiplicador_tipos(movimiento.type, defensor.types)
+    multiplicador = obtener_multiplicador_tipos(movimiento.type, defensor.types, atacante.types)
 
     daño_final = daño_base*multiplicador
     return daño_final
@@ -62,7 +63,6 @@ def establecer_vida(defensor, dañofinal):
     defensor.hp = defensor.hp - dañofinal
     if defensor.hp < 0: defensor.hp = 0
     return defensor.hp
-
 
 def probar_efecto(efecto, probabilidad, defensor):
     return 0

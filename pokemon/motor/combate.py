@@ -1,20 +1,29 @@
 from pokemon.models.move import Move
 import random
 import math
-from pokemon.motor.acciones import calcular_daño, establecer_vida
+from pokemon.motor.acciones import calcular_daño, establecer_vida, obtener_multiplicador_tipos
 from pokemon.motor.estado_juego import EstadoJuego
 from pokemon.enums.damage_class import DamageClass
 
 class Combate:
     estado_del_equipo = None
-    estado_combate = None
 
     def __init__(self, estado_juego):
         self.estado_del_equipo = estado_juego
-
-    #En el combate, se espera las entradas de los jugadores
-    #Se procesan ordenando las acciones
-    #Se ejecuta el turno. Y pues se generaría un nuevo estado y se esperarian las entradas nuevamente
+    
+    def elegir_intercambio(self, elegibles):
+        for i, (idx_real, pokemon) in enumerate(elegibles):
+            print(f"{i + 1}. {pokemon.name} (HP: {pokemon.hp})")
+        
+        while True:
+            try:
+                seleccion = int(input("Elige el número de la opción: ")) - 1
+                if 0 <= seleccion < len(elegibles):
+                    return elegibles[seleccion][0] 
+                else:
+                    print("Esa opción no está en la lista.")
+            except ValueError:
+                print("Escribe un número, no seas pendejo (con cariño).")
 
     #La UI debe disparar un evento que envie pokemonP1, accionelegidaP1, pokemonP2, P2accionElegida. Envia la referencia de la funcion o el nombre del movimiento
     def ordenar_acciones(self, pokemonP1, accionElegidaP1, pokemonP2, accionElegidaP2):
@@ -45,67 +54,75 @@ class Combate:
     #Tal vez si devuelvo el orden de los indices? P1 = 0, P2 = 1
 
     #Esto debería disparar eventos a la interfaz y devolver un nuevo estado. Los parametros entregarlos de estado_juego
-    def ejecutar_turno(self, pokemonP1, accionElegidaP1, pokemonP2, accionElegidaP2):
+    def ejecutar_turno(self, pokemonP1, accionElegidaP1, pokemonP2, accionElegidaP2, tipoP1, tipoP2):
         orden = self.ordenar_acciones(pokemonP1, accionElegidaP1, pokemonP2, accionElegidaP2)
         
-        if isinstance(self.estado_del_equipo, EstadoJuego):
-            nuevo_estado_juego = self.estado_del_equipo
+        contexto = {
+            0: {"id_propio": 1, "id_rival": 2, "accion": accionElegidaP1, "tipo_rival": tipoP2},
+            1: {"id_propio": 2, "id_rival": 1, "accion": accionElegidaP2, "tipo_rival": tipoP1}
+        }
 
         for indice in orden:
+            ctx = contexto[indice]
             
-            if indice == 0 and pokemonP1.hp != 0:
-                if not isinstance(accionElegidaP1, Move):
-                    print("Disparar evento para que la UI haga la animación de intercambio") 
+            atacante = self.estado_del_equipo.pokemonActivoP1 if ctx["id_propio"] == 1 else self.estado_del_equipo.pokemonActivoP2
+            defensor = self.estado_del_equipo.pokemonActivoP2 if ctx["id_propio"] == 1 else self.estado_del_equipo.pokemonActivoP1
+            
+            # Si el atacante muere pierde su turno
+            if atacante is None or atacante.hp <= 0:
+                continue 
 
-                if isinstance(accionElegidaP1, Move):
-                    if accionElegidaP1.damage_class != DamageClass.STATUS:
-                        daño = calcular_daño(pokemonP1, pokemonP2, accionElegidaP1)
-                        print("Disparar evento para el efecto de daño")       
-                        vidaRestante = establecer_vida(pokemonP2, daño)
-                        print("Disparar evento para cambiar la vida en la UI") 
+            accion = ctx["accion"]
 
-                        if vidaRestante == 0:
-                            print("Disparar evento de desvanecer pokemon") 
-                            print("Disparar evento para que la UI pase a la pantalla de seleccionar pokemon")
-                            nuevo_estado_juego.intercambiarPokemon(1, 2) #El evento tiene que retornar el pokemon en reemplazo. Aqui se asume que entra el segundo
+            if isinstance(accion, Move):
+                if accion.damage_class != DamageClass.STATUS:
+                    daño = calcular_daño(atacante, defensor, accion)
+                    print(f"¡{atacante.name} usa {accion.name}!")
+                    print(f"Hace {daño} de daño a {defensor.name}")
+                    
+                    nueva_vida_rival = establecer_vida(defensor, daño)
 
-
-
+                    if nueva_vida_rival <= 0:
+                        print(f"¡{defensor.name} se ha debilitado!")
                         
-            if indice == 1 and pokemonP2.hp != 0:
-                if not isinstance(accionElegidaP2, Move):
-                    print("Disparar evento para que la UI haga la animación de intercambio")
-                
-                if isinstance(accionElegidaP2, Move):
-                    if accionElegidaP2.damage_class != DamageClass.STATUS:
-                        daño = calcular_daño(pokemonP2, pokemonP1, accionElegidaP2)
-                        print("Disparar evento para el efecto de daño") 
-                        vidaRestante = establecer_vida(pokemonP1, daño)
-                        print("Disparar evento para cambiar la vida en la UI") 
+                        #Si se queda sin pokemones el rival tras mi turno
+                        if self.estado_del_equipo.conteo_vivos(ctx["id_rival"]) == 0:
+                            return 
 
-                        if vidaRestante == 0:
-                            print("Disparar evento de desvanecer pokemon") 
-                            print("Disparar evento para que la UI pase a la pantalla de seleccionar pokemon")
-                            nuevo_estado_juego.intercambiarPokemon(1, 1) 
-        #Falta manejar status
+                        elegibles = self.estado_del_equipo.pokemonesElegibles(ctx["id_rival"])
+                        
+                        if ctx["tipo_rival"] == 1: # Humano
+                            idx_nuevo = self.elegir_intercambio(elegibles)
+                        else: # IA
+                            idx_nuevo = random.choice(elegibles)[0]
+                        
+                        self.estado_del_equipo.intercambiarPokemon(idx_nuevo, ctx["id_rival"])
+                else:
+                    print(f"¡{atacante.name} usó {accion.name}, que es un estado!")
+            
+            else:
+                print(f"El entrenador del Equipo {ctx['id_propio']} retira a su Pokémon...")
+                elegibles = self.estado_del_equipo.pokemonesElegibles(ctx["id_propio"])
+                
+                tipo_jugador = tipoP1 if ctx["id_propio"] == 1 else tipoP2
+                
+                if tipo_jugador == 1:
+                    idx_nuevo = self.elegir_intercambio(elegibles)
+                else:
+                    idx_nuevo = random.choice(elegibles)[0]
+                
+                self.estado_del_equipo.intercambiarPokemon(idx_nuevo, ctx["id_propio"])
     
     def verificar_ganador(self):
         estado_juego = None
         if isinstance(self.estado_del_equipo, EstadoJuego):
             estado_juego = self.estado_del_equipo
         
-        cuentaP1 = 0
-        cuentaP2 = 0
-        for pokemon in estado_juego.equipoP1:
-            if pokemon.hp == 0: cuentaP1 = cuentaP1+1
 
-        for pokemon in estado_juego.equipoP2:
-            if pokemon.hp == 0: cuentaP2 = cuentaP2+1
-        
-        if cuentaP1 == len(estado_juego.equipoP1): 
+        if estado_juego.conteo_vivos(2) == 0:
             print("El jugador gana")
             return True
-        elif cuentaP2 == len(estado_juego.equipoP2):
+        elif estado_juego.conteo_vivos(1) == 0:
             print("El oponente gana")
             return True
 

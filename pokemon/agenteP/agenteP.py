@@ -1,7 +1,7 @@
 import random
 import math
 from pokemon.motor.estado_juego import EstadoJuego
-from pokemon.motor.acciones import calcular_daño, 
+from pokemon.motor.acciones import calcular_daño, obtener_multiplicador_tipos
 
 #Esta es una idea sin fundamento por el momento, pero si se puede usar luego entonces genial
 
@@ -98,10 +98,11 @@ def heuristica_difHP(estado_juego, movimientos):
 
 def heuristica_avanzada(estado_juego, movimiento, pesos):
     # Normalizar cada componente entre 0 y 1
-    hp_ratio = (estado_juego.pokemonActivoP2.hp - estado_juego.pokemonActivoP1.hp) / max(estado_juego.pokemonActivoP2.hp + estado_juego.pokemonActivoP1.hp, 1)
-    velocidad = (estado_juego.pokemonActivoP1.speed - estado_juego.pokemonActivoP2.speed) / max(estado_juego.pokemonActivoP1.speed + estado_juego.pokemonActivoP2.speed, 1)
-    ventaja_tipo = calcular_ventaja_tipo(estado_juego.pokemonActivoP1, estado_juego.pokemonActivoP2, movimiento)
-    pokemons_vivos = (conteo_vivos(estado_juego.equipoP2) - conteo_vivos(estado_juego.equipoP1)) / max(len(estado_juego.equipoP1), len(estado_juego.equipoP2), 1)
+    if isinstance(estado_juego, EstadoJuego):
+        hp_ratio = (estado_juego.pokemonActivoP2.hp - estado_juego.pokemonActivoP1.hp) / max(estado_juego.pokemonActivoP2.hp + estado_juego.pokemonActivoP1.hp, 1)
+        velocidad = (estado_juego.pokemonActivoP1.speed - estado_juego.pokemonActivoP2.speed) / max(estado_juego.pokemonActivoP1.speed + estado_juego.pokemonActivoP2.speed, 1)
+        ventaja_tipo = obtener_multiplicador_tipos(movimiento, estado_juego.pokemonActivoP1, estado_juego.pokemonActivoP2, )
+        pokemons_vivos = estado_juego.conteo_vivos(2) - estado_juego.conteo_vivos(1) / max(len(estado_juego.equipoP1), len(estado_juego.equipoP2), 1)
 
     return (
         pesos["hp"] * hp_ratio +

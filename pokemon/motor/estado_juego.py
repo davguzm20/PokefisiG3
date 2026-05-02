@@ -18,22 +18,35 @@ class EstadoJuego:
             self.equipoP2 = pokemones 
             self.pokemonActivoP2 = pokemones[0]
     
+    def pokemonesElegibles(self, equipo = 1):
+        equipo_objetivo = self.equipoP1 if equipo == 1 else self.equipoP2
+
+        return [(i, p) for i, p in enumerate(equipo_objetivo) if p.hp > 0]
+    
     #Pasale el indice del pokemon al que quieres cambiar. La 
     def intercambiarPokemon(self, indicePokemonDentro, equipo=1):
-        if(equipo == 1): 
-            temp = self.equipoP1[0]
-            self.equipoP1[0] = self.equipoP1[indicePokemonDentro]
-            self.equipoP1[indicePokemonDentro] = temp
-            
-            self.pokemonActivoP1 = self.equipoP1[0]
-
-        else:
-            temp = self.equipoP2[0]
-            self.equipoP2[0] = self.equipoP2[indicePokemonDentro]
-            self.equipoP2[indicePokemonDentro] = temp
-
-            self.pokemonActivoP2 = self.equipoP2[0]
+        equipo_objetivo = self.equipoP1 if equipo == 1 else self.equipoP2
         
+        temp = equipo_objetivo[0]
+        equipo_objetivo[0] = equipo_objetivo[indicePokemonDentro]
+        equipo_objetivo[indicePokemonDentro] = temp
+        
+        if equipo == 1:
+            self.pokemonActivoP1 = equipo_objetivo[0]
+        else:
+            self.pokemonActivoP2 = equipo_objetivo[0]
+    
+    def conteo_vivos(self, equipo=1):
+        cuenta = 0
+        
+        if(equipo==1):
+            for pokemon in self.equipoP1:
+                if pokemon.hp != 0: cuenta = cuenta + 1
+        else:
+            for pokemon in self.equipoP2:
+                if pokemon.hp != 0: cuenta = cuenta + 1
+
+        return cuenta
 
         
     

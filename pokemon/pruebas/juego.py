@@ -1,47 +1,112 @@
 from pokemon.pokemon_factory import PokemonFactory
-#from pokemon.motor.maquina_de_estados import maquina_de_estados
 from pokemon.motor.acciones import calcular_daño
-from pokemon.motor.acciones import establecer_vida
+from pokemon.motor.acciones import establecer_vida, obtener_multiplicador_tipos
 from pokemon.motor.combate import Combate
 from pokemon.motor.estado_juego import EstadoJuego
 from pokemon.agenteP.agenteP import AgenteP, elegirMovimientoAleatorio, movimiento_en_base_a_mayor_daño
+import copy, random
 
-import math
-import random
+def configurar_entidad(num_jugador, disponible):
+    print(f"\n--- Configurando Jugador {num_jugador} ---")
+    print("1. Humano")
+    print("2. IA")
+    tipo = int(input("Seleccione tipo: "))
+    
+    equipo = []
+    
+    for i in range(n_pokes):
 
+        if tipo == 1: 
+            print(f"\nSeleccione su Pokémon {i+1}:")
+            for idx, p in enumerate(disponible):
+                print(f"{idx+1}. {p.name}")
+            p_sel = copy.deepcopy(disponible[int(input("Número: ")) - 1])
+            
+            print(f"Configure movimientos para {p_sel.name} (Máx 4):")
+            todos_movs = p_sel.moves
+            mis_movs = []
+            
+            for j in range(4):
+                for idx, m in enumerate(todos_movs):
+                    print(f"{idx+1}. {m.name}")
+                m_sel = todos_movs.pop(int(input(f"Movimiento {j+1}: ")) - 1)
+                mis_movs.append(m_sel)
+            p_sel.moves = mis_movs
+            equipo.append(p_sel)
+        
+        else: 
+            p_sel = copy.deepcopy(random.choice(disponible))
+            random.shuffle(p_sel.moves)
+            p_sel.moves = p_sel.moves[:4]
+            equipo.append(p_sel)
+            print(f"IA {num_jugador} eligió a {p_sel.name} con movimientos aleatorios.")
+            
+    return tipo, equipo
+
+def elegir_equipo(pokemones_disponibles):
+    for i, pokemon in enumerate(pokemones_disponibles):
+        print(f"{i + 1}. {pokemon.name}")
+    
+    while True:
+        try:
+            seleccion = int(input("Elige un pokemon (número): ")) - 1
+            if 0 <= seleccion < len(pokemones_disponibles):
+                return pokemones_disponibles[seleccion]
+            else:
+                print("Selección inválida. Intenta de nuevo.")
+        except ValueError:
+            print("Por favor, ingresa un número válido.")
+
+def elegir_movimiento_jugador(pokemon):
+    for i, move in enumerate(pokemon.moves):
+        print(f"{i + 1}. {move.name} (Tipo: {move.type} | Poder: {move.power})")
+    
+    while True:
+        try:
+            seleccion = int(input("Elige un movimiento (número): ")) - 1
+            if 0 <= seleccion < len(pokemon.moves):
+                return pokemon.moves[seleccion]
+            else:
+                print("Selección inválida. Intenta de nuevo.")
+        except ValueError:
+            print("Por favor, ingresa un número válido.")
+
+#============================ Juego
 
 pokemones_disponibles = PokemonFactory.load_all_pokemons("pokemon/pokemones.json")
 
+n_pokes = 3 if int(input("1. 3vs3\n2. 4vs4\nSelección: ")) == 1 else 4
+
 for p in pokemones_disponibles:
-    p.hp *= 2
+    p.hp *= 3
+
+tipoP1, equipoP1 = configurar_entidad(1, pokemones_disponibles)
+tipoP2, equipoP2 = configurar_entidad(2, pokemones_disponibles)
+
 
 estado = EstadoJuego()
-estado.setEquipo([pokemones_disponibles[0], pokemones_disponibles[1]], equipo=1) # P1
-estado.setEquipo([pokemones_disponibles[5], pokemones_disponibles[6]], equipo=2) # P2
+estado.setEquipo(equipoP1, equipo=1) 
+estado.setEquipo(equipoP2, equipo=2) 
 
 motor = Combate(estado)
 
-print(f"--- INICIO DEL DUELO: {estado.pokemonActivoP1.name} vs {estado.pokemonActivoP2.name} ---")
-
 turno = 1
 while True:
-    print(f"\n>>> TURNO {turno}")
-    
-    accionP1 = elegirMovimientoAleatorio(estado.pokemonActivoP1.moves)
-    accionP2 = movimiento_en_base_a_mayor_daño(estado.pokemonActivoP1, estado.pokemonActivoP2, estado.pokemonActivoP2.moves)[1] #Cuidado aquí
+    print(f"\n>>> TURNO {turno} | {estado.pokemonActivoP1.name}({estado.pokemonActivoP1.hp}hp) vs {estado.pokemonActivoP2.name}({estado.pokemonActivoP2.hp}hp)")
 
-    print(accionP2.damage_class)
+    if tipoP1 == 1:
+        accionP1 = elegir_movimiento_jugador(estado.pokemonActivoP1)
+    else:
+        accionP1 = elegirMovimientoAleatorio(estado.pokemonActivoP1.moves)
 
-    motor.ejecutar_turno(
-        estado.pokemonActivoP1, accionP1, 
-        estado.pokemonActivoP2, accionP2
-    )
-    print(f'Jugador 1 usa: {accionP1.name}')
-    print(f'Jugador 2 usa: {accionP2.name}')
-    print(f'{estado.pokemonActivoP1.name}: {estado.pokemonActivoP1.hp} ||||| {estado.pokemonActivoP1.name}: {estado.pokemonActivoP2.hp}')
+    if tipoP2 == 1:
+        accionP2 = elegir_movimiento_jugador(estado.pokemonActivoP1)
+    else:
+        accionP2 = movimiento_en_base_a_mayor_daño(estado.pokemonActivoP1, estado.pokemonActivoP2, estado.pokemonActivoP2.moves)[1]
 
-    resultado = motor.verificar_ganador()
-    if resultado: 
+    motor.ejecutar_turno(estado.pokemonActivoP1, accionP1, estado.pokemonActivoP2, accionP2, tipoP1, tipoP2)
+
+    if motor.verificar_ganador(): 
         break
     
     turno += 1

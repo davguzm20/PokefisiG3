@@ -1,7 +1,7 @@
 import random
 import math
 from pokemon.motor.estado_juego import EstadoJuego
-from pokemon.motor.acciones import calcular_daño
+from pokemon.motor.acciones import calcular_daño, 
 
 #Esta es una idea sin fundamento por el momento, pero si se puede usar luego entonces genial
 
@@ -23,11 +23,6 @@ class AgenteP:
             self.conocimiento[pokemonOponente].append(movimiento)
 
 #=============== Las siguientes funciones pueden usarse independientemente para los agentes de diferentes niveles. Podrían ser operadores para pasar de un estado a otro
-
-#Este sería el agente de nivel 0
-
-#def elegirMovimientoAleatorio(movimientos):
-    #return movimientos[math.ceil(random.random()*len(movimientos)-1)] 
 
 #Devuelve daño causado y el objeto movimiento (en ese orden)
 def movimiento_en_base_a_mayor_daño(pokemonActivoP1, pokemonActivoP2, movimientos):

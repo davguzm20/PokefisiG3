@@ -23,7 +23,7 @@ class Combate:
                 else:
                     print("Esa opción no está en la lista.")
             except ValueError:
-                print("Escribe un número, no seas pendejo (con cariño).")
+                print("Escribe un número por favor")
 
     #La UI debe disparar un evento que envie pokemonP1, accionelegidaP1, pokemonP2, P2accionElegida. Envia la referencia de la funcion o el nombre del movimiento
     def ordenar_acciones(self, pokemonP1, accionElegidaP1, pokemonP2, accionElegidaP2):

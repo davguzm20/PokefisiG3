@@ -31,7 +31,7 @@ class Combate:
         if not isinstance(accionElegidaP1, Move): return [0, 1]
         if not isinstance(accionElegidaP2, Move): return [1, 0]
 
-        #Si hay prioridad???
+        #Si hay prioridad?
         if accionElegidaP1.priority > accionElegidaP2.priority:
             return [0, 1]
         
@@ -51,7 +51,6 @@ class Combate:
             rng = math.ceil(random.random()*2)
             if rng == 1: return [0, 1]
             else: return [1, 0]
-    #Tal vez si devuelvo el orden de los indices? P1 = 0, P2 = 1
 
     #Esto debería disparar eventos a la interfaz y devolver un nuevo estado. Los parametros entregarlos de estado_juego
     def ejecutar_turno(self, pokemonP1, accionElegidaP1, pokemonP2, accionElegidaP2, tipoP1, tipoP2):
@@ -118,7 +117,6 @@ class Combate:
         if isinstance(self.estado_del_equipo, EstadoJuego):
             estado_juego = self.estado_del_equipo
         
-
         if estado_juego.conteo_vivos(2) == 0:
             print("El jugador gana")
             return True

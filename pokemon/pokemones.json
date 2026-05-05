@@ -125,10 +125,12 @@
             }
         ],
         "sprites": {
-            "normal": "../assets/normal/weepinbell.gif",
-            "back": "../assets/back/weepinbell.gif",
-            "shiny": "../assets/shiny/weepinbell.gif",
-            "back_shiny": "../assets/back_shiny/weepinbell.gif"
+            "regular": "assets/sprites-pokemon/animated/regular/weepinbell.gif",
+            "back": "assets/sprites-pokemon/animated/back/weepinbell.gif",
+            "shiny": "assets/sprites-pokemon/animated/shiny/weepinbell.gif",
+            "back_shiny": "assets/sprites-pokemon/animated/back-shiny/weepinbell.gif",
+            "mini_regular": "assets/sprites-pokemon/mini/regular/weepinbell.gif",
+            "mini_shiny": "assets/sprites-pokemon/mini/shiny/weepinbell.gif"
         }
     },
     "wartortle": {
@@ -256,10 +258,12 @@
             }
         ],
         "sprites": {
-            "normal": "../assets/normal/wartortle.gif",
-            "back": "../assets/back/wartortle.gif",
-            "shiny": "../assets/shiny/wartortle.gif",
-            "back_shiny": "../assets/back_shiny/wartortle.gif"
+            "regular": "assets/sprites-pokemon/animated/regular/wartortle.gif",
+            "back": "assets/sprites-pokemon/animated/back/wartortle.gif",
+            "shiny": "assets/sprites-pokemon/animated/shiny/wartortle.gif",
+            "back_shiny": "assets/sprites-pokemon/animated/back-shiny/wartortle.gif",
+            "mini_regular": "assets/sprites-pokemon/mini/regular/wartortle.gif",
+            "mini_shiny": "assets/sprites-pokemon/mini/shiny/wartortle.gif"
         }
     },
     "togetic": {
@@ -392,10 +396,12 @@
             }
         ],
         "sprites": {
-            "normal": "../assets/normal/togetic.gif",
-            "back": "../assets/back/togetic.gif",
-            "shiny": "../assets/shiny/togetic.gif",
-            "back_shiny": "../assets/back_shiny/togetic.gif"
+            "regular": "assets/sprites-pokemon/animated/regular/togetic.gif",
+            "back": "assets/sprites-pokemon/animated/back/togetic.gif",
+            "shiny": "assets/sprites-pokemon/animated/shiny/togetic.gif",
+            "back_shiny": "assets/sprites-pokemon/animated/back-shiny/togetic.gif",
+            "mini_regular": "assets/sprites-pokemon/mini/regular/togetic.gif",
+            "mini_shiny": "assets/sprites-pokemon/mini/shiny/togetic.gif"
         }
     },
     "seadra": {
@@ -527,10 +533,12 @@
             }
         ],
         "sprites": {
-            "normal": "../assets/normal/seadra.gif",
-            "back": "../assets/back/seadra.gif",
-            "shiny": "../assets/shiny/seadra.gif",
-            "back_shiny": "../assets/back_shiny/seadra.gif"
+            "regular": "assets/sprites-pokemon/animated/regular/seadra.gif",
+            "back": "assets/sprites-pokemon/animated/back/seadra.gif",
+            "shiny": "assets/sprites-pokemon/animated/shiny/seadra.gif",
+            "back_shiny": "assets/sprites-pokemon/animated/back-shiny/seadra.gif",
+            "mini_regular": "assets/sprites-pokemon/mini/regular/seadra.gif",
+            "mini_shiny": "assets/sprites-pokemon/mini/shiny/seadra.gif"
         }
     },
     "rhydon": {
@@ -663,10 +671,12 @@
             }
         ],
         "sprites": {
-            "normal": "../assets/normal/rhydon.gif",
-            "back": "../assets/back/rhydon.gif",
-            "shiny": "../assets/shiny/rhydon.gif",
-            "back_shiny": "../assets/back_shiny/rhydon.gif"
+            "regular": "assets/sprites-pokemon/animated/regular/rhydon.gif",
+            "back": "assets/sprites-pokemon/animated/back/rhydon.gif",
+            "shiny": "assets/sprites-pokemon/animated/shiny/rhydon.gif",
+            "back_shiny": "assets/sprites-pokemon/animated/back-shiny/rhydon.gif",
+            "mini_regular": "assets/sprites-pokemon/mini/regular/rhydon.gif",
+            "mini_shiny": "assets/sprites-pokemon/mini/shiny/rhydon.gif"
         }
     },
     "quilava": {
@@ -794,10 +804,12 @@
             }
         ],
         "sprites": {
-            "normal": "../assets/normal/quilava.gif",
-            "back": "../assets/back/quilava.gif",
-            "shiny": "../assets/shiny/quilava.gif",
-            "back_shiny": "../assets/back_shiny/quilava.gif"
+            "regular": "assets/sprites-pokemon/animated/regular/quilava.gif",
+            "back": "assets/sprites-pokemon/animated/back/quilava.gif",
+            "shiny": "assets/sprites-pokemon/animated/shiny/quilava.gif",
+            "back_shiny": "assets/sprites-pokemon/animated/back-shiny/quilava.gif",
+            "mini_regular": "assets/sprites-pokemon/mini/regular/quilava.gif",
+            "mini_shiny": "assets/sprites-pokemon/mini/shiny/quilava.gif"
         }
     },
     "primeape": {
@@ -929,10 +941,12 @@
             }
         ],
         "sprites": {
-            "normal": "../assets/normal/primeape.gif",
-            "back": "../assets/back/primeape.gif",
-            "shiny": "../assets/shiny/primeape.gif",
-            "back_shiny": "../assets/back_shiny/primeape.gif"
+            "regular": "assets/sprites-pokemon/animated/regular/primeape.gif",
+            "back": "assets/sprites-pokemon/animated/back/primeape.gif",
+            "shiny": "assets/sprites-pokemon/animated/shiny/primeape.gif",
+            "back_shiny": "assets/sprites-pokemon/animated/back-shiny/primeape.gif",
+            "mini_regular": "assets/sprites-pokemon/mini/regular/primeape.gif",
+            "mini_shiny": "assets/sprites-pokemon/mini/shiny/primeape.gif"
         }
     },
     "porygon": {
@@ -1064,10 +1078,12 @@
             }
         ],
         "sprites": {
-            "normal": "../assets/normal/porygon.gif",
-            "back": "../assets/back/porygon.gif",
-            "shiny": "../assets/shiny/porygon.gif",
-            "back_shiny": "../assets/back_shiny/porygon.gif"
+            "regular": "assets/sprites-pokemon/animated/regular/porygon.gif",
+            "back": "assets/sprites-pokemon/animated/back/porygon.gif",
+            "shiny": "assets/sprites-pokemon/animated/shiny/porygon.gif",
+            "back_shiny": "assets/sprites-pokemon/animated/back-shiny/porygon.gif",
+            "mini_regular": "assets/sprites-pokemon/mini/regular/porygon.gif",
+            "mini_shiny": "assets/sprites-pokemon/mini/shiny/porygon.gif"
         }
     },
     "poliwhirl": {
@@ -1199,10 +1215,12 @@
             }
         ],
         "sprites": {
-            "normal": "../assets/normal/poliwhirl.gif",
-            "back": "../assets/back/poliwhirl.gif",
-            "shiny": "../assets/shiny/poliwhirl.gif",
-            "back_shiny": "../assets/back_shiny/poliwhirl.gif"
+            "regular": "assets/sprites-pokemon/animated/regular/poliwhirl.gif",
+            "back": "assets/sprites-pokemon/animated/back/poliwhirl.gif",
+            "shiny": "assets/sprites-pokemon/animated/shiny/poliwhirl.gif",
+            "back_shiny": "assets/sprites-pokemon/animated/back-shiny/poliwhirl.gif",
+            "mini_regular": "assets/sprites-pokemon/mini/regular/poliwhirl.gif",
+            "mini_shiny": "assets/sprites-pokemon/mini/shiny/poliwhirl.gif"
         }
     },
     "pikachu": {
@@ -1330,10 +1348,12 @@
             }
         ],
         "sprites": {
-            "normal": "../assets/normal/pikachu.gif",
-            "back": "../assets/back/pikachu.gif",
-            "shiny": "../assets/shiny/pikachu.gif",
-            "back_shiny": "../assets/back_shiny/pikachu.gif"
+            "regular": "assets/sprites-pokemon/animated/regular/pikachu.gif",
+            "back": "assets/sprites-pokemon/animated/back/pikachu.gif",
+            "shiny": "assets/sprites-pokemon/animated/shiny/pikachu.gif",
+            "back_shiny": "assets/sprites-pokemon/animated/back-shiny/pikachu.gif",
+            "mini_regular": "assets/sprites-pokemon/mini/regular/pikachu.gif",
+            "mini_shiny": "assets/sprites-pokemon/mini/shiny/pikachu.gif"
         }
     },
     "pidgeotto": {
@@ -1466,10 +1486,12 @@
             }
         ],
         "sprites": {
-            "normal": "../assets/normal/pidgeotto.gif",
-            "back": "../assets/back/pidgeotto.gif",
-            "shiny": "../assets/shiny/pidgeotto.gif",
-            "back_shiny": "../assets/back_shiny/pidgeotto.gif"
+            "regular": "assets/sprites-pokemon/animated/regular/pidgeotto.gif",
+            "back": "assets/sprites-pokemon/animated/back/pidgeotto.gif",
+            "shiny": "assets/sprites-pokemon/animated/shiny/pidgeotto.gif",
+            "back_shiny": "assets/sprites-pokemon/animated/back-shiny/pidgeotto.gif",
+            "mini_regular": "assets/sprites-pokemon/mini/regular/pidgeotto.gif",
+            "mini_shiny": "assets/sprites-pokemon/mini/shiny/pidgeotto.gif"
         }
     },
     "marill": {
@@ -1602,10 +1624,12 @@
             }
         ],
         "sprites": {
-            "normal": "../assets/normal/marill.gif",
-            "back": "../assets/back/marill.gif",
-            "shiny": "../assets/shiny/marill.gif",
-            "back_shiny": "../assets/back_shiny/marill.gif"
+            "regular": "assets/sprites-pokemon/animated/regular/marill.gif",
+            "back": "assets/sprites-pokemon/animated/back/marill.gif",
+            "shiny": "assets/sprites-pokemon/animated/shiny/marill.gif",
+            "back_shiny": "assets/sprites-pokemon/animated/back-shiny/marill.gif",
+            "mini_regular": "assets/sprites-pokemon/mini/regular/marill.gif",
+            "mini_shiny": "assets/sprites-pokemon/mini/shiny/marill.gif"
         }
     },
     "magneton": {
@@ -1738,10 +1762,12 @@
             }
         ],
         "sprites": {
-            "normal": "../assets/normal/magneton.gif",
-            "back": "../assets/back/magneton.gif",
-            "shiny": "../assets/shiny/magneton.gif",
-            "back_shiny": "../assets/back_shiny/magneton.gif"
+            "regular": "assets/sprites-pokemon/animated/regular/magneton.gif",
+            "back": "assets/sprites-pokemon/animated/back/magneton.gif",
+            "shiny": "assets/sprites-pokemon/animated/shiny/magneton.gif",
+            "back_shiny": "assets/sprites-pokemon/animated/back-shiny/magneton.gif",
+            "mini_regular": "assets/sprites-pokemon/mini/regular/magneton.gif",
+            "mini_shiny": "assets/sprites-pokemon/mini/shiny/magneton.gif"
         }
     },
     "magmar": {
@@ -1869,10 +1895,12 @@
             }
         ],
         "sprites": {
-            "normal": "../assets/normal/magmar.gif",
-            "back": "../assets/back/magmar.gif",
-            "shiny": "../assets/shiny/magmar.gif",
-            "back_shiny": "../assets/back_shiny/magmar.gif"
+            "regular": "assets/sprites-pokemon/animated/regular/magmar.gif",
+            "back": "assets/sprites-pokemon/animated/back/magmar.gif",
+            "shiny": "assets/sprites-pokemon/animated/shiny/magmar.gif",
+            "back_shiny": "assets/sprites-pokemon/animated/back-shiny/magmar.gif",
+            "mini_regular": "assets/sprites-pokemon/mini/regular/magmar.gif",
+            "mini_shiny": "assets/sprites-pokemon/mini/shiny/magmar.gif"
         }
     },
     "machoke": {
@@ -2004,10 +2032,12 @@
             }
         ],
         "sprites": {
-            "normal": "../assets/normal/machoke.gif",
-            "back": "../assets/back/machoke.gif",
-            "shiny": "../assets/shiny/machoke.gif",
-            "back_shiny": "../assets/back_shiny/machoke.gif"
+            "regular": "assets/sprites-pokemon/animated/regular/machoke.gif",
+            "back": "assets/sprites-pokemon/animated/back/machoke.gif",
+            "shiny": "assets/sprites-pokemon/animated/shiny/machoke.gif",
+            "back_shiny": "assets/sprites-pokemon/animated/back-shiny/machoke.gif",
+            "mini_regular": "assets/sprites-pokemon/mini/regular/machoke.gif",
+            "mini_shiny": "assets/sprites-pokemon/mini/shiny/machoke.gif"
         }
     },
     "kadabra": {
@@ -2139,10 +2169,12 @@
             }
         ],
         "sprites": {
-            "normal": "../assets/normal/kadabra.gif",
-            "back": "../assets/back/kadabra.gif",
-            "shiny": "../assets/shiny/kadabra.gif",
-            "back_shiny": "../assets/back_shiny/kadabra.gif"
+            "regular": "assets/sprites-pokemon/animated/regular/kadabra.gif",
+            "back": "assets/sprites-pokemon/animated/back/kadabra.gif",
+            "shiny": "assets/sprites-pokemon/animated/shiny/kadabra.gif",
+            "back_shiny": "assets/sprites-pokemon/animated/back-shiny/kadabra.gif",
+            "mini_regular": "assets/sprites-pokemon/mini/regular/kadabra.gif",
+            "mini_shiny": "assets/sprites-pokemon/mini/shiny/kadabra.gif"
         }
     },
     "jigglypuff": {
@@ -2275,10 +2307,12 @@
             }
         ],
         "sprites": {
-            "normal": "../assets/normal/jigglypuff.gif",
-            "back": "../assets/back/jigglypuff.gif",
-            "shiny": "../assets/shiny/jigglypuff.gif",
-            "back_shiny": "../assets/back_shiny/jigglypuff.gif"
+            "regular": "assets/sprites-pokemon/animated/regular/jigglypuff.gif",
+            "back": "assets/sprites-pokemon/animated/back/jigglypuff.gif",
+            "shiny": "assets/sprites-pokemon/animated/shiny/jigglypuff.gif",
+            "back_shiny": "assets/sprites-pokemon/animated/back-shiny/jigglypuff.gif",
+            "mini_regular": "assets/sprites-pokemon/mini/regular/jigglypuff.gif",
+            "mini_shiny": "assets/sprites-pokemon/mini/shiny/jigglypuff.gif"
         }
     },
     "ivysaur": {
@@ -2407,10 +2441,12 @@
             }
         ],
         "sprites": {
-            "normal": "../assets/normal/ivysaur.gif",
-            "back": "../assets/back/ivysaur.gif",
-            "shiny": "../assets/shiny/ivysaur.gif",
-            "back_shiny": "../assets/back_shiny/ivysaur.gif"
+            "regular": "assets/sprites-pokemon/animated/regular/ivysaur.gif",
+            "back": "assets/sprites-pokemon/animated/back/ivysaur.gif",
+            "shiny": "assets/sprites-pokemon/animated/shiny/ivysaur.gif",
+            "back_shiny": "assets/sprites-pokemon/animated/back-shiny/ivysaur.gif",
+            "mini_regular": "assets/sprites-pokemon/mini/regular/ivysaur.gif",
+            "mini_shiny": "assets/sprites-pokemon/mini/shiny/ivysaur.gif"
         }
     },
     "haunter": {
@@ -2535,10 +2571,12 @@
             }
         ],
         "sprites": {
-            "normal": "../assets/normal/haunter.gif",
-            "back": "../assets/back/haunter.gif",
-            "shiny": "../assets/shiny/haunter.gif",
-            "back_shiny": "../assets/back_shiny/haunter.gif"
+            "regular": "assets/sprites-pokemon/animated/regular/haunter.gif",
+            "back": "assets/sprites-pokemon/animated/back/haunter.gif",
+            "shiny": "assets/sprites-pokemon/animated/shiny/haunter.gif",
+            "back_shiny": "assets/sprites-pokemon/animated/back-shiny/haunter.gif",
+            "mini_regular": "assets/sprites-pokemon/mini/regular/haunter.gif",
+            "mini_shiny": "assets/sprites-pokemon/mini/shiny/haunter.gif"
         }
     },
     "graveler": {
@@ -2671,10 +2709,12 @@
             }
         ],
         "sprites": {
-            "normal": "../assets/normal/graveler.gif",
-            "back": "../assets/back/graveler.gif",
-            "shiny": "../assets/shiny/graveler.gif",
-            "back_shiny": "../assets/back_shiny/graveler.gif"
+            "regular": "assets/sprites-pokemon/animated/regular/graveler.gif",
+            "back": "assets/sprites-pokemon/animated/back/graveler.gif",
+            "shiny": "assets/sprites-pokemon/animated/shiny/graveler.gif",
+            "back_shiny": "assets/sprites-pokemon/animated/back-shiny/graveler.gif",
+            "mini_regular": "assets/sprites-pokemon/mini/regular/graveler.gif",
+            "mini_shiny": "assets/sprites-pokemon/mini/shiny/graveler.gif"
         }
     },
     "golbat": {
@@ -2803,10 +2843,12 @@
             }
         ],
         "sprites": {
-            "normal": "../assets/normal/golbat.gif",
-            "back": "../assets/back/golbat.gif",
-            "shiny": "../assets/shiny/golbat.gif",
-            "back_shiny": "../assets/back_shiny/golbat.gif"
+            "regular": "assets/sprites-pokemon/animated/regular/golbat.gif",
+            "back": "assets/sprites-pokemon/animated/back/golbat.gif",
+            "shiny": "assets/sprites-pokemon/animated/shiny/golbat.gif",
+            "back_shiny": "assets/sprites-pokemon/animated/back-shiny/golbat.gif",
+            "mini_regular": "assets/sprites-pokemon/mini/regular/golbat.gif",
+            "mini_shiny": "assets/sprites-pokemon/mini/shiny/golbat.gif"
         }
     },
     "gloom": {
@@ -2935,10 +2977,12 @@
             }
         ],
         "sprites": {
-            "normal": "../assets/normal/gloom.gif",
-            "back": "../assets/back/gloom.gif",
-            "shiny": "../assets/shiny/gloom.gif",
-            "back_shiny": "../assets/back_shiny/gloom.gif"
+            "regular": "assets/sprites-pokemon/animated/regular/gloom.gif",
+            "back": "assets/sprites-pokemon/animated/back/gloom.gif",
+            "shiny": "assets/sprites-pokemon/animated/shiny/gloom.gif",
+            "back_shiny": "assets/sprites-pokemon/animated/back-shiny/gloom.gif",
+            "mini_regular": "assets/sprites-pokemon/mini/regular/gloom.gif",
+            "mini_shiny": "assets/sprites-pokemon/mini/shiny/gloom.gif"
         }
     },
     "flaaffy": {
@@ -3066,10 +3110,12 @@
             }
         ],
         "sprites": {
-            "normal": "../assets/normal/flaaffy.gif",
-            "back": "../assets/back/flaaffy.gif",
-            "shiny": "../assets/shiny/flaaffy.gif",
-            "back_shiny": "../assets/back_shiny/flaaffy.gif"
+            "regular": "assets/sprites-pokemon/animated/regular/flaaffy.gif",
+            "back": "assets/sprites-pokemon/animated/back/flaaffy.gif",
+            "shiny": "assets/sprites-pokemon/animated/shiny/flaaffy.gif",
+            "back_shiny": "assets/sprites-pokemon/animated/back-shiny/flaaffy.gif",
+            "mini_regular": "assets/sprites-pokemon/mini/regular/flaaffy.gif",
+            "mini_shiny": "assets/sprites-pokemon/mini/shiny/flaaffy.gif"
         }
     },
     "electabuzz": {
@@ -3197,10 +3243,12 @@
             }
         ],
         "sprites": {
-            "normal": "../assets/normal/electabuzz.gif",
-            "back": "../assets/back/electabuzz.gif",
-            "shiny": "../assets/shiny/electabuzz.gif",
-            "back_shiny": "../assets/back_shiny/electabuzz.gif"
+            "regular": "assets/sprites-pokemon/animated/regular/electabuzz.gif",
+            "back": "assets/sprites-pokemon/animated/back/electabuzz.gif",
+            "shiny": "assets/sprites-pokemon/animated/shiny/electabuzz.gif",
+            "back_shiny": "assets/sprites-pokemon/animated/back-shiny/electabuzz.gif",
+            "mini_regular": "assets/sprites-pokemon/mini/regular/electabuzz.gif",
+            "mini_shiny": "assets/sprites-pokemon/mini/shiny/electabuzz.gif"
         }
     },
     "dragonair": {
@@ -3328,10 +3376,12 @@
             }
         ],
         "sprites": {
-            "normal": "../assets/normal/dragonair.gif",
-            "back": "../assets/back/dragonair.gif",
-            "shiny": "../assets/shiny/dragonair.gif",
-            "back_shiny": "../assets/back_shiny/dragonair.gif"
+            "regular": "assets/sprites-pokemon/animated/regular/dragonair.gif",
+            "back": "assets/sprites-pokemon/animated/back/dragonair.gif",
+            "shiny": "assets/sprites-pokemon/animated/shiny/dragonair.gif",
+            "back_shiny": "assets/sprites-pokemon/animated/back-shiny/dragonair.gif",
+            "mini_regular": "assets/sprites-pokemon/mini/regular/dragonair.gif",
+            "mini_shiny": "assets/sprites-pokemon/mini/shiny/dragonair.gif"
         }
     },
     "croconaw": {
@@ -3459,10 +3509,12 @@
             }
         ],
         "sprites": {
-            "normal": "../assets/normal/croconaw.gif",
-            "back": "../assets/back/croconaw.gif",
-            "shiny": "../assets/shiny/croconaw.gif",
-            "back_shiny": "../assets/back_shiny/croconaw.gif"
+            "regular": "assets/sprites-pokemon/animated/regular/croconaw.gif",
+            "back": "assets/sprites-pokemon/animated/back/croconaw.gif",
+            "shiny": "assets/sprites-pokemon/animated/shiny/croconaw.gif",
+            "back_shiny": "assets/sprites-pokemon/animated/back-shiny/croconaw.gif",
+            "mini_regular": "assets/sprites-pokemon/mini/regular/croconaw.gif",
+            "mini_shiny": "assets/sprites-pokemon/mini/shiny/croconaw.gif"
         }
     },
     "clefairy": {
@@ -3594,10 +3646,12 @@
             }
         ],
         "sprites": {
-            "normal": "../assets/normal/clefairy.gif",
-            "back": "../assets/back/clefairy.gif",
-            "shiny": "../assets/shiny/clefairy.gif",
-            "back_shiny": "../assets/back_shiny/clefairy.gif"
+            "regular": "assets/sprites-pokemon/animated/regular/clefairy.gif",
+            "back": "assets/sprites-pokemon/animated/back/clefairy.gif",
+            "shiny": "assets/sprites-pokemon/animated/shiny/clefairy.gif",
+            "back_shiny": "assets/sprites-pokemon/animated/back-shiny/clefairy.gif",
+            "mini_regular": "assets/sprites-pokemon/mini/regular/clefairy.gif",
+            "mini_shiny": "assets/sprites-pokemon/mini/shiny/clefairy.gif"
         }
     },
     "charmeleon": {
@@ -3725,10 +3779,12 @@
             }
         ],
         "sprites": {
-            "normal": "../assets/normal/charmeleon.gif",
-            "back": "../assets/back/charmeleon.gif",
-            "shiny": "../assets/shiny/charmeleon.gif",
-            "back_shiny": "../assets/back_shiny/charmeleon.gif"
+            "regular": "assets/sprites-pokemon/animated/regular/charmeleon.gif",
+            "back": "assets/sprites-pokemon/animated/back/charmeleon.gif",
+            "shiny": "assets/sprites-pokemon/animated/shiny/charmeleon.gif",
+            "back_shiny": "assets/sprites-pokemon/animated/back-shiny/charmeleon.gif",
+            "mini_regular": "assets/sprites-pokemon/mini/regular/charmeleon.gif",
+            "mini_shiny": "assets/sprites-pokemon/mini/shiny/charmeleon.gif"
         }
     },
     "chansey": {
@@ -3860,10 +3916,12 @@
             }
         ],
         "sprites": {
-            "normal": "../assets/normal/chansey.gif",
-            "back": "../assets/back/chansey.gif",
-            "shiny": "../assets/shiny/chansey.gif",
-            "back_shiny": "../assets/back_shiny/chansey.gif"
+            "regular": "assets/sprites-pokemon/animated/regular/chansey.gif",
+            "back": "assets/sprites-pokemon/animated/back/chansey.gif",
+            "shiny": "assets/sprites-pokemon/animated/shiny/chansey.gif",
+            "back_shiny": "assets/sprites-pokemon/animated/back-shiny/chansey.gif",
+            "mini_regular": "assets/sprites-pokemon/mini/regular/chansey.gif",
+            "mini_shiny": "assets/sprites-pokemon/mini/shiny/chansey.gif"
         }
     },
     "bayleef": {
@@ -3991,10 +4049,12 @@
             }
         ],
         "sprites": {
-            "normal": "../assets/normal/bayleef.gif",
-            "back": "../assets/back/bayleef.gif",
-            "shiny": "../assets/shiny/bayleef.gif",
-            "back_shiny": "../assets/back_shiny/bayleef.gif"
+            "regular": "assets/sprites-pokemon/animated/regular/bayleef.gif",
+            "back": "assets/sprites-pokemon/animated/back/bayleef.gif",
+            "shiny": "assets/sprites-pokemon/animated/shiny/bayleef.gif",
+            "back_shiny": "assets/sprites-pokemon/animated/back-shiny/bayleef.gif",
+            "mini_regular": "assets/sprites-pokemon/mini/regular/bayleef.gif",
+            "mini_shiny": "assets/sprites-pokemon/mini/shiny/bayleef.gif"
         }
     }
 }

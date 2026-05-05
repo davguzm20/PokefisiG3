@@ -74,16 +74,25 @@ def elegirMovimientoAleatorio(movimientos):
 #Heuristica incial basada en diferencia de HP
 #maximizar diferencia a favor de IA y minimizarla a favor del jugador
 
-def heuristica_difHP(estado_juego, movimientos):
+def heuristica_difHP(estado_juego, movimientos, ia_side=1):
     mejor = None
     mejor_valor = -float("inf")
 
-    hp_player = estado_juego.pokemonActivoP2.hp
-    hp_ia = estado_juego.pokemonActivoP1.hp
-    max_hp = max(hp_player, hp_ia, 1)
+    if ia_side == 2:
+        hp_player = estado_juego.pokemonActivoP1.hp
+        hp_ia = estado_juego.pokemonActivoP2.hp
+        max_hp = max(hp_player, hp_ia, 1)
+        atacante = estado_juego.pokemonActivoP2
+        defensor = estado_juego.pokemonActivoP1
+    else:
+        hp_player = estado_juego.pokemonActivoP2.hp
+        hp_ia = estado_juego.pokemonActivoP1.hp
+        max_hp = max(hp_player, hp_ia, 1)
+        atacante = estado_juego.pokemonActivoP1
+        defensor = estado_juego.pokemonActivoP2
 
     for movimiento in movimientos:
-        dano_ia = calcular_daño(estado_juego.pokemonActivoP1, estado_juego.pokemonActivoP2, movimiento)
+        dano_ia = calcular_daño(atacante, defensor, movimiento)
         valor = (hp_player - dano_ia) - hp_ia
         valor_normalizado = valor / max_hp
 

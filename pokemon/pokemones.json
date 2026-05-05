@@ -125,10 +125,10 @@
             }
         ],
         "sprites": {
-            "normal": "../assets/normal/weepinbell",
-            "back": "../assets/back/weepinbell",
-            "shiny": "../assets/shiny/weepinbell",
-            "back_shiny": "../assets/back_shiny/weepinbell"
+            "normal": "../assets/normal/weepinbell.gif",
+            "back": "../assets/back/weepinbell.gif",
+            "shiny": "../assets/shiny/weepinbell.gif",
+            "back_shiny": "../assets/back_shiny/weepinbell.gif"
         }
     },
     "wartortle": {
@@ -256,10 +256,10 @@
             }
         ],
         "sprites": {
-            "normal": "../assets/normal/wartortle",
-            "back": "../assets/back/wartortle",
-            "shiny": "../assets/shiny/wartortle",
-            "back_shiny": "../assets/back_shiny/wartortle"
+            "normal": "../assets/normal/wartortle.gif",
+            "back": "../assets/back/wartortle.gif",
+            "shiny": "../assets/shiny/wartortle.gif",
+            "back_shiny": "../assets/back_shiny/wartortle.gif"
         }
     },
     "togetic": {
@@ -392,10 +392,10 @@
             }
         ],
         "sprites": {
-            "normal": "../assets/normal/togetic",
-            "back": "../assets/back/togetic",
-            "shiny": "../assets/shiny/togetic",
-            "back_shiny": "../assets/back_shiny/togetic"
+            "normal": "../assets/normal/togetic.gif",
+            "back": "../assets/back/togetic.gif",
+            "shiny": "../assets/shiny/togetic.gif",
+            "back_shiny": "../assets/back_shiny/togetic.gif"
         }
     },
     "seadra": {
@@ -527,10 +527,10 @@
             }
         ],
         "sprites": {
-            "normal": "../assets/normal/seadra",
-            "back": "../assets/back/seadra",
-            "shiny": "../assets/shiny/seadra",
-            "back_shiny": "../assets/back_shiny/seadra"
+            "normal": "../assets/normal/seadra.gif",
+            "back": "../assets/back/seadra.gif",
+            "shiny": "../assets/shiny/seadra.gif",
+            "back_shiny": "../assets/back_shiny/seadra.gif"
         }
     },
     "rhydon": {
@@ -663,10 +663,10 @@
             }
         ],
         "sprites": {
-            "normal": "../assets/normal/rhydon",
-            "back": "../assets/back/rhydon",
-            "shiny": "../assets/shiny/rhydon",
-            "back_shiny": "../assets/back_shiny/rhydon"
+            "normal": "../assets/normal/rhydon.gif",
+            "back": "../assets/back/rhydon.gif",
+            "shiny": "../assets/shiny/rhydon.gif",
+            "back_shiny": "../assets/back_shiny/rhydon.gif"
         }
     },
     "quilava": {
@@ -794,10 +794,10 @@
             }
         ],
         "sprites": {
-            "normal": "../assets/normal/quilava",
-            "back": "../assets/back/quilava",
-            "shiny": "../assets/shiny/quilava",
-            "back_shiny": "../assets/back_shiny/quilava"
+            "normal": "../assets/normal/quilava.gif",
+            "back": "../assets/back/quilava.gif",
+            "shiny": "../assets/shiny/quilava.gif",
+            "back_shiny": "../assets/back_shiny/quilava.gif"
         }
     },
     "primeape": {
@@ -929,10 +929,10 @@
             }
         ],
         "sprites": {
-            "normal": "../assets/normal/primeape",
-            "back": "../assets/back/primeape",
-            "shiny": "../assets/shiny/primeape",
-            "back_shiny": "../assets/back_shiny/primeape"
+            "normal": "../assets/normal/primeape.gif",
+            "back": "../assets/back/primeape.gif",
+            "shiny": "../assets/shiny/primeape.gif",
+            "back_shiny": "../assets/back_shiny/primeape.gif"
         }
     },
     "porygon": {
@@ -1064,10 +1064,10 @@
             }
         ],
         "sprites": {
-            "normal": "../assets/normal/porygon",
-            "back": "../assets/back/porygon",
-            "shiny": "../assets/shiny/porygon",
-            "back_shiny": "../assets/back_shiny/porygon"
+            "normal": "../assets/normal/porygon.gif",
+            "back": "../assets/back/porygon.gif",
+            "shiny": "../assets/shiny/porygon.gif",
+            "back_shiny": "../assets/back_shiny/porygon.gif"
         }
     },
     "poliwhirl": {
@@ -1199,10 +1199,10 @@
             }
         ],
         "sprites": {
-            "normal": "../assets/normal/poliwhirl",
-            "back": "../assets/back/poliwhirl",
-            "shiny": "../assets/shiny/poliwhirl",
-            "back_shiny": "../assets/back_shiny/poliwhirl"
+            "normal": "../assets/normal/poliwhirl.gif",
+            "back": "../assets/back/poliwhirl.gif",
+            "shiny": "../assets/shiny/poliwhirl.gif",
+            "back_shiny": "../assets/back_shiny/poliwhirl.gif"
         }
     },
     "pikachu": {
@@ -1330,10 +1330,10 @@
             }
         ],
         "sprites": {
-            "normal": "../assets/normal/pikachu",
-            "back": "../assets/back/pikachu",
-            "shiny": "../assets/shiny/pikachu",
-            "back_shiny": "../assets/back_shiny/pikachu"
+            "normal": "../assets/normal/pikachu.gif",
+            "back": "../assets/back/pikachu.gif",
+            "shiny": "../assets/shiny/pikachu.gif",
+            "back_shiny": "../assets/back_shiny/pikachu.gif"
         }
     },
     "pidgeotto": {
@@ -1466,10 +1466,10 @@
             }
         ],
         "sprites": {
-            "normal": "../assets/normal/pidgeotto",
-            "back": "../assets/back/pidgeotto",
-            "shiny": "../assets/shiny/pidgeotto",
-            "back_shiny": "../assets/back_shiny/pidgeotto"
+            "normal": "../assets/normal/pidgeotto.gif",
+            "back": "../assets/back/pidgeotto.gif",
+            "shiny": "../assets/shiny/pidgeotto.gif",
+            "back_shiny": "../assets/back_shiny/pidgeotto.gif"
         }
     },
     "marill": {
@@ -1602,10 +1602,10 @@
             }
         ],
         "sprites": {
-            "normal": "../assets/normal/marill",
-            "back": "../assets/back/marill",
-            "shiny": "../assets/shiny/marill",
-            "back_shiny": "../assets/back_shiny/marill"
+            "normal": "../assets/normal/marill.gif",
+            "back": "../assets/back/marill.gif",
+            "shiny": "../assets/shiny/marill.gif",
+            "back_shiny": "../assets/back_shiny/marill.gif"
         }
     },
     "magneton": {
@@ -1738,10 +1738,10 @@
             }
         ],
         "sprites": {
-            "normal": "../assets/normal/magneton",
-            "back": "../assets/back/magneton",
-            "shiny": "../assets/shiny/magneton",
-            "back_shiny": "../assets/back_shiny/magneton"
+            "normal": "../assets/normal/magneton.gif",
+            "back": "../assets/back/magneton.gif",
+            "shiny": "../assets/shiny/magneton.gif",
+            "back_shiny": "../assets/back_shiny/magneton.gif"
         }
     },
     "magmar": {
@@ -1869,10 +1869,10 @@
             }
         ],
         "sprites": {
-            "normal": "../assets/normal/magmar",
-            "back": "../assets/back/magmar",
-            "shiny": "../assets/shiny/magmar",
-            "back_shiny": "../assets/back_shiny/magmar"
+            "normal": "../assets/normal/magmar.gif",
+            "back": "../assets/back/magmar.gif",
+            "shiny": "../assets/shiny/magmar.gif",
+            "back_shiny": "../assets/back_shiny/magmar.gif"
         }
     },
     "machoke": {
@@ -2004,10 +2004,10 @@
             }
         ],
         "sprites": {
-            "normal": "../assets/normal/machoke",
-            "back": "../assets/back/machoke",
-            "shiny": "../assets/shiny/machoke",
-            "back_shiny": "../assets/back_shiny/machoke"
+            "normal": "../assets/normal/machoke.gif",
+            "back": "../assets/back/machoke.gif",
+            "shiny": "../assets/shiny/machoke.gif",
+            "back_shiny": "../assets/back_shiny/machoke.gif"
         }
     },
     "kadabra": {
@@ -2139,10 +2139,10 @@
             }
         ],
         "sprites": {
-            "normal": "../assets/normal/kadabra",
-            "back": "../assets/back/kadabra",
-            "shiny": "../assets/shiny/kadabra",
-            "back_shiny": "../assets/back_shiny/kadabra"
+            "normal": "../assets/normal/kadabra.gif",
+            "back": "../assets/back/kadabra.gif",
+            "shiny": "../assets/shiny/kadabra.gif",
+            "back_shiny": "../assets/back_shiny/kadabra.gif"
         }
     },
     "jigglypuff": {
@@ -2275,10 +2275,10 @@
             }
         ],
         "sprites": {
-            "normal": "../assets/normal/jigglypuff",
-            "back": "../assets/back/jigglypuff",
-            "shiny": "../assets/shiny/jigglypuff",
-            "back_shiny": "../assets/back_shiny/jigglypuff"
+            "normal": "../assets/normal/jigglypuff.gif",
+            "back": "../assets/back/jigglypuff.gif",
+            "shiny": "../assets/shiny/jigglypuff.gif",
+            "back_shiny": "../assets/back_shiny/jigglypuff.gif"
         }
     },
     "ivysaur": {
@@ -2407,10 +2407,10 @@
             }
         ],
         "sprites": {
-            "normal": "../assets/normal/ivysaur",
-            "back": "../assets/back/ivysaur",
-            "shiny": "../assets/shiny/ivysaur",
-            "back_shiny": "../assets/back_shiny/ivysaur"
+            "normal": "../assets/normal/ivysaur.gif",
+            "back": "../assets/back/ivysaur.gif",
+            "shiny": "../assets/shiny/ivysaur.gif",
+            "back_shiny": "../assets/back_shiny/ivysaur.gif"
         }
     },
     "haunter": {
@@ -2535,10 +2535,10 @@
             }
         ],
         "sprites": {
-            "normal": "../assets/normal/haunter",
-            "back": "../assets/back/haunter",
-            "shiny": "../assets/shiny/haunter",
-            "back_shiny": "../assets/back_shiny/haunter"
+            "normal": "../assets/normal/haunter.gif",
+            "back": "../assets/back/haunter.gif",
+            "shiny": "../assets/shiny/haunter.gif",
+            "back_shiny": "../assets/back_shiny/haunter.gif"
         }
     },
     "graveler": {
@@ -2671,10 +2671,10 @@
             }
         ],
         "sprites": {
-            "normal": "../assets/normal/graveler",
-            "back": "../assets/back/graveler",
-            "shiny": "../assets/shiny/graveler",
-            "back_shiny": "../assets/back_shiny/graveler"
+            "normal": "../assets/normal/graveler.gif",
+            "back": "../assets/back/graveler.gif",
+            "shiny": "../assets/shiny/graveler.gif",
+            "back_shiny": "../assets/back_shiny/graveler.gif"
         }
     },
     "golbat": {
@@ -2803,10 +2803,10 @@
             }
         ],
         "sprites": {
-            "normal": "../assets/normal/golbat",
-            "back": "../assets/back/golbat",
-            "shiny": "../assets/shiny/golbat",
-            "back_shiny": "../assets/back_shiny/golbat"
+            "normal": "../assets/normal/golbat.gif",
+            "back": "../assets/back/golbat.gif",
+            "shiny": "../assets/shiny/golbat.gif",
+            "back_shiny": "../assets/back_shiny/golbat.gif"
         }
     },
     "gloom": {
@@ -2935,10 +2935,10 @@
             }
         ],
         "sprites": {
-            "normal": "../assets/normal/gloom",
-            "back": "../assets/back/gloom",
-            "shiny": "../assets/shiny/gloom",
-            "back_shiny": "../assets/back_shiny/gloom"
+            "normal": "../assets/normal/gloom.gif",
+            "back": "../assets/back/gloom.gif",
+            "shiny": "../assets/shiny/gloom.gif",
+            "back_shiny": "../assets/back_shiny/gloom.gif"
         }
     },
     "flaaffy": {
@@ -3066,10 +3066,10 @@
             }
         ],
         "sprites": {
-            "normal": "../assets/normal/flaaffy",
-            "back": "../assets/back/flaaffy",
-            "shiny": "../assets/shiny/flaaffy",
-            "back_shiny": "../assets/back_shiny/flaaffy"
+            "normal": "../assets/normal/flaaffy.gif",
+            "back": "../assets/back/flaaffy.gif",
+            "shiny": "../assets/shiny/flaaffy.gif",
+            "back_shiny": "../assets/back_shiny/flaaffy.gif"
         }
     },
     "electabuzz": {
@@ -3197,10 +3197,10 @@
             }
         ],
         "sprites": {
-            "normal": "../assets/normal/electabuzz",
-            "back": "../assets/back/electabuzz",
-            "shiny": "../assets/shiny/electabuzz",
-            "back_shiny": "../assets/back_shiny/electabuzz"
+            "normal": "../assets/normal/electabuzz.gif",
+            "back": "../assets/back/electabuzz.gif",
+            "shiny": "../assets/shiny/electabuzz.gif",
+            "back_shiny": "../assets/back_shiny/electabuzz.gif"
         }
     },
     "dragonair": {
@@ -3328,10 +3328,10 @@
             }
         ],
         "sprites": {
-            "normal": "../assets/normal/dragonair",
-            "back": "../assets/back/dragonair",
-            "shiny": "../assets/shiny/dragonair",
-            "back_shiny": "../assets/back_shiny/dragonair"
+            "normal": "../assets/normal/dragonair.gif",
+            "back": "../assets/back/dragonair.gif",
+            "shiny": "../assets/shiny/dragonair.gif",
+            "back_shiny": "../assets/back_shiny/dragonair.gif"
         }
     },
     "croconaw": {
@@ -3459,10 +3459,10 @@
             }
         ],
         "sprites": {
-            "normal": "../assets/normal/croconaw",
-            "back": "../assets/back/croconaw",
-            "shiny": "../assets/shiny/croconaw",
-            "back_shiny": "../assets/back_shiny/croconaw"
+            "normal": "../assets/normal/croconaw.gif",
+            "back": "../assets/back/croconaw.gif",
+            "shiny": "../assets/shiny/croconaw.gif",
+            "back_shiny": "../assets/back_shiny/croconaw.gif"
         }
     },
     "clefairy": {
@@ -3594,10 +3594,10 @@
             }
         ],
         "sprites": {
-            "normal": "../assets/normal/clefairy",
-            "back": "../assets/back/clefairy",
-            "shiny": "../assets/shiny/clefairy",
-            "back_shiny": "../assets/back_shiny/clefairy"
+            "normal": "../assets/normal/clefairy.gif",
+            "back": "../assets/back/clefairy.gif",
+            "shiny": "../assets/shiny/clefairy.gif",
+            "back_shiny": "../assets/back_shiny/clefairy.gif"
         }
     },
     "charmeleon": {
@@ -3725,10 +3725,10 @@
             }
         ],
         "sprites": {
-            "normal": "../assets/normal/charmeleon",
-            "back": "../assets/back/charmeleon",
-            "shiny": "../assets/shiny/charmeleon",
-            "back_shiny": "../assets/back_shiny/charmeleon"
+            "normal": "../assets/normal/charmeleon.gif",
+            "back": "../assets/back/charmeleon.gif",
+            "shiny": "../assets/shiny/charmeleon.gif",
+            "back_shiny": "../assets/back_shiny/charmeleon.gif"
         }
     },
     "chansey": {
@@ -3860,10 +3860,10 @@
             }
         ],
         "sprites": {
-            "normal": "../assets/normal/chansey",
-            "back": "../assets/back/chansey",
-            "shiny": "../assets/shiny/chansey",
-            "back_shiny": "../assets/back_shiny/chansey"
+            "normal": "../assets/normal/chansey.gif",
+            "back": "../assets/back/chansey.gif",
+            "shiny": "../assets/shiny/chansey.gif",
+            "back_shiny": "../assets/back_shiny/chansey.gif"
         }
     },
     "bayleef": {
@@ -3991,10 +3991,10 @@
             }
         ],
         "sprites": {
-            "normal": "../assets/normal/bayleef",
-            "back": "../assets/back/bayleef",
-            "shiny": "../assets/shiny/bayleef",
-            "back_shiny": "../assets/back_shiny/bayleef"
+            "normal": "../assets/normal/bayleef.gif",
+            "back": "../assets/back/bayleef.gif",
+            "shiny": "../assets/shiny/bayleef.gif",
+            "back_shiny": "../assets/back_shiny/bayleef.gif"
         }
     }
 }

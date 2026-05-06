@@ -71,33 +71,62 @@ def elegirMovimientoAleatorio(movimientos):
     return random.choice(movimientos)
 
 #Niv 2
-#Heuristica incial basada en diferencia de HP
-#maximizar diferencia a favor de IA y minimizarla a favor del jugador
+#Heuristica inicial basada en diferencia de HP
+#maximizar diferencia a favor de IA
 
+    #Devuelve el pokemon activo de la IA, el pokemon activo del jugador, y sus HP respectivamente
+    # dependiendo de qué lado controle la IA.
+def _resolver_lados(estado_juego, ia_side):
+    
+    if ia_side == 2:
+        return (
+            estado_juego.pokemonActivoP2,
+            estado_juego.pokemonActivoP1,
+            estado_juego.pokemonActivoP2.hp,
+            estado_juego.pokemonActivoP1.hp,
+        )
+
+    return (
+        estado_juego.pokemonActivoP1,
+        estado_juego.pokemonActivoP2,
+        estado_juego.pokemonActivoP1.hp,
+        estado_juego.pokemonActivoP2.hp,
+    )
+
+    #La funcion evalua cada mov en base a:
+    # si produce KO, cuánto HP restante deja y cuánto HP tiene la IA en ese momento
+    #Retorna el mov con mayor valor heurístico
 def heuristica_difHP(estado_juego, movimientos, ia_side=1):
+
+    # Valida que el estado del juego sea válido y que haya movimientos disponibles.
+    # Si no, retorna None para evitar errores.
+    if not isinstance(estado_juego, EstadoJuego) or not movimientos:
+        return None
+
+    # Obtiene los pokémon activos y sus HP según qué lado controle la IA.
+    atacante, defensor, hp_ia, hp_player = _resolver_lados(estado_juego, ia_side)
+    max_hp = max(hp_ia, hp_player, 1)
+
     mejor = None
     mejor_valor = -float("inf")
 
-    if ia_side == 2:
-        hp_player = estado_juego.pokemonActivoP1.hp
-        hp_ia = estado_juego.pokemonActivoP2.hp
-        max_hp = max(hp_player, hp_ia, 1)
-        atacante = estado_juego.pokemonActivoP2
-        defensor = estado_juego.pokemonActivoP1
-    else:
-        hp_player = estado_juego.pokemonActivoP2.hp
-        hp_ia = estado_juego.pokemonActivoP1.hp
-        max_hp = max(hp_player, hp_ia, 1)
-        atacante = estado_juego.pokemonActivoP1
-        defensor = estado_juego.pokemonActivoP2
-
+    # Evalúa cada movimiento disponible.
     for movimiento in movimientos:
-        dano_ia = calcular_daño(atacante, defensor, movimiento)
-        valor = (hp_player - dano_ia) - hp_ia
-        valor_normalizado = valor / max_hp
 
-        if valor_normalizado > mejor_valor:
-            mejor_valor = valor_normalizado
+        # Calcula el daño que infligiría este movimiento y hp del defensortras recibirlo.
+        dano_ia = calcular_daño(atacante, defensor, movimiento)
+        hp_player_restante = max(0, hp_player - dano_ia)
+
+        # Si el ataque hace KO, es la mejor opción posible, así que le damos un mayor valor.
+        if hp_player_restante == 0:
+            valor = 2.0 + (hp_ia / max_hp)
+        else:
+            # Si no hay KO, puntúa la ventaja de vida neta para la IA.
+            valor = (hp_ia - hp_player_restante) / max_hp
+
+        # Si el mov tiene valor mayor que el actual, se convierte en el mejor candidato.
+        if valor > mejor_valor:
+            mejor_valor = valor
             mejor = movimiento
 
     return mejor

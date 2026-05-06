@@ -7,6 +7,8 @@ from pokemon.models.move import Move
 from pokemon.enums.damage_class import DamageClass
 
 class PokemonFactory:
+    pokemons = None
+
     @staticmethod
     def create_pokemon(data: dict) -> Pokemon:
         types = [PokemonType(type) for type in data["tipo"]]
@@ -62,5 +64,7 @@ class PokemonFactory:
         with open(filepath, encoding="utf-8") as file:
             data = json.load(file)
             
-        return [PokemonFactory.create_pokemon(pokemon_data) 
+        PokemonFactory.pokemons = [PokemonFactory.create_pokemon(pokemon_data) 
                 for pokemon_data in data.values()]
+        print(f"Fueron cargados {len(PokemonFactory.pokemons)} pokemons")
+        return PokemonFactory.pokemons

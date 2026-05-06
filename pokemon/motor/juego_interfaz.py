@@ -50,7 +50,7 @@ class Juego:
             p_sel.moves = p_sel.moves[:4]
             equipo.append(p_sel)
         
-        print(f"IA {num_jugador} eligió a {p_sel.name} con movimientos aleatorios.")
+            print(f"IA {num_jugador} eligió a {p_sel.name} con movimientos aleatorios.")
         print(f"Nivel de IA seleccionado: {nivel_ia}")
 
         self.estado.setEquipo(equipo, num_jugador)

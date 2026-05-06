@@ -113,19 +113,19 @@ motor = Combate(estado)
 
 turno = 1
 while True:
-    print(f"\n>>> TURNO {turno} | {estado.pokemonActivoP1.name}({estado.pokemonActivoP1.hp}hp) vs {estado.pokemonActivoP2.name}({estado.pokemonActivoP2.hp}hp)")
+    print(f"\n>>> TURNO {turno} | {motor.estado_del_equipo.pokemonActivoP1.name}({motor.estado_del_equipo.pokemonActivoP1.hp}hp) vs {motor.estado_del_equipo.pokemonActivoP2.name}({motor.estado_del_equipo.pokemonActivoP2.hp}hp)")
 
     if tipoP1 == 1:
-        accionP1 = elegir_movimiento_jugador(estado.pokemonActivoP1)
+        accionP1 = elegir_movimiento_jugador(motor.estado_del_equipo.pokemonActivoP1)
     else:
-        accionP1 = elegir_movimiento_ia(estado, 1, nivelP1)
+        accionP1 = elegir_movimiento_ia(motor.estado_del_equipo, 1, nivelP1)
 
     if tipoP2 == 1:
-        accionP2 = elegir_movimiento_jugador(estado.pokemonActivoP2)
+        accionP2 = elegir_movimiento_jugador(motor.estado_del_equipo.pokemonActivoP2)
     else:
-        accionP2 = elegir_movimiento_ia(estado, 2, nivelP2)
+        accionP2 = elegir_movimiento_ia(motor.estado_del_equipo, 2, nivelP2)
 
-    motor.ejecutar_turno(estado.pokemonActivoP1, accionP1, estado.pokemonActivoP2, accionP2, tipoP1, tipoP2)
+    motor.ejecutar_turno(motor.estado_del_equipo.pokemonActivoP1, accionP1, motor.estado_del_equipo.pokemonActivoP2, accionP2, tipoP1, tipoP2)
 
     if motor.verificar_ganador(): 
         break

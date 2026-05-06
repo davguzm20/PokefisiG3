@@ -20,3 +20,4 @@ class EventBus:
     #Si solo lee lo que hay en direccion de memoria de la función faltaría definir parametros (1)
 
 bus_de_eventos_global = EventBus() #Importen esta instancia, no la clase
+print("Inicié el bus de eventos")

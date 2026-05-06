@@ -4,20 +4,42 @@ from ui.scenes.enums.scene_type import SceneType
 from ui.scenes.enums.difficulty_option import DifficultyOption
 from ui.components.button import Button
 from ui.components.placeholder import Placeholder
+from pokemon.pokemon_factory import PokemonFactory
+from pokemon.motor.bus_de_eventos import bus_de_eventos_global
 from config.controls import Controls
 
 class DifficultyScene(Scene):
     def __init__(self, scene_manager):
         super().__init__(scene_manager)
-        self.selected_index = 1
+        self.selected_index = 0
         self.buttons = {
-            DifficultyOption.EASY: Button(40, 282, 120, 44, "assets/ui/buttons/button-easy.png", 20),
-            DifficultyOption.INTERMEDIATE: Button(260, 282, 120, 44, "assets/ui/buttons/button-intermediate.png", 20),
-            DifficultyOption.HARD: Button(480, 282, 120, 44, "assets/ui/buttons/button-hard.png", 20),
+            DifficultyOption.EASY: Button(
+                position_x=40, position_y=282,
+                width=120, height=44,
+                asset="assets/ui/buttons/button-easy.png",
+            ),
+            DifficultyOption.INTERMEDIATE: Button(
+                position_x=260, position_y=282,
+                width=120, height=44,
+                asset="assets/ui/buttons/button-intermediate.png",
+            ),
+            DifficultyOption.HARD: Button(
+                position_x=480, position_y=282,
+                width=120, height=44,
+                asset="assets/ui/buttons/button-hard.png",
+            ),
         }
         self.placeholders = [
-            Placeholder(0, 0, 640, 360, "assets/backgrounds/menus/fondo-campo.png"),
-            Placeholder(110, 105, 420, 135, "assets/ui/titles/titulo-principal.png"),
+            Placeholder(
+                position_x=0, position_y=0,
+                width=640, height=360,
+                asset="assets/backgrounds/menus/fondo-campo.png",
+            ),
+            Placeholder(
+                position_x=110, position_y=105,
+                width=420, height=135,
+                asset="assets/ui/titles/titulo-principal.png",
+            ),
         ]
 
     def handle_event(self, event):
@@ -29,7 +51,7 @@ class DifficultyScene(Scene):
             elif event.key in Controls.SELECT.value:
                 self.select_option()
             elif event.key in Controls.BACK.value:
-                self.scene_manager.change_scene(SceneType.MENU)
+                self.scene_manager.change_scene(SceneType.MODE)
 
         elif event.type == pygame.MOUSEBUTTONDOWN:
             if event.button == 1:
@@ -40,19 +62,35 @@ class DifficultyScene(Scene):
 
     def select_option(self):
         option = list(self.buttons.keys())[self.selected_index]
+        
+        if option == DifficultyOption.HARD:
+            return
 
-        if option == DifficultyOption.EASY:
-            self.scene_manager.change_scene(SceneType.TEAM)
-        elif option == DifficultyOption.INTERMEDIATE:
-            self.scene_manager.change_scene(SceneType.TEAM)
-        elif option == DifficultyOption.HARD:
-            self.scene_manager.change_scene(SceneType.TEAM)
+        level = option.value
+        sm = self.scene_manager
+
+        if sm.game_mode == "PVAI":
+            sm.difficulty_config[2] = level
+            sm.change_scene(SceneType.TEAM)
+
+        elif sm.game_mode == "AIVSAI":
+            if sm.current_ia_setup == 1:
+                sm.difficulty_config[1] = level
+                sm.current_ia_setup = 2
+                sm.change_scene(SceneType.DIFFICULTY)
+            else:
+                sm.difficulty_config[2] = level
+                bus_de_eventos_global.disparar("ESTABLECER_NUM_POKEMONES", 4)
+                bus_de_eventos_global.disparar("ESTABLECER_JUGADOR_COMO_IA", 1, sm.difficulty_config[1], PokemonFactory.pokemons)
+                bus_de_eventos_global.disparar("ESTABLECER_JUGADOR_COMO_IA", 2, sm.difficulty_config[2], PokemonFactory.pokemons)
+                bus_de_eventos_global.disparar("INICIALIZAR_COMBATE")
+                sm.change_scene(SceneType.COMBAT)
 
     def draw(self, screen):
         for placeholder in self.placeholders:
             placeholder.draw(screen)
 
         current_option = list(self.buttons.keys())[self.selected_index]
-        
+
         for option, button in self.buttons.items():
             button.draw(screen, option == current_option)

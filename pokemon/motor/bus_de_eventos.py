@@ -8,8 +8,9 @@ class EventBus:
 
     # (1) entonces se agrega args y kwarg
     def disparar(self, suscripcion, *args, **kwargs): #Publicar
-        for dirfuncion in self.suscripciones[suscripcion]:
-            dirfuncion(*args, **kwargs)
+        if suscripcion in self.suscripciones:
+            for dirfuncion in self.suscripciones[suscripcion]:
+                dirfuncion(*args, **kwargs)
 
     
     def escuchar(self, nombreSuscripcion, dirfuncion): #Suscribir

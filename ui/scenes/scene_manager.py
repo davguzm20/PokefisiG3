@@ -4,6 +4,7 @@ from ui.scenes.menu_scene import MenuScene
 from ui.scenes.mode_scene import ModeScene
 from ui.scenes.dificulty_scene import DifficultyScene
 from ui.scenes.team_scene import TeamScene
+from ui.scenes.combat_scene import CombatScene
 
 class SceneManager:
     def __init__(self, screen):
@@ -17,6 +18,7 @@ class SceneManager:
             SceneType.MODE: ModeScene(self),
             SceneType.DIFFICULTY: DifficultyScene(self),
             SceneType.TEAM: TeamScene(self),
+            SceneType.COMBAT: CombatScene(self),
         }
         self.current_scene = self.scenes[SceneType.MENU]
 

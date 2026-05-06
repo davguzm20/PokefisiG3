@@ -1,14 +1,16 @@
 import pygame
 from ui.scenes.enums.scene_type import SceneType
 from ui.scenes.menu_scene import MenuScene
+from ui.scenes.dificulty_scene import DifficultyScene
+from ui.scenes.team_scene import TeamScene
 
 class SceneManager:
     def __init__(self, screen):
         self.screen = screen
         self.scenes = {
             SceneType.MENU: MenuScene(self),
-            # SceneType.TEAM: TeamScene(self),
-            # SceneType.COMBAT: CombatScene(self),
+            SceneType.DIFFICULTY: DifficultyScene(self),
+            SceneType.TEAM: TeamScene(self),
         }
         self.current_scene = self.scenes[SceneType.MENU]
 

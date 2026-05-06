@@ -8,21 +8,32 @@ class Placeholder:
                  asset: str | None = None, text_color: Colors = Colors.WHITE,
                  text_size: int = 20, label: str | None = None,
                  background_color: Colors | None = None):
-        self.asset = Assets.load_image(asset, width, height) if asset else None
+        self.position_x = position_x
+        self.position_y = position_y
+        self.width = width
+        self.height = height
+        self.asset_path = asset
         self.label = label
         self.text_size = text_size
-        self.text_color = text_color.value
-        self.background_color = background_color.value if background_color else None
-        self.rect = pygame.Rect(position_x, position_y, width, height)
+        self.text_color = text_color
+        self.background_color = background_color
 
     def draw(self, screen):
-        if self.background_color:
-            pygame.draw.rect(screen, self.background_color, self.rect)
+        rect = pygame.Rect(self.position_x, self.position_y, self.width, self.height)
+        background = self.background_color.value if self.background_color else None
+        text_color = self.text_color.value
 
-        if self.asset:
-            screen.blit(self.asset, self.rect)
+        if background:
+            pygame.draw.rect(screen, background, rect)
+
+        if self.asset_path:
+            loaded_asset = Assets.load_image(self.asset_path, self.width, self.height)
+
+            if loaded_asset:
+                screen.blit(loaded_asset, rect)
+        
         elif self.label:
             font = Fonts.get_pixelify_sans(self.text_size)
-            text_surface = font.render(self.label, True, self.text_color)
-            text_rect = text_surface.get_rect(center=self.rect.center)
+            text_surface = font.render(self.label, True, text_color)
+            text_rect = text_surface.get_rect(center=rect.center)
             screen.blit(text_surface, text_rect)

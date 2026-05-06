@@ -1,29 +1,25 @@
 import pygame
+from config.colors import Colors
+from ui.utils.assets import Assets
+from ui.utils.fonts import Fonts
 
 class Placeholder:
-    def __init__(self, x, y, ancho, alto, nombre_asset, color=(100,100,100), borde=2, image_path=None):
-        self.x = x
-        self.y = y
-        self.ancho = ancho
-        self.alto = alto
-        self.nombre_asset = nombre_asset
-        self.color = color
-        self.borde = borde
-        self.rect = pygame.Rect(x, y, ancho, alto)
-        self.image = None
-        if image_path:
-            try:
-                raw = pygame.image.load(image_path).convert_alpha()
-                self.image = pygame.transform.scale(raw, (ancho, alto))
-            except Exception:
-                self.image = None
+    def __init__(self, position_x: int, position_y: int, width: int, height: int,
+            asset: str, color: Colors = Colors.WHITE,
+            text_size: int = 20, label: str | None = None):
+        self.asset = Assets.load_image(asset, width, height)
+        self.label = label if label is not None else asset
+        self.text_size = text_size
+        self.color = color.value
+        self.rect = pygame.Rect(position_x, position_y, width, height)
 
     def draw(self, screen):
-        if self.image:
-            screen.blit(self.image, self.rect)
+        if self.asset:
+            screen.blit(self.asset, self.rect)
         else:
-            pygame.draw.rect(screen, self.color, self.rect, self.borde)
-            font = pygame.font.Font(None, 18)
-            text_surface = font.render(self.nombre_asset, True, self.color)
+            pygame.draw.rect(screen, self.color, self.rect, 3)
+
+            font = Fonts.get_pixelify_sans(self.text_size)
+            text_surface = font.render(self.label, True, self.color)
             text_rect = text_surface.get_rect(center=self.rect.center)
             screen.blit(text_surface, text_rect)

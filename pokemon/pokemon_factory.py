@@ -1,5 +1,6 @@
 import json
 from pokemon.models.pokemon import Pokemon
+from pokemon.models.sprites import Sprites
 from pokemon.enums.pokemon_type import PokemonType
 from pokemon.models.ability import Ability
 from pokemon.models.move import Move
@@ -32,20 +33,30 @@ class PokemonFactory:
             for move in data["movimientos"]
         ]
         
+        sprites = Sprites(
+            regular=data["sprites"]["regular"],
+            back=data["sprites"]["back"],
+            shiny=data["sprites"]["shiny"],
+            back_shiny=data["sprites"]["back_shiny"],
+            mini_regular=data["sprites"]["mini_regular"],
+            mini_shiny=data["sprites"]["mini_shiny"]
+        )
+
         return Pokemon(
             name=data["nombre"],
             types=types,
             abilities=abilities,
-            moves=moves,
             hp=data["hp"],
             attack=data["atk"],
             defense=data["def"],
             special_attack=data["spa"],
             special_defense=data["spd"],
             speed=data["speed"],
-            weight=data["peso"]
+            weight=data["peso"],
+            moves=moves,
+            sprites=sprites
         )
-    
+        
     @staticmethod
     def load_all_pokemons(filepath: str) -> list[Pokemon]:
         with open(filepath, encoding="utf-8") as file:

@@ -2,9 +2,8 @@ import pygame
 from ui.scenes.models.scene import Scene
 from ui.scenes.enums.scene_type import SceneType
 from ui.scenes.enums.menu_option import MenuOption
-from ui.components.boton import Button
+from ui.components.button import Button
 from ui.components.placeholder import Placeholder
-from config.colors import Colors
 from config.controls import Controls
 
 class MenuScene(Scene):
@@ -12,19 +11,13 @@ class MenuScene(Scene):
         super().__init__(scene_manager)
         self.selected_index = 0
         self.buttons = {
-            MenuOption.PLAY: Button(260, 282, 120, 44, "btn_jugar", 20,
-                                    Colors.WHITE.value, Colors.GOLD.value,
-                                    image_path="assets/ui/buttons/button-play.png"),
-            MenuOption.RANKING: Button(480, 282, 120, 44, "btn_ranking", 20,
-                                       Colors.WHITE.value, Colors.GOLD.value,
-                                       image_path="assets/ui/buttons/button-ranking.png"),
-            MenuOption.QUIT: Button(40, 282, 120, 44, "btn_salir", 20,
-                                    Colors.WHITE.value, Colors.GOLD.value,
-                                    image_path="assets/ui/buttons/button-leave.png"),
+            MenuOption.PLAY: Button(260, 282, 120, 44, "assets/ui/buttons/button-play.png", 20),
+            MenuOption.RANKING: Button(480, 282, 120, 44, "assets/ui/buttons/button-ranking.png", 20),
+            MenuOption.QUIT: Button(40, 282, 120, 44, "assets/ui/buttons/button-leave.png", 20),
         }
         self.placeholders = [
-            Placeholder(0, 0, 640, 360, "fondo", image_path="assets/backgrounds/menus/fondo-campo.png"),
-            Placeholder(110, 105, 420, 135, "titulo", image_path="assets/ui/titles/titulo-principal.png"),
+            Placeholder(0, 0, 640, 360, "assets/backgrounds/menus/fondo-campo.png"),
+            Placeholder(110, 105, 420, 135, "assets/ui/titles/titulo-principal.png"),
         ]
 
     def handle_event(self, event):
@@ -58,5 +51,6 @@ class MenuScene(Scene):
             placeholder.draw(screen)
 
         current_option = list(MenuOption)[self.selected_index]
+        
         for option, button in self.buttons.items():
             button.draw(screen, option == current_option)

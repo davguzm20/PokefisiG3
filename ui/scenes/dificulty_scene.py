@@ -2,29 +2,22 @@ import pygame
 from ui.scenes.models.scene import Scene
 from ui.scenes.enums.scene_type import SceneType
 from ui.scenes.enums.difficulty_option import DifficultyOption
-from ui.components.boton import Button
+from ui.components.button import Button
 from ui.components.placeholder import Placeholder
-from config.colors import Colors
 from config.controls import Controls
 
 class DifficultyScene(Scene):
     def __init__(self, scene_manager):
         super().__init__(scene_manager)
-        self.selected_index = 0
+        self.selected_index = 1
         self.buttons = {
-            DifficultyOption.EASY: Button(40, 282, 120, 44, "", 20,
-                                          Colors.WHITE.value, Colors.GOLD.value,
-                                          image_path="assets/ui/buttons/button-easy.png"),
-            DifficultyOption.INTERMEDIATE: Button(260, 282, 120, 44, "", 20,
-                                                  Colors.WHITE.value, Colors.GOLD.value,
-                                                  image_path="assets/ui/buttons/button-intermediate.png"),
-            DifficultyOption.HARD: Button(480, 282, 120, 44, "", 20,
-                                          Colors.WHITE.value, Colors.GOLD.value,
-                                          image_path="assets/ui/buttons/button-hard.png"),
+            DifficultyOption.EASY: Button(40, 282, 120, 44, "assets/ui/buttons/button-easy.png", 20),
+            DifficultyOption.INTERMEDIATE: Button(260, 282, 120, 44, "assets/ui/buttons/button-intermediate.png", 20),
+            DifficultyOption.HARD: Button(480, 282, 120, 44, "assets/ui/buttons/button-hard.png", 20),
         }
         self.placeholders = [
-            Placeholder(0, 0, 640, 360, "fondo", image_path="assets/backgrounds/menus/fondo-campo.png"),
-            Placeholder(110, 105, 420, 135, "titulo", image_path="assets/ui/titles/titulo-principal.png"),
+            Placeholder(0, 0, 640, 360, "assets/backgrounds/menus/fondo-campo.png"),
+            Placeholder(110, 105, 420, 135, "assets/ui/titles/titulo-principal.png"),
         ]
 
     def handle_event(self, event):
@@ -49,18 +42,17 @@ class DifficultyScene(Scene):
         option = list(self.buttons.keys())[self.selected_index]
 
         if option == DifficultyOption.EASY:
-            pass
+            self.scene_manager.change_scene(SceneType.TEAM)
         elif option == DifficultyOption.INTERMEDIATE:
-            pass
+            self.scene_manager.change_scene(SceneType.TEAM)
         elif option == DifficultyOption.HARD:
-            pass
+            self.scene_manager.change_scene(SceneType.TEAM)
 
     def draw(self, screen):
-        screen.fill((0, 0, 0))
-
         for placeholder in self.placeholders:
             placeholder.draw(screen)
 
         current_option = list(self.buttons.keys())[self.selected_index]
+        
         for option, button in self.buttons.items():
             button.draw(screen, option == current_option)

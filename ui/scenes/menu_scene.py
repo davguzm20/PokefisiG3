@@ -11,13 +11,33 @@ class MenuScene(Scene):
         super().__init__(scene_manager)
         self.selected_index = 0
         self.buttons = {
-            MenuOption.PLAY: Button(260, 282, 120, 44, "assets/ui/buttons/button-play.png", 20),
-            MenuOption.RANKING: Button(480, 282, 120, 44, "assets/ui/buttons/button-ranking.png", 20),
-            MenuOption.QUIT: Button(40, 282, 120, 44, "assets/ui/buttons/button-leave.png", 20),
+            MenuOption.PLAY: Button(
+                position_x=260, position_y=282,
+                width=120, height=44,
+                asset="assets/ui/buttons/button-play.png",
+            ),
+            MenuOption.RANKING: Button(
+                position_x=480, position_y=282,
+                width=120, height=44,
+                asset="assets/ui/buttons/button-ranking.png",
+            ),
+            MenuOption.QUIT: Button(
+                position_x=40, position_y=282,
+                width=120, height=44,
+                asset="assets/ui/buttons/button-leave.png",
+            ),
         }
         self.placeholders = [
-            Placeholder(0, 0, 640, 360, "assets/backgrounds/menus/fondo-campo.png"),
-            Placeholder(110, 105, 420, 135, "assets/ui/titles/titulo-principal.png"),
+            Placeholder(
+                position_x=0, position_y=0,
+                width=640, height=360,
+                asset="assets/backgrounds/menus/fondo-campo.png",
+            ),
+            Placeholder(
+                position_x=110, position_y=105,
+                width=420, height=135,
+                asset="assets/ui/titles/titulo-principal.png",
+            ),
         ]
 
     def handle_event(self, event):
@@ -40,7 +60,7 @@ class MenuScene(Scene):
         option = list(MenuOption)[self.selected_index]
 
         if option == MenuOption.PLAY:
-            self.scene_manager.change_scene(SceneType.DIFFICULTY)
+            self.scene_manager.change_scene(SceneType.MODE)
         elif option == MenuOption.RANKING:
             pass
         elif option == MenuOption.QUIT:

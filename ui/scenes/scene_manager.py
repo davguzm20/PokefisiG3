@@ -1,14 +1,20 @@
 import pygame
 from ui.scenes.enums.scene_type import SceneType
 from ui.scenes.menu_scene import MenuScene
+from ui.scenes.mode_scene import ModeScene
 from ui.scenes.dificulty_scene import DifficultyScene
 from ui.scenes.team_scene import TeamScene
 
 class SceneManager:
     def __init__(self, screen):
         self.screen = screen
+        self.juego = None
+        self.game_mode = None
+        self.current_ia_setup = 1
+        self.difficulty_config = {}
         self.scenes = {
             SceneType.MENU: MenuScene(self),
+            SceneType.MODE: ModeScene(self),
             SceneType.DIFFICULTY: DifficultyScene(self),
             SceneType.TEAM: TeamScene(self),
         }
@@ -27,7 +33,7 @@ class SceneManager:
         self.current_scene.draw(self.screen)
     
     @staticmethod
-    def run():
+    def run(juego=None):
         pygame.init()
         from config.settings import SCREEN_SIZE, CAPTION
         
@@ -35,6 +41,7 @@ class SceneManager:
         pygame.display.set_caption(CAPTION)
         
         manager = SceneManager(screen)
+        manager.juego = juego
         
         running = True
         while running:

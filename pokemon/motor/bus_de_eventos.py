@@ -10,7 +10,10 @@ class EventBus:
     def disparar(self, suscripcion, *args, **kwargs): #Publicar
         if suscripcion in self.suscripciones:
             for dirfuncion in self.suscripciones[suscripcion]:
-                dirfuncion(*args, **kwargs)
+                try:
+                    dirfuncion(*args, **kwargs)
+                except TypeError:
+                    dirfuncion()
 
     
     def escuchar(self, nombreSuscripcion, dirfuncion): #Suscribir

@@ -29,6 +29,7 @@ class Juego:
 
     def iniciar_en_bus_eventos(self):
         bus_de_eventos_global.escuchar("INICIAR_TURNO", self.iniciar_turno)
+        bus_de_eventos_global.escuchar("ESTABLECER_NUM_POKEMONES", self.set_num_pokemones)
         bus_de_eventos_global.escuchar("ESTABLECER_JUGADOR_COMO_IA", self.configurar_jugador_como_IA)
         bus_de_eventos_global.escuchar("ESTABLECER_JUGADOR_COMO_HUMANO", self.configurar_jugador_como_humano)
         bus_de_eventos_global.escuchar("INICIALIZAR_COMBATE", self.inicializar_combate)

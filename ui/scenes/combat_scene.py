@@ -15,6 +15,9 @@ class CombatScene(Scene):
         self.selected_index = 0
         self.showing_messages = False
         self._turn_count = 0
+        self._is_ai_vs_ai = getattr(scene_manager, 'game_mode', None) == "AIVSAI"
+        self._message_timer = 0
+        self._game_over = False
 
         self.combat_messages = []
         bus_de_eventos_global.escuchar("MENSAJE_COMBATE", self.combat_messages.append)
@@ -60,6 +63,9 @@ class CombatScene(Scene):
 
     def handle_event(self, event):
         if event.type == pygame.KEYDOWN:
+            if self._game_over:
+                return
+
             if self.showing_messages:
                 if event.key in Controls.SELECT.value:
                     if self.combat_messages:
@@ -91,6 +97,8 @@ class CombatScene(Scene):
                 self.scene_manager.change_scene(SceneType.MENU)
 
         elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+            if self._game_over:
+                return
             if self.showing_messages:
                 return
             for index, move_button in enumerate(self.move_buttons):
@@ -125,14 +133,42 @@ class CombatScene(Scene):
         self.selected_index = 0
 
     def select_move(self):
-        move = self.move_buttons[self.selected_index].move
         juego = self.scene_manager.juego
-        juego.iniciar_turno(accionP1=move)
+        if self._is_ai_vs_ai:
+            accion_P1, accion_P2 = juego.generar_acciones_IA()
+            for i, btn in enumerate(self.move_buttons):
+                if btn.move == accion_P1:
+                    self.selected_index = i
+                    break
+            game_over = juego.iniciar_turno(accionP1=accion_P1, accionP2=accion_P2)
+        else:
+            move = self.move_buttons[self.selected_index].move
+            game_over = juego.iniciar_turno(accionP1=move)
+        if game_over:
+            self._game_over = True
         self._turn_count += 1
         self.turn_placeholder.label = f"Turno {self._turn_count}"
+        self._message_timer = pygame.time.get_ticks() + 1500
         self.showing_messages = True
 
     def draw(self, screen):
+        if self._is_ai_vs_ai and not self._game_over:
+            if self.showing_messages:
+                if self._message_timer and pygame.time.get_ticks() >= self._message_timer:
+                    if self.combat_messages:
+                        self.combat_messages.pop(0)
+                        self._message_timer = pygame.time.get_ticks() + 1500
+                    if not self.combat_messages:
+                        self.showing_messages = False
+                        self._rebuild_pokemon_layout()
+                        self._rebuild_move_buttons()
+                        self._message_timer = pygame.time.get_ticks() + 1000
+            elif self._message_timer == 0:
+                self._message_timer = pygame.time.get_ticks() + 1000
+            elif pygame.time.get_ticks() >= self._message_timer:
+                self._message_timer = 0
+                self.select_move()
+
         for placeholder in self.placeholders:
             placeholder.draw(screen)
 
@@ -142,7 +178,7 @@ class CombatScene(Scene):
         for index, move_button in enumerate(self.move_buttons):
             move_button.draw(screen, is_selected=(index == self.selected_index))
 
-        if self.showing_messages and self.combat_messages:
+        if self.combat_messages and (self.showing_messages or self._game_over):
             self.move_description.label = self.combat_messages[0]
         else:
             self.move_description.label = ""

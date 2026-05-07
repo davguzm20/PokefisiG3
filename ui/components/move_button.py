@@ -38,7 +38,7 @@ class MoveButton(Button):
             f"assets/ui/move-class-icons/{self.move.damage_class.name.lower()}.png"
         )
 
-        text_font = Fonts.get_pixelify_sans(12)
+        text_font = Fonts.get_font(12)
         move_name_text = self.move.name.upper()
 
         name_text_surface = text_font.render(move_name_text, True, Colors.WHITE.value)

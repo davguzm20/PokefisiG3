@@ -36,7 +36,7 @@ class PokemonCard:
                 screen.blit(sprite, (center_x - 34, rect.y + 8))
 
             name = self.pokemon.name.capitalize()
-            font = Fonts.get_pixelify_sans(12)
+            font = Fonts.get_font(12)
 
             name_surface = font.render(name, True, Colors.WHITE.value)
             name_rect = name_surface.get_rect(centerx=center_x, y=rect.y + 37)

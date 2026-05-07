@@ -57,6 +57,9 @@ def calcular_daño(atacante, defensor, movimiento):
     multiplicador = obtener_multiplicador_tipos(movimiento.type, defensor.types, atacante.types)
 
     daño_final = daño_base*multiplicador
+    daño_final_str = f'{daño_final:.3f}'
+    daño_final = float(daño_final_str)
+
     return daño_final
 
 def establecer_vida(defensor, dañofinal):

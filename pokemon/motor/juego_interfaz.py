@@ -87,7 +87,7 @@ class Juego:
         if isinstance(self.jugador1,IA): tipo_P1 = 2
         if isinstance(self.jugador2,IA): tipo_P2 = 2
 
-        self.combate.ejecutar_turno(self.combate.estado_del_equipo.pokemonActivoP1, accion_P1, self.combate.estado_del_equipo.pokemonActivoP2, accion_P2, tipo_P1, tipo_P2)
+        self.combate.ejecutar_turno_ui(self.combate.estado_del_equipo.pokemonActivoP1, accion_P1, self.combate.estado_del_equipo.pokemonActivoP2, accion_P2, tipo_P1, tipo_P2)
         
         bus_de_eventos_global.disparar("TURNO_FINALIZADO", self.combate.estado_del_equipo)
 

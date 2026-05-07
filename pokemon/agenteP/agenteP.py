@@ -78,7 +78,7 @@ def elegirMovimientoAleatorio(movimientos):
 
     #Devuelve el pokemon activo de la IA, el pokemon activo del jugador, y sus HP respectivamente
     # dependiendo de qué lado controle la IA.
-def _resolver_lados(estado_juego, ia_side):
+def resolver_lados(estado_juego, ia_side):
     
     if ia_side == 2:
         return (
@@ -106,7 +106,7 @@ def heuristica_difHP(estado_juego, movimientos, ia_side=1):
         return None
 
     # Obtiene los pokémon activos y sus HP según qué lado controle la IA.
-    atacante, defensor, hp_ia, hp_player = _resolver_lados(estado_juego, ia_side)
+    atacante, defensor, hp_ia, hp_player = resolver_lados(estado_juego, ia_side)
     max_hp = max(hp_ia, hp_player, 1)
 
     mejor = None
@@ -119,13 +119,15 @@ def heuristica_difHP(estado_juego, movimientos, ia_side=1):
         dano_ia = calcular_daño(atacante, defensor, movimiento)
         hp_player_restante = max(0, hp_player - dano_ia)
 
-        # Si el ataque hace KO, es la mejor opción posible, así que le damos un mayor valor.
+        #Si es KO: Max prioridad
         if hp_player_restante == 0:
             valor = 2.0 + (hp_ia / max_hp)
         else:
-            # Si no hay KO, puntúa la ventaja de vida neta para la IA.
+            #Diferencia de HP favorables a la IA 
+            #  Si no hay KO, puntúa la ventaja de vida neta para la IA.
             valor = (hp_ia - hp_player_restante) / max_hp
 
+        #Actualiza mejor mov
         # Si el mov tiene valor mayor que el actual, se convierte en el mejor candidato.
         if valor > mejor_valor:
             mejor_valor = valor

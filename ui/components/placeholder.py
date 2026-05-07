@@ -32,7 +32,7 @@ class Placeholder:
             if loaded_asset:
                 screen.blit(loaded_asset, rect)
         
-        elif self.label:
+        if self.label:
             font = Fonts.get_pixelify_sans(self.text_size)
             text_surface = font.render(self.label, True, text_color)
             text_rect = text_surface.get_rect(center=rect.center)

@@ -104,6 +104,9 @@ for p in pokemones_disponibles:
 tipoP1, equipoP1, nivelP1 = configurar_entidad(1, pokemones_disponibles)
 tipoP2, equipoP2, nivelP2 = configurar_entidad(2, pokemones_disponibles)
 
+copia_equipoP1 = copy.deepcopy(equipoP1)
+copia_equipoP2 = copy.deepcopy(equipoP2)
+
 estado = EstadoJuego()
 estado.setEquipo(equipoP1, equipo=1) 
 estado.setEquipo(equipoP2, equipo=2) 
@@ -131,8 +134,24 @@ while True:
     motor.ejecutar_turno(motor.estado_del_equipo.pokemonActivoP1, accionP1, motor.estado_del_equipo.pokemonActivoP2, accionP2, tipoP1, tipoP2)
 
     if motor.verificar_ganador():
-        break
+        if motor.estado_del_equipo.conteo_vivos(2) == 0:
+            ganadas_P1 += 1
+
+        if motor.estado_del_equipo.conteo_vivos(1) == 0:
+            ganadas_P2 += 1
+
+        nuevo_estado = EstadoJuego()
+        nuevo_estado.setEquipo(copy.deepcopy(copia_equipoP1), equipo=1) 
+        nuevo_estado.setEquipo(copy.deepcopy(copia_equipoP2), equipo=2) 
+        motor = Combate(nuevo_estado) 
+        turno = 0 
+        ganadas += 1 
+
+        if ganadas == 20:
+            break
 
     
     turno += 1
 
+print(f'Win rate P1: {ganadas_P1/(ganadas_P1+ganadas_P2)*100}') 
+print(f'Win rate P2: {ganadas_P2/(ganadas_P1+ganadas_P2)*100}') 

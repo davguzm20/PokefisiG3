@@ -1,3 +1,4 @@
+from pokemon.motor.bus_de_eventos import bus_de_eventos_global
 
 class EstadoJuego:
     
@@ -9,6 +10,10 @@ class EstadoJuego:
     
     #La UI debería disparar el evento cuando el equipo es armado
     #Pasar una lista de pokemones. El equipo es 1 del jugador o 2 de la IA
+    def _emit(self, text):
+        print(text)
+        bus_de_eventos_global.disparar("MENSAJE_COMBATE", text)
+
     def setEquipo(self, pokemones, equipo=1):
         if (equipo == 1): 
             self.equipoP1 = pokemones 
@@ -35,6 +40,8 @@ class EstadoJuego:
             self.pokemonActivoP1 = equipo_objetivo[0]
         else:
             self.pokemonActivoP2 = equipo_objetivo[0]
+        
+        self._emit(f'El jugador {equipo}  envía a {equipo_objetivo[0].name}')
     
     def conteo_vivos(self, equipo=1):
         cuenta = 0

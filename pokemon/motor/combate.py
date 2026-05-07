@@ -94,7 +94,7 @@ class Combate:
                             return 
 
                         elegibles = self.estado_del_equipo.pokemonesElegibles(ctx["id_rival"])
-                        idx_nuevo = random.choice(elegibles)[0]
+                        idx_nuevo = elegibles[0][0]
                         self.estado_del_equipo.intercambiarPokemon(idx_nuevo, ctx["id_rival"])
                 else:
                     self._emit(f"¡{atacante.name} usó {accion.name}, que es un estado!")
@@ -102,7 +102,7 @@ class Combate:
             else:
                 self._emit(f"El entrenador del Equipo {ctx['id_propio']} retira a su Pokémon...")
                 elegibles = self.estado_del_equipo.pokemonesElegibles(ctx["id_propio"])
-                idx_nuevo = random.choice(elegibles)[0]
+                idx_nuevo = elegibles[0][0]
                 self.estado_del_equipo.intercambiarPokemon(idx_nuevo, ctx["id_propio"])
     
     def verificar_ganador(self):

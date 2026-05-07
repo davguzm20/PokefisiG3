@@ -18,6 +18,7 @@ class CombatScene(Scene):
         self._is_ai_vs_ai = getattr(scene_manager, 'game_mode', None) == "AIVSAI"
         self._message_timer = 0
         self._game_over = False
+        self._last_pop_time = 0
 
         self.combat_messages = []
         bus_de_eventos_global.escuchar("MENSAJE_COMBATE", self.combat_messages.append)
@@ -64,10 +65,19 @@ class CombatScene(Scene):
     def handle_event(self, event):
         if event.type == pygame.KEYDOWN:
             if self._game_over:
+                if event.key in Controls.SELECT.value and len(self.combat_messages) > 1:
+                    now = pygame.time.get_ticks()
+                    if now - self._last_pop_time > 500:
+                        self.combat_messages.pop(0)
+                        self._last_pop_time = now
                 return
 
             if self.showing_messages:
                 if event.key in Controls.SELECT.value:
+                    now = pygame.time.get_ticks()
+                    if now - self._last_pop_time < 500:
+                        return
+                    self._last_pop_time = now
                     if self.combat_messages:
                         self.combat_messages.pop(0)
                     if not self.combat_messages:
@@ -153,22 +163,20 @@ class CombatScene(Scene):
         self.showing_messages = True
 
     def draw(self, screen):
-        if self._is_ai_vs_ai and not self._game_over:
+        if self._is_ai_vs_ai:
             if self.showing_messages:
-                if self._message_timer and pygame.time.get_ticks() >= self._message_timer:
-                    if self.combat_messages:
-                        self.combat_messages.pop(0)
-                        self._message_timer = pygame.time.get_ticks() + 1500
-                    if not self.combat_messages:
-                        self.showing_messages = False
-                        self._rebuild_pokemon_layout()
-                        self._rebuild_move_buttons()
-                        self._message_timer = pygame.time.get_ticks() + 1000
-            elif self._message_timer == 0:
-                self._message_timer = pygame.time.get_ticks() + 1000
-            elif pygame.time.get_ticks() >= self._message_timer:
-                self._message_timer = 0
-                self.select_move()
+                if len(self.combat_messages) > 1 and self._message_timer and pygame.time.get_ticks() >= self._message_timer:
+                    self.combat_messages.pop(0)
+                    self._message_timer = pygame.time.get_ticks() + 1500
+                elif not self.combat_messages:
+                    self.showing_messages = False
+                    self._message_timer = pygame.time.get_ticks() + 1000
+            elif not self._game_over:
+                if self._message_timer == 0:
+                    self._message_timer = pygame.time.get_ticks() + 1000
+                elif pygame.time.get_ticks() >= self._message_timer:
+                    self._message_timer = 0
+                    self.select_move()
 
         for placeholder in self.placeholders:
             placeholder.draw(screen)
@@ -179,8 +187,8 @@ class CombatScene(Scene):
         for index, move_button in enumerate(self.move_buttons):
             move_button.draw(screen, is_selected=(index == self.selected_index))
 
-        if self.combat_messages and (self.showing_messages or self._game_over):
-            self.move_description.label = self.combat_messages[-1 if self._game_over else 0]
+        if self.combat_messages:
+            self.move_description.label = self.combat_messages[0]
         else:
             self.move_description.label = ""
         self.move_description.draw(screen)

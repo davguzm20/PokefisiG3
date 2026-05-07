@@ -12,7 +12,7 @@ class MoveButton(Button):
 
     def __init__(self, position_x: int, position_y: int, move: Move,
                  on_click=None, selected_color: Colors = Colors.GOLD,
-                 border_size: int = 2):
+                 border_size: int = 3):
         super().__init__(
             position_x=position_x,
             position_y=position_y,

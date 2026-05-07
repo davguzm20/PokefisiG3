@@ -17,6 +17,10 @@ class PokemonLayout:
         self.frame_index = 0
         self.last_frame_time = 0
 
+    def rebuild(self):
+        self.frames = []
+        self.frame_index = 0
+
     def draw(self, screen):
         if self.pokemon:
             if not self.frames:

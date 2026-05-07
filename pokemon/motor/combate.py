@@ -6,13 +6,15 @@ from pokemon.motor.estado_juego import EstadoJuego
 from pokemon.enums.damage_class import DamageClass
 from pokemon.motor.bus_de_eventos import bus_de_eventos_global
 
-
 class Combate:
     estado_del_equipo = None
 
     def __init__(self, estado_juego):
         self.estado_del_equipo = estado_juego
     
+    def _emit(self, text):
+        print(text)
+        bus_de_eventos_global.disparar("MENSAJE_COMBATE", text)
 
     def elegir_intercambio(self, elegibles):
         for i, (idx_real, pokemon) in enumerate(elegibles):
@@ -141,40 +143,28 @@ class Combate:
             if isinstance(accion, Move):
                 if accion.damage_class != DamageClass.STATUS:
                     daño = calcular_daño(atacante, defensor, accion)
-                    print(f"¡{atacante.name} usa {accion.name}!")
-                    print(f"Hace {daño} de daño a {defensor.name}")
+                    self._emit(f"¡{atacante.name} usa {accion.name}!")
+                    self._emit(f"Hace {daño} de daño a {defensor.name}")
                     
                     nueva_vida_rival = establecer_vida(defensor, daño)
 
                     if nueva_vida_rival <= 0:
-                        print(f"¡{defensor.name} se ha debilitado!")
+                        self._emit(f"¡{defensor.name} se ha debilitado!")
                         
                         #Si se queda sin pokemones el rival tras mi turno
                         if self.estado_del_equipo.conteo_vivos(ctx["id_rival"]) == 0:
                             return 
 
                         elegibles = self.estado_del_equipo.pokemonesElegibles(ctx["id_rival"])
-                        
-                        if ctx["tipo_rival"] == 1: # Humano
-                            idx_nuevo = self.elegir_intercambio(elegibles)
-                        else: # IA
-                            idx_nuevo = random.choice(elegibles)[0]
-                        
+                        idx_nuevo = elegibles[0][0]
                         self.estado_del_equipo.intercambiarPokemon(idx_nuevo, ctx["id_rival"])
                 else:
-                    print(f"¡{atacante.name} usó {accion.name}, que es un estado!")
+                    self._emit(f"¡{atacante.name} usó {accion.name}, que es un estado!")
             
             else:
-                print(f"El entrenador del Equipo {ctx['id_propio']} retira a su Pokémon...")
+                self._emit(f"El entrenador del Equipo {ctx['id_propio']} retira a su Pokémon...")
                 elegibles = self.estado_del_equipo.pokemonesElegibles(ctx["id_propio"])
-                
-                tipo_jugador = tipoP1 if ctx["id_propio"] == 1 else tipoP2
-                
-                if tipo_jugador == 1:
-                    idx_nuevo = self.elegir_intercambio(elegibles)
-                else:
-                    idx_nuevo = random.choice(elegibles)[0]
-                
+                idx_nuevo = elegibles[0][0]
                 self.estado_del_equipo.intercambiarPokemon(idx_nuevo, ctx["id_propio"])
     
     def verificar_ganador(self):
@@ -183,10 +173,10 @@ class Combate:
             estado_juego = self.estado_del_equipo
         
         if estado_juego.conteo_vivos(2) == 0:
-            print("El jugador gana")
+            self._emit("El jugador gana")
             return True
         elif estado_juego.conteo_vivos(1) == 0:
-            print("El oponente gana")
+            self._emit("El oponente gana")
             return True
 
         return False

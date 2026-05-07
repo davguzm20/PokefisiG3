@@ -39,6 +39,7 @@ def movimiento_en_base_a_mayor_daño(pokemonActivoP1, pokemonActivoP2, movimient
 #Ej. Agente de nivel 1 con heuristica de daño. 
 #La IA elige retirarse dada *una condicion aun mejorable* o atacar con el mayor daño que puede hacer
 def movimiento_en_base_a_difHP_generada(estado_juego, movimientos, agenteP):
+
     if isinstance(agenteP, AgenteP) and isinstance(estado_juego, EstadoJuego):
         movimiento_mas_fuerte_IA = movimiento_en_base_a_mayor_daño(estado_juego.pokemonActivoP1, estado_juego.pokemonActivoP2, movimientos)
         movimiento_mas_fuerte_Player = movimiento_en_base_a_mayor_daño(estado_juego.pokemonActivoP2, estado_juego.pokemonActivoP1, agenteP.conocimiento[estado_juego.pokemonActivoP1])
@@ -46,6 +47,7 @@ def movimiento_en_base_a_difHP_generada(estado_juego, movimientos, agenteP):
         hpRestante = estado_juego.pokemonActivoP2.hp - movimiento_mas_fuerte_Player[0]
 
         if hpRestante < estado_juego.pokemonActivoP1.hp - movimiento_mas_fuerte_IA[0] and hpRestante <= 0:
+            estado_juego.pokemonesElegibles()
             estado_juego.intercambiarPokemon(1,2)
         
     return movimiento_mas_fuerte_IA[1]

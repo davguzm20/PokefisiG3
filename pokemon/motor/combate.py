@@ -57,6 +57,18 @@ class Combate:
             if rng == 1: return [0, 1]
             else: return [1, 0]
 
+    def resolver_intercambio(self, ctx):
+        print(ctx)
+        elegibles = self.estado_del_equipo.pokemonesElegibles(ctx["id_rival"])
+
+        if ctx["tipo_rival"] == 1: # Humano
+            idx_nuevo = random.choice(elegibles)[0]
+            #idx_nuevo = bus_de_eventos_global.disparar("ELEGIR_INTERCAMBIO", elegibles, ctx["tipo_rival"])
+        else: # IA
+            idx_nuevo = random.choice(elegibles)[0]
+        
+        self.estado_del_equipo.intercambiarPokemon(idx_nuevo, ctx["id_rival"])
+
     def ejecutar_turno_ui(self, pokemonP1, accionElegidaP1, pokemonP2, accionElegidaP2, tipoP1, tipoP2):
         orden = self.ordenar_acciones(pokemonP1, accionElegidaP1, pokemonP2, accionElegidaP2)
 
@@ -64,16 +76,18 @@ class Combate:
             0: {"id_player": 1, "id_rival": 2, "accion": accionElegidaP1, "tipo_rival": tipoP2},
             1: {"id_player": 2, "id_rival": 1, "accion": accionElegidaP2, "tipo_rival": tipoP1}
         }
+        pokemonDesvanecido = False
 
         for indice in orden:
+
             ctx = contexto[indice]
-            
+            print(f"Estoy en el turno de {ctx["id_player"]}")            
+            #Si el pokemon se desvaneció por el turno anterior
+            if pokemonDesvanecido: 
+                return
+
             atacante = self.estado_del_equipo.pokemonActivoP1 if ctx["id_player"] == 1 else self.estado_del_equipo.pokemonActivoP2
             defensor = self.estado_del_equipo.pokemonActivoP2 if ctx["id_player"] == 1 else self.estado_del_equipo.pokemonActivoP1
-            
-            # Si el atacante muere pierde su turno, pero sigue iterando
-            if atacante is None or atacante.hp <= 0:
-                continue 
 
             accion = ctx["accion"]
 
@@ -88,29 +102,36 @@ class Combate:
                     
                     nueva_vida_rival = establecer_vida(defensor, daño)
 
-                    if nueva_vida_rival <= 0:
+                    if nueva_vida_rival <= 0 :
                         self._emit(f"¡{defensor.name} se ha debilitado!")
-                        
-                        #Si el rival se queda sin pokemones tras el turno ya no hace falta seguir ejecutando movimientos
-                        if self.estado_del_equipo.conteo_vivos(ctx["id_rival"]) == 0:
-                            return 
-                        
-                        #De otra manera tiene que elegir un pokemon de reemplazo
-                        elegibles = self.estado_del_equipo.pokemonesElegibles(ctx["id_rival"])
-                        idx_nuevo = elegibles[0][0]
-                        self.estado_del_equipo.intercambiarPokemon(idx_nuevo, ctx["id_rival"])
+                        pokemonDesvanecido = True
+
+                        self.resolver_intercambio(ctx)
+
+                    #Si el rival se queda sin pokemones tras el turno ya no hace falta seguir ejecutando movimiento
+                    if self.estado_del_equipo.conteo_vivos(ctx["id_rival"]) == 0:
+                        return   
+                               
                 else:
                     self._emit(f"¡{atacante.name} usó {accion.name}, que es un estado!")
             
             else:
                 self._emit(f"El entrenador del Equipo {ctx['id_player']} retira a su Pokémon...")
                 elegibles = self.estado_del_equipo.pokemonesElegibles(ctx["id_player"])
-                idx_nuevo = elegibles[0][0]
+                tipo_player = tipoP1 if ctx["id_player"] == 1 else tipoP2
+                
+                if tipo_player == 1:
+                    idx_nuevo = random.choice(elegibles)[0]
+                    #idx_nuevo = bus_de_eventos_global.disparar("ELEGIR_INTERCAMBIO", elegibles, tipo_player)
+                else:
+                    idx_nuevo = random.choice(elegibles)[0]
+                
                 self.estado_del_equipo.intercambiarPokemon(idx_nuevo, ctx["id_player"])
     
     #Esto debería disparar eventos a la interfaz y devolver un nuevo estado. Los parametros entregarlos de estado_juego
     def ejecutar_turno(self, pokemonP1, accionElegidaP1, pokemonP2, accionElegidaP2, tipoP1, tipoP2):
         orden = self.ordenar_acciones(pokemonP1, accionElegidaP1, pokemonP2, accionElegidaP2)
+        
         
         contexto = {
             0: {"id_propio": 1, "id_rival": 2, "accion": accionElegidaP1, "tipo_rival": tipoP2},
@@ -144,7 +165,13 @@ class Combate:
                             return 
 
                         elegibles = self.estado_del_equipo.pokemonesElegibles(ctx["id_rival"])
-                        idx_nuevo = elegibles[0][0]
+                        
+                        if ctx["tipo_rival"] == 1: # Humano
+                            idx_nuevo = random.choice(elegibles)[0]
+                            #idx_nuevo = bus_de_eventos_global.disparar("ELEGIR_INTERCAMBIO", elegibles, ctx["tipo_rival"])
+                        else: # IA
+                            idx_nuevo = random.choice(elegibles)[0]
+                        
                         self.estado_del_equipo.intercambiarPokemon(idx_nuevo, ctx["id_rival"])
                 else:
                     self._emit(f"¡{atacante.name} usó {accion.name}, que es un estado!")
@@ -152,8 +179,16 @@ class Combate:
             else:
                 self._emit(f"El entrenador del Equipo {ctx['id_propio']} retira a su Pokémon...")
                 elegibles = self.estado_del_equipo.pokemonesElegibles(ctx["id_propio"])
-                idx_nuevo = elegibles[0][0]
-                self.estado_del_equipo.intercambiarPokemon(idx_nuevo, ctx["id_propio"])
+                
+                tipo_player = tipoP1 if ctx["id_player"] == 1 else tipoP2
+                
+                if tipo_player == 1:
+                    idx_nuevo = random.choice(elegibles)[0]
+                    #idx_nuevo = bus_de_eventos_global.disparar("ELEGIR_INTERCAMBIO", elegibles, tipo_player)
+                else:
+                    idx_nuevo = random.choice(elegibles)[0]
+                
+                self.estado_del_equipo.intercambiarPokemon(idx_nuevo, ctx["id_player"])
     
     def verificar_ganador(self):
         estado_juego = None

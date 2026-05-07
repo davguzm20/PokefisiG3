@@ -2,7 +2,7 @@ import pygame
 from ui.scenes.enums.scene_type import SceneType
 from ui.scenes.menu_scene import MenuScene
 from ui.scenes.mode_scene import ModeScene
-from ui.scenes.dificulty_scene import DifficultyScene
+from ui.scenes.difficulty_scene import DifficultyScene
 from ui.scenes.team_scene import TeamScene
 from ui.scenes.combat_scene import CombatScene
 
@@ -18,12 +18,14 @@ class SceneManager:
             SceneType.MODE: ModeScene(self),
             SceneType.DIFFICULTY: DifficultyScene(self),
             SceneType.TEAM: TeamScene(self),
-            SceneType.COMBAT: CombatScene(self),
         }
         self.current_scene = self.scenes[SceneType.MENU]
 
     def change_scene(self, scene_type: SceneType):
-        self.current_scene = self.scenes[scene_type]
+        if scene_type == SceneType.COMBAT:
+            self.current_scene = CombatScene(self)
+        else:
+            self.current_scene = self.scenes[scene_type]
 
     def handle_event(self, event):
         self.current_scene.handle_event(event)

@@ -57,7 +57,7 @@ class TeamScene(Scene):
 
         return cards
 
-    def confirmar_equipo(self):
+    def confirm_team(self):
         bus_de_eventos_global.disparar("ESTABLECER_NUM_POKEMONES", 4)
         bus_de_eventos_global.disparar("ESTABLECER_JUGADOR_COMO_HUMANO", 1, self.team_pokemons)
         bus_de_eventos_global.disparar("ESTABLECER_JUGADOR_COMO_IA", 2, self.scene_manager.difficulty_config[2], PokemonFactory.pokemons)
@@ -94,7 +94,7 @@ class TeamScene(Scene):
 
                 if all(self.team_pokemons) and self.continue_button.is_selected(event.pos):
                     self.selected_index = 4
-                    self.confirmar_equipo()
+                    self.confirm_team()
                     return
 
         if event.type == pygame.KEYDOWN:
@@ -114,7 +114,7 @@ class TeamScene(Scene):
                             self.selected_slot = self.selected_index
                             self.on_grid = True
                     else:
-                        self.confirmar_equipo()
+                        self.confirm_team()
 
                 elif event.key in Controls.BACK.value:
                     self.scene_manager.change_scene(SceneType.DIFFICULTY)

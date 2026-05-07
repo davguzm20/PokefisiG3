@@ -58,7 +58,9 @@ class Combate:
             else: return [1, 0]
 
     def resolver_intercambio(self, ctx):
-        print(ctx)
+        if self.estado_del_equipo.conteo_vivos(ctx["id_rival"]) == 0:
+            return 
+        
         elegibles = self.estado_del_equipo.pokemonesElegibles(ctx["id_rival"])
 
         if ctx["tipo_rival"] == 1: # Humano

@@ -134,6 +134,7 @@ class CombatScene(Scene):
 
     def select_move(self):
         juego = self.scene_manager.juego
+        self.combat_messages.clear()
         if self._is_ai_vs_ai:
             accion_P1, accion_P2 = juego.generar_acciones_IA()
             for i, btn in enumerate(self.move_buttons):
@@ -179,7 +180,7 @@ class CombatScene(Scene):
             move_button.draw(screen, is_selected=(index == self.selected_index))
 
         if self.combat_messages and (self.showing_messages or self._game_over):
-            self.move_description.label = self.combat_messages[0]
+            self.move_description.label = self.combat_messages[-1 if self._game_over else 0]
         else:
             self.move_description.label = ""
         self.move_description.draw(screen)

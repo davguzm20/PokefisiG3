@@ -46,7 +46,7 @@ def calcular_daño(atacante, defensor, movimiento):
         defensa = defensor.special_defense
 
     poder = movimiento.power
-    nivel = 75  #Esto podría ponerse en otro lugar
+    nivel = 50  #Esto podría ponerse en otro lugar
     
     if not poder: #Pequeño parche para evitar por el momento que un movimiento de status trabe el programa
         poder = 0 

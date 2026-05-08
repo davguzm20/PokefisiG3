@@ -78,7 +78,7 @@ def elegirMovimientoAleatorio(movimientos):
 
     #Devuelve el pokemon activo de la IA, el pokemon activo del jugador, y sus HP respectivamente
     # dependiendo de qué lado controle la IA.
-def _resolver_lados(estado_juego, ia_side):
+def resolver_lados(estado_juego, ia_side):
     
     if ia_side == 2:
         return (
@@ -106,7 +106,7 @@ def heuristica_difHP(estado_juego, movimientos, ia_side=1):
         return None
 
     # Obtiene los pokémon activos y sus HP según qué lado controle la IA.
-    atacante, defensor, hp_ia, hp_player = _resolver_lados(estado_juego, ia_side)
+    atacante, defensor, hp_ia, hp_player = resolver_lados(estado_juego, ia_side)
     max_hp = max(hp_ia, hp_player, 1)
 
     mejor = None

@@ -7,6 +7,8 @@ class EstadoJuego:
         self.equipoP2 = []        
         self.pokemonActivoP1 = None
         self.pokemonActivoP2 = None
+        self.estado_anterior = None
+        self.operador = None
     
     #La UI debería disparar el evento cuando el equipo es armado
     #Pasar una lista de pokemones. El equipo es 1 del jugador o 2 de la IA

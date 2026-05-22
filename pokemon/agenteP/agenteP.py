@@ -140,48 +140,8 @@ def heuristica_avanzada(estado_juego, movimiento, pesos):
     )
 
 
-def tasa_de_especialización(pokemon_lado_ia, pokemon_lado_oponente):
-
-    if not isinstance(pokemon_lado_oponente, Pokemon) and not isinstance(pokemon_lado_ia, Pokemon):
-        return
-    
-    spec_oponente = pokemon_lado_oponente.attack - pokemon_lado_oponente.special_attack
-    spec_def_oponente = pokemon_lado_oponente.defense - pokemon_lado_oponente.special_defense
-    
-    spec_def_ia = pokemon_lado_ia.defense - pokemon_lado_ia.special_defense
-    spec_ia = pokemon_lado_ia.attack - pokemon_lado_ia.special_attack
-
-    ##Si sale negativo se especializa en fisico, si no en especial. ¿Pero qué tanto se especializa?
-    
-    magnitud_de_especializacion_oponente = spec_oponente/ ( pokemon_lado_oponente.attack + pokemon_lado_oponente.special_attack) #¿Por qué la suma de ambos?
-
-    #Si el ataque fisico del oponente es *magnitud* mayor que mi defensa fisica, significa que soy debil ante él. ¿Pero qué tan débil?
-    
-
-    return
-
-
-
-
 def funcion_heuristica_avanzada(estado_juego, estado_anterior, movimiento, pesos, lado_ia):
     
-    # Para hacer una heuristica necesito saber información de un estado que me ayude a evaluar qué tan cerca estoy de una meta
-    # En este caso nuestra meta sería obtener un estado donde el oponente 
-
-    # Esto será implementado con minimax
-    # Ya que es una función de utilidad que será usada con algoritmo evolutivo los valores que devuelva deben ser de 0 a 1
-    
-    # Necesito: definir heuristicas, evaluar el estado en base a ellas, y cuantificar eso en un rango de 0 a 1
-
-    # Heurística 1: Si soy suficientemente rápido para pegar este movimiento que sería letal, lo mejor es atacar
-    
-    # Heurística 2: Si mi pokemon es capaz de resistir bastante bien los ataques del pokemon oponente no hace falta cambiar. 
-    # Si es al revés hace falta buscar un pokemon que sea capaz de resistir los ataques del oponente
-    
-    # Generalmente los pokemones se especializan en fisico, magico, y a veces balanceados. Puedo evaluar eso con una tasa de especialización. Tasa de especialización en defensa y ataque
-    # Mientras mayor diferencia haya entre su tipo de daño especializado y mi defensa que lo soporta más riesgo hay
-    
-    # Una mayor tasa de especialización
 
     ant_pokemon_lado_ia, ant_pokemon_lado_oponente, ant_hp_poke_ia, ant_hp_poke_oponente = resolver_lados(estado_anterior, lado_ia)
     pokemon_lado_ia, pokemon_lado_oponente, hp_poke_ia, hp_poke_oponente = resolver_lados(estado_juego, lado_ia)
@@ -189,9 +149,9 @@ def funcion_heuristica_avanzada(estado_juego, estado_anterior, movimiento, pesos
 
     # Normalizar cada componente entre 0 y 1
     if isinstance(estado_juego, EstadoJuego):
-        danio_hecho = ant_hp_poke_oponente - hp_poke_oponente ## Puedo hacer tanto daño con el operador que me llevó a este estado
-        danio_recibido = ant_hp_poke_ia - hp_poke_ia ## Puedo resistir tanto daño con la acción del oponente que me llevó a este estado
-        velocidad = (pokemon_lado_ia.speed - pokemon_lado_oponente.speed) / max(pokemon_lado_ia.speed + pokemon_lado_oponente.speed, 1) ## Ejecutar mis acciones más rapido que el oponente me da cierta magnitud de ventaja. Qué es una magnitud mayor cuando el oponente esta bajo de vida
+        danio_hecho = ant_hp_poke_oponente - hp_poke_oponente
+        danio_recibido = ant_hp_poke_ia - hp_poke_ia 
+        velocidad = (pokemon_lado_ia.speed - pokemon_lado_oponente.speed) / max(pokemon_lado_ia.speed + pokemon_lado_oponente.speed, 1)
 
         hp_ratio = (hp_poke_ia - hp_poke_oponente) / max(hp_poke_ia + hp_poke_oponente, 1) 
         ventaja_tipo_movimiento = obtener_multiplicador_tipos(movimiento, pokemon_lado_ia, pokemon_lado_oponente)
@@ -317,117 +277,6 @@ def generar_sucesores(estado_juego, lado_ia):
 
     return sucesores
 
-#Retorna si el nodo debe ser podado o no
-def poda_alfa_beta(nodo): #Un padre visita las hojas y actualiza
-    if not isinstance(nodo, Nodo):
-        return
-    
-    if not nodo.padre: return False
-    # Al principio, los nodos no tienen ni alfa ni beta. Los valores de alfa y beta se van heredando de los padres
-    if not nodo.alfa: nodo.alfa = nodo.padre.alfa
-    if not nodo.beta: nodo.beta = nodo.padre.beta
-
-    #Pero lo principal en la poda es obtener el puntaje asociado a un nodo dependiendo de si el turno es de Min o Max
-    #En este caso las hojas actualizan al padre, entonces el turno actual es el del padre
-    if nodo.puntaje:
-        if nodo.padre.turnoDeMax: #Max elegirá el mayor valor disponible, reemplazará a alfa
-            if nodo.puntaje > nodo.padre.alfa:
-                nodo.padre.alfa = nodo.puntaje
-                print(f'AAAAAAAAAAAAAAAAAAAAAAAAAAAA {nodo.operador}')
-                mejor_movimiento = nodo.operador
-                if nodo.padre.profundidad == 0:
-                    mejor_movimiento = nodo.operador
-                    print(mejor_movimiento)
-                    
-            if nodo.padre.alfa >= nodo.padre.beta:
-                return True
-        elif not nodo.padre.turnoDeMax:
-            if nodo.puntaje < nodo.padre.beta:
-                mejor_movimiento = nodo.operador
-                print(f'AAAAAAAAAAAAAAAAAAAAAAAAAAAA {nodo.operador}')
-                nodo.padre.beta = nodo.puntaje
-
-            if nodo.padre.beta <= nodo.padre.alfa:
-                return True
-    
-    return False
-
-def Mini_Max(estado_juego, profundidad, lado_ia):
-
-    pila = []
-    nodo_estado = Nodo(estado_juego, 0)
-
-    lado_max = lado_ia
-    lado_min = 2 if lado_ia == 1 else 1
-    pila.append(nodo_estado)
-    
-    alfa = -float('inf') #No puede disminuir
-    beta = float('inf') #No puede aumentar 
-    nodo_estado.alfa = alfa
-    nodo_estado.beta = beta
-
-    while pila:
-        #Esto es una búsqueda, solo que en un caso es turno de Max y en otro de Min, y además no se siguen generando hijos hasta cierta profundidad
-        print(f'Nueva pila: {pila}')
-        nodo_actual = pila.pop()
-        estado_actual = nodo_actual.estado
-
-        #(3)... Los estados visitados deben ser podados dependiendo del puntaje y si el turno es de Min o Max
-        fue_podado = poda_alfa_beta(nodo_actual)
-        if fue_podado:
-            while pila and pila[-1].padre == nodo_actual.padre:
-                pila.pop()
-            continue
-
-        #()Los estados generados dependen de si un turno es de Min o Max
-        lado_actual = lado_max if nodo_actual.turnoDeMax else lado_min
-
-        if nodo_actual.turnoDeMax: print("========================= Es turno de Max =======================")
-        else: print("========================= Es turno de Min =======================")
-
-        print(f'Se tomó un elemento de la pila: {nodo_actual}')
-        #Entonces generar sucesores depende de si el equipo es de min o max, información que brinda lado_actual
-        sucesores = generar_sucesores(estado_actual, lado_actual)
-
-        #(2)... (Backtracking) Necesito volver a visitar al padre después de haber visitado los sucesores para poder seguir el proceso de MiniMax y poda. Entonces lo pondré en la pila. Saldrá al final de los sucesores por ser LIFO
-        if nodo_actual.sucesores_no_generados and nodo_actual.profundidad != profundidad: 
-            pila.append(nodo_actual)
-        
-        #Se va generando un arbol en base a min y a max. Donde los sucesores están encapsulados en un nodo que permite generar el arbol correctamente
-        if nodo_actual.profundidad != profundidad and nodo_actual.sucesores_no_generados:
-            nodo_actual.sucesores_no_generados = False
-            for sucesor in sucesores:
-                print(sucesor.equipoP1[0].name)
-                nodo_sucesor = Nodo(sucesor, nodo_actual.profundidad + 1, not nodo_actual.turnoDeMax)
-                
-                nodo_sucesor.padre = nodo_actual #Apunto al padre porque necesito actualizar los puntajes y accederlos. No se guardan en la pila una vez se generaron los sucesores.
-
-                pila.append(nodo_sucesor)
-        
-        
-        #Aquí se califica el estado. Calificar el estado permitirá que cuando se visite un nodo este pueda ser podado
-        if nodo_actual.profundidad == profundidad: #Solo las hojas son calificadas
-
-            nodo_actual.puntaje = heuristica_avanzada(estado_actual, estado_actual.operador, pesos_mock)
-            print(f"califique este estado con {nodo_actual.puntaje}")
-        
-        #Cómo se supone que devuelva el movimiento? (2)..
-        
-    if nodo_actual.profundidad == 0 and not nodo_actual.sucesores_no_generados:
-            print(f'El mejor movimiento es: {mejor_movimiento}')
-            return mejor_movimiento
-    return None
-
-
-
-def poda_alfa_betav2(nodo):
-    if not isinstance(nodo, Nodo):
-        return 
-
-
-    return 0
-
-
 class NodoV2:
     def __init__(self, estado = None, padre = None, turnoMax = True, profundidad = 0):
         self.altura = 0 #No se esta usando
@@ -438,6 +287,13 @@ class NodoV2:
         self.puntaje = None
         self.hijos = None
         self.operador = None
+        self.hijo_escogido = None
+        self.alfa = -float('inf')
+        self.beta = float('inf')
+        self.hay_poda = False
+
+
+##### ==================== La siguiente es una versión de minimax sin poda. Es más facil de explicar que el de arriba. Y en caso se quiera rehacer el mini_max con poda se puede partir de aquí
 
 def evaluarminmax(hijos, turnoMax):
     
@@ -452,16 +308,16 @@ def evaluarminmax(hijos, turnoMax):
         if turnoMax:
             if hijo.puntaje > valMax:
                 valMax = hijo.puntaje
-                hijoMax = hijo.estado
+                hijoMax = hijo.estado.operador
         else:
             if hijo.puntaje < valMin:
                 valMin = hijo.puntaje
-                hijoMin = hijo.estado
+                hijoMin = hijo.estado.operador
 
     return [(hijoMax,valMax),(hijoMin,valMin)]
-        
 
-def minimax(nodo, profundidad, lado_ia):
+## Siempre terminar con turno de Max, osea profundidad debe ser multiplo de 2
+def minimax2(nodo, profundidad, lado_ia):
     if not isinstance(nodo, NodoV2):
         raise Exception("El parametro debe ser una instancia de Nodo")
     
@@ -481,14 +337,15 @@ def minimax(nodo, profundidad, lado_ia):
         estado_actual = nodo_actual.estado ###
         if not isinstance(estado_actual, EstadoJuego): raise Exception("El valor contenido en el nodo no es un estado")
 
-        lado_actual = lado_max if nodo.turnoMax else lado_min
+        lado_actual = lado_max if nodo_actual.turnoMax else lado_min
         if nodo_actual.turnoMax: print("========================= Es turno de Max =======================")
         else: print("========================= Es turno de Min =======================")
         
 
-        # ====== (2) .. Cuando se vuelva al padre despues de puntuar sus hijos (y que existan) es el momento de elegir Min_Max
+        # ====== (2) .. Cuando se vuelva al padre despues de puntuar sus hijos (y que existan) es el momento de elegir Min_Max para uno de los padres. Es como si ya hubieran visto a (todos) sus hijos
         if nodo_actual.profundidad != profundidad and nodo_actual.hijos:
-            
+
+            #(3)... En este punto un arbol suficiente para hacer poda habría sido generado, para que sea más facil de implementar se guardó a los hijos
             indice_hijo_elegido = 0 if nodo_actual.turnoMax else 1
             hijo_elegido = evaluarminmax(nodo_actual.hijos, nodo_actual.turnoMax)
             
@@ -496,13 +353,13 @@ def minimax(nodo, profundidad, lado_ia):
             nodo_actual.operador = hijo_elegido[indice_hijo_elegido][0].operador
 
 
-        # ====== Se va generando sucesores solo si el nodo no es una hoja. En este caso eso depende de: la profundidad del nodo actual es la maxima, o si en este nodo el estado devuelve un juego terminado
+        # ====== Se va generando sucesores solo si el nodo no es una hoja. En este caso eso depende de: la profundidad del nodo actual es la maxima, o si en este nodo el estado devuelve un juego terminado (Esto último falta programarlo)
         print(f"Profundidad de: {nodo_actual.profundidad}")
         if nodo_actual.profundidad != profundidad and not nodo_actual.hijos:
             sucesores = generar_sucesores(estado_actual, lado_actual)
             hijos = []
 
-            #El nodo actual debe de apilarse para volver a él y poder elegir de sus hijos
+            #El nodo actual debe de apilarse para volver a él y poder elegir de sus hijos el puntaje que corresponda
             nodo_actual.hijos = hijos
             pila.append(nodo_actual)  
 
@@ -520,16 +377,299 @@ def minimax(nodo, profundidad, lado_ia):
 
         # ====== Las hojas se puntuan
         if nodo_actual.profundidad == profundidad:
-            
+
             nodo_actual.puntaje = heuristica_avanzada(estado_actual, estado_actual.operador, pesos_mock)
             print(f'Puntaje de {nodo_actual.puntaje} realizando: {estado_actual.operador}')
 
+        # ====== (2) .. Retorna el mejor movimiento. El nodo raiz solo tendrá operador cuando haya llegado al final de min_max
         if nodo_actual.profundidad == 0 and nodo_actual.operador:
             print(f'Con un puntaje de {nodo_actual.puntaje}')
+
             if nodo_actual.operador["movimiento"]:
                 print(f'El movimiento elegido es: {nodo_actual.operador["movimiento"].name}')
             if nodo_actual.operador["intercambio"]:
                 print(f'Se hizo un intercambio con: {nodo_actual.operador["intercambio"]}')
-            
 
+
+# ============================ Mini max con poda ======================================
+
+#(2) .. La profundidad nos sirve para identificar si los hijos del padre serán hojas. Si son hojas tienen que ser puntuados. Y si son puntuados, a medida que se van generando los hijos se debe ir comprobando si hay poda.
+def generar_sucesores_V2(padre, lado_ia, profundidad):
+
+    if not isinstance(padre, NodoV2):
+        print("padre debe ser instacia de Nodo")
+        return
+
+    if not isinstance(padre.estado, EstadoJuego):
+        print("estado_juego debe ser instacia de EstadoJuego")
+        return
     
+    estado_actual = copiar_estado(padre.estado)
+    equipo_ia = estado_actual.equipoP1 if lado_ia == 1 else estado_actual.equipoP2
+    
+    sucesores = []
+    
+    # Los turnos de min y max en este caso suceden en una única secuencia en lugar de ordenarse, por lo que un pokemon podría ser debilitado antes de que el agente pueda realmente ejecutar su movimiento. El estado sería evaluable pero en el juego la decisión podría no suceder como se espera
+    # Así que por otro lado la función de evaluación debería valorar también la magnitud en la que un pokemon puede ejecutar sus movimientos
+
+    # También es posible que uno de los estados evaluados devuelva un pokemon con 0hp.
+    # En ese caso, en el siguiente turno en el estado se habrá elegido tanto un intercambio como un movimiento
+
+    # (2).. La poda limita la cantidad de sucesores que se generan. Entonces debe aplicarse a medida que se vayan generando hijos
+    hay_poda = False
+    
+    if equipo_ia[0].hp == 0:
+        for i in range(1, len(equipo_ia)):
+            if hay_poda: break
+            if equipo_ia[i].hp != 0:
+                
+                for movimiento in equipo_ia[i].moves:
+                    estado_sucesor = copiar_estado(estado_actual)
+                    estado_sucesor.intercambiarPokemon(i, lado_ia)
+
+                    equipo_actual = estado_sucesor.equipoP1 if lado_ia == 1 else estado_sucesor.equipoP2
+                    equipo_opuesto = estado_sucesor.equipoP2 if lado_ia == 1 else estado_sucesor.equipoP1
+
+                    danio_final = calcular_daño(equipo_actual[0], equipo_opuesto[0], movimiento)
+
+                    establecer_vida(equipo_opuesto[0], danio_final)
+
+                    estado_sucesor.operador = {
+                        "movimiento": movimiento,
+                        "intercambio": i
+                    }
+
+                    #Encapsulamiento
+                    nodo_sucesor = NodoV2(estado_sucesor, padre, not padre.turnoMax, padre.profundidad +1)
+
+                    #Si el hijo puede calificarse se pueden aprovecha a puntuar los alfa y beta del padre
+                    if padre.profundidad + 1 == profundidad:
+                        nodo_sucesor.puntaje = heuristica_avanzada(estado_sucesor, movimiento, pesos_mock)
+
+                        indice_hijo_elegido = 0 if nodo_sucesor.turnoMax else 1
+                        
+                        hijo_elegido, hay_poda = poda(nodo_sucesor)
+                        nodo_sucesor.puntaje = hijo_elegido[indice_hijo_elegido][1]
+                        nodo_sucesor.operador = hijo_elegido[indice_hijo_elegido][0].operador
+                        
+                        return 0
+                    
+                    sucesores.append(nodo_sucesor)
+
+    else:
+        #Los posibles intercambios
+        for i in range(1, len(equipo_ia)):
+            if hay_poda: break
+            if equipo_ia[i].hp != 0:
+                estado_sucesor = copiar_estado(estado_actual)
+                estado_sucesor.intercambiarPokemon(i, lado_ia)
+                estado_sucesor.operador = {
+                    "movimiento": None,
+                    "intercambio": i
+                }
+
+                sucesores.append(estado_sucesor)
+        
+        #Los posibles movimientos
+        for movimiento in equipo_ia[0].moves:
+            if hay_poda: break
+            estado_sucesor = copiar_estado(estado_actual)
+            equipo_opuesto = estado_sucesor.equipoP2 if lado_ia == 1 else estado_sucesor.equipoP1
+
+            #print(f'se estaría usando el movimiento {movimiento.name} sobre {equipo_opuesto[0].name} con hp: {equipo_opuesto[0].hp}')
+
+            danio_final = calcular_daño(equipo_ia[0], equipo_opuesto[0], movimiento)
+
+            establecer_vida(equipo_opuesto[0], danio_final)
+            estado_sucesor.operador = {
+                "movimiento": movimiento,
+                "intercambio": None
+            }
+            #print(equipo_opuesto[0].hp)
+            sucesores.append(estado_sucesor)
+
+    print(f'sucesores generados: {sucesores}')
+    list.reverse(sucesores)
+
+    return sucesores
+
+## Debe retornar un nodo del cual se devolverá su operador. Para ello recursivamente va a generar sucesores.
+def mini_max_recursivo(nodo, profundidad, lado_ia):
+    
+    if not isinstance(nodo, NodoV2):
+        print("padre debe ser instacia de Nodo")
+        return
+    
+    if not isinstance(nodo.estado, EstadoJuego):
+        print("el estado de nodo debe ser instacia de EstadoJuego")
+        return
+    
+    estado_actual = copiar_estado(nodo.estado)
+    equipo_ia = estado_actual.equipoP1 if lado_ia == 1 else estado_actual.equipoP2
+
+    # ========================================================= Divide el trabajo
+    
+    #Primero hay que evaluar si es hoja para que no siga generando sucesores. 
+    if nodo.profundidad == profundidad:
+        nodo.puntaje = heuristica_avanzada(nodo.estado, nodo.estado.operador, pesos_mock)
+
+        #El padre se actualiza los alfas y betas
+        if not isinstance(nodo.padre, NodoV2):
+            print("padre debe ser instacia de Nodo")
+        
+        if nodo.padre.turnoMax:
+            if nodo.puntaje >= nodo.padre.beta:
+                print("hay poda")
+                return True
+
+            if nodo.puntaje > nodo.padre.alfa:
+                nodo.padre.alfa = nodo.puntaje
+                nodo.padre.hijo_escogido = nodo
+        else:
+            if nodo.puntaje <= nodo.padre.alfa:
+                print("hay poda")
+                return True
+
+            if nodo.puntaje < nodo.padre.beta:
+                nodo.padre.beta = nodo.puntaje
+                nodo.padre.hijo_escogido = nodo
+        
+        #Sin embargo si la poda se hace en el primer elemento, el padre no tendrá hijo escogido. Pero no hay problema porque de todas maneras siempre lo tendría en su primera búsqueda dx
+
+        return False
+    #También se tiene que evaluar la poda
+
+    # ======================================= Conquista
+    
+    #Hay que generar sucesores y a cada uno de los sucesores ha de aplicarsele el minimax
+    if nodo.profundidad != profundidad:
+        if equipo_ia[0].hp == 0:
+            for i in range(1, len(equipo_ia)):
+                if equipo_ia[i].hp != 0:
+                    
+                    for movimiento in equipo_ia[i].moves:
+                        if nodo.alfa >= nodo.beta:
+                            break
+                        estado_sucesor = copiar_estado(estado_actual)
+                        estado_sucesor.intercambiarPokemon(i, lado_ia)
+
+                        if nodo.turnoMax:
+                            equipo_actual = estado_sucesor.equipoP1 if lado_ia == 1 else estado_sucesor.equipoP2
+                            equipo_opuesto = estado_sucesor.equipoP2 if lado_ia == 1 else estado_sucesor.equipoP1
+                            lado_atacante = lado_ia
+                        else:
+                            equipo_actual = estado_sucesor.equipoP2 if lado_ia == 1 else estado_sucesor.equipoP1
+                            equipo_opuesto = estado_sucesor.equipoP1 if lado_ia == 1 else estado_sucesor.equipoP2
+                            lado_atacante = 2 if lado_ia == 1 else 1
+
+                        danio_final = calcular_daño(equipo_actual[0], equipo_opuesto[0], movimiento)
+
+                        establecer_vida(equipo_opuesto[0], danio_final)
+
+                        estado_sucesor.operador = {
+                            "movimiento": movimiento,
+                            "intercambio": i
+                        }
+
+                        #Encapsulamiento
+                        nodo_sucesor = NodoV2(estado_sucesor, nodo, not nodo.turnoMax, nodo.profundidad +1)
+                        nodo_sucesor.operador = estado_sucesor.operador
+                        
+                        #En la poda, en bajada, alfa y beta se pasan tal cual a los hijos. (Propagación de alfa y beta en bajada)
+                        nodo_sucesor.alfa = nodo.alfa
+                        nodo_sucesor.beta = nodo.beta
+
+                        #Parte de la conquista
+                        nodo.hay_poda = mini_max_recursivo(nodo_sucesor, profundidad, lado_atacante)
+
+                        
+
+        else:
+            #Los posibles intercambios
+            for i in range(1, len(equipo_ia)):
+                if equipo_ia[i].hp != 0:
+                    if nodo.alfa >= nodo.beta:
+                        break
+                    estado_sucesor = copiar_estado(estado_actual)
+                    estado_sucesor.intercambiarPokemon(i, lado_ia)
+                    estado_sucesor.operador = {
+                        "movimiento": None,
+                        "intercambio": i
+                    }
+
+                    nodo_sucesor = NodoV2(estado_sucesor, nodo, not nodo.turnoMax, nodo.profundidad +1)
+                    
+                    #En la poda, en bajada, alfa y beta se pasan tal cual a los hijos. (Propagación de alfa y beta en bajada)
+                    nodo_sucesor.alfa = nodo.alfa
+                    nodo_sucesor.beta = nodo.beta
+                    nodo_sucesor.operador = estado_sucesor.operador
+
+                    if nodo.turnoMax:
+                        equipo_actual = estado_sucesor.equipoP1 if lado_ia == 1 else estado_sucesor.equipoP2
+                        equipo_opuesto = estado_sucesor.equipoP2 if lado_ia == 1 else estado_sucesor.equipoP1
+                        lado_atacante = lado_ia
+                    else:
+                        equipo_actual = estado_sucesor.equipoP2 if lado_ia == 1 else estado_sucesor.equipoP1
+                        equipo_opuesto = estado_sucesor.equipoP1 if lado_ia == 1 else estado_sucesor.equipoP2
+                        lado_atacante = 2 if lado_ia == 1 else 1
+
+                    #Parte de la conquista
+                    nodo.hay_poda = mini_max_recursivo(nodo_sucesor, profundidad, lado_atacante)
+            
+            #Los posibles movimientos
+            for movimiento in equipo_ia[0].moves:
+                if nodo.alfa >= nodo.beta:
+                    break
+                estado_sucesor = copiar_estado(estado_actual)
+                
+                if nodo.turnoMax:
+                    equipo_actual = estado_sucesor.equipoP1 if lado_ia == 1 else estado_sucesor.equipoP2
+                    equipo_opuesto = estado_sucesor.equipoP2 if lado_ia == 1 else estado_sucesor.equipoP1
+                    lado_atacante = lado_ia
+                else:
+                    equipo_actual = estado_sucesor.equipoP2 if lado_ia == 1 else estado_sucesor.equipoP1
+                    equipo_opuesto = estado_sucesor.equipoP1 if lado_ia == 1 else estado_sucesor.equipoP2
+                    lado_atacante = 2 if lado_ia == 1 else 1
+
+                #print(f'se estaría usando el movimiento {movimiento.name} sobre {equipo_opuesto[0].name} con hp: {equipo_opuesto[0].hp}')
+
+                danio_final = calcular_daño(equipo_ia[0], equipo_opuesto[0], movimiento)
+
+                establecer_vida(equipo_opuesto[0], danio_final)
+                estado_sucesor.operador = {
+                    "movimiento": movimiento,
+                    "intercambio": None
+                }
+                #print(equipo_opuesto[0].hp)
+                nodo_sucesor = NodoV2(estado_sucesor, nodo, not nodo.turnoMax, nodo.profundidad +1)
+                nodo_sucesor.operador = estado_sucesor.operador
+                #En la poda, en bajada, alfa y beta se pasan tal cual a los hijos. (Propagación de alfa y beta en bajada)
+                nodo_sucesor.alfa = nodo.alfa
+                nodo_sucesor.beta = nodo.beta
+                
+                
+                #Parte de la conquista
+                nodo.hay_poda = mini_max_recursivo(nodo_sucesor, profundidad, lado_atacante)
+    
+
+    # =================================== Combina .. (?)
+
+    #Si no es la raiz debe actualizar los alfa y betas del padre (Propagación de alfa y beta en subida) Esto sucede cuando ya se vieron los hijos no podados del nodo
+    if nodo.profundidad != profundidad:  
+        nodo.puntaje = nodo.alfa if nodo.turnoMax else nodo.beta
+
+    if nodo.padre:
+        if nodo.padre.turnoMax:
+            if nodo.puntaje > nodo.padre.alfa:
+                nodo.padre.alfa = nodo.puntaje
+                nodo.padre.hijo_escogido = nodo
+        else:
+            if nodo.puntaje < nodo.padre.beta:
+                nodo.padre.beta = nodo.puntaje
+                nodo.padre.hijo_escogido = nodo
+    
+    if not nodo.padre:
+        return nodo
+    
+
+    return nodo.alfa >= nodo.beta

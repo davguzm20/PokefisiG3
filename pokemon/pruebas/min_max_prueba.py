@@ -3,7 +3,7 @@ from pokemon.motor.acciones import calcular_daño
 from pokemon.motor.acciones import establecer_vida, obtener_multiplicador_tipos
 from pokemon.motor.combate import Combate
 from pokemon.motor.estado_juego import EstadoJuego
-from pokemon.agenteP.agenteP import AgenteP, elegirMovimientoAleatorio, movimiento_en_base_a_mayor_daño, heuristica_difHP, Mini_Max, generar_sucesores, minimax, NodoV2
+from pokemon.agenteP.agenteP import AgenteP, elegirMovimientoAleatorio, movimiento_en_base_a_mayor_daño, heuristica_difHP, generar_sucesores, minimax, NodoV2, minimax2, mini_max_recursivo
 import copy, random
 
 def configurar_entidad(num_jugador, disponible):
@@ -109,5 +109,8 @@ estado.setEquipo(equipoP2, equipo=2)
 nodo = NodoV2(estado, profundidad=0)
 #motor = Combate(estado)
 print(" ==================== MiniMax =====================")
-minimax(nodo, 4, 1)
+nodo = mini_max_recursivo(nodo, 4, 1)
+
+if nodo.hijo_escogido.operador["movimiento"]: print(f'El movimiento escogido es: {nodo.hijo_escogido.operador["movimiento"].name}')
+if nodo.hijo_escogido.operador["intercambio"]:print(f'Se hizo un intercambio con el pokemon de indice: {nodo.hijo_escogido.operador["intercambio"]}')
 

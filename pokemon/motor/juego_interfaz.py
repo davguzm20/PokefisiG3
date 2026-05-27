@@ -4,20 +4,47 @@ from pokemon.motor.combate import Combate
 from pokemon.motor.estado_juego import EstadoJuego
 from pokemon.motor.bus_de_eventos import bus_de_eventos_global
 ##IA
-from pokemon.agenteP.agenteP import AgenteP, elegirMovimientoAleatorio, movimiento_en_base_a_mayor_daño, heuristica_difHP
+from pokemon.agenteP.agenteP import AgenteP, elegirMovimientoAleatorio, movimiento_en_base_a_mayor_daño, heuristica_difHP, mini_max_recursivo, copiar_estado, NodoV2
 
 #Instancien una única vez esta clase
 class IA:
-    def __init__(self, tipo_IA, num_jugador):
+    def __init__(self, tipo_IA, num_jugador, profundidad_minimax = 4):
         self.nivel_IA = tipo_IA
         self.num_jugador = num_jugador
+        self.profundidad_minimax = profundidad_minimax
     
     def elegir_movimiento_ia(self, estado):
+
+        if self.nivel_IA == 1:
+            return elegirMovimientoAleatorio(estado.pokemonActivoP1.moves if self.num_jugador == 1 else estado.pokemonActivoP2.moves)
+        
         if self.nivel_IA == 2:
             if self.num_jugador == 1:
                 return heuristica_difHP(estado, estado.pokemonActivoP1.moves, ia_side=1)
             return heuristica_difHP(estado, estado.pokemonActivoP2.moves, ia_side=2)
-        return elegirMovimientoAleatorio(estado.pokemonActivoP1.moves if self.num_jugador == 1 else estado.pokemonActivoP2.moves)
+        
+        if self.nivel_IA == 3:
+            return self.elegir_movimiento_con_minimax(estado)
+                
+    
+    def elegir_movimiento_con_minimax(self, estado):
+    
+        copia_estado = copiar_estado(estado)
+        copia_estado.esSimulado = True
+        nodo = NodoV2(copia_estado)
+
+        raiz = mini_max_recursivo(nodo, self.profundidad_minimax, self.num_jugador, self.num_jugador)
+
+        print("La elección de minimax es:")
+        if raiz.hijo_escogido.operador["movimiento"] is not None: 
+            print(f'# Usar: {raiz.hijo_escogido.operador["movimiento"].name}')
+            return raiz.hijo_escogido.operador["movimiento"]
+        
+        if raiz.hijo_escogido.operador["intercambio"] is not None:
+            print(f'# Intercambiar el pokemon con el de indice: {raiz.hijo_escogido.operador["intercambio"]}')
+            return raiz.hijo_escogido.operador["intercambio"]
+        
+        
 
 class Juego:
     def __init__(self):
@@ -41,7 +68,7 @@ class Juego:
     # Configura un jugador a IA o Humano: num_jugador se refiere a si es Jugador 1 o Jugador 2. 
     #tipo_jugador se refiere a si es una IA: 2 para IA, 1 para humano
     #nivel_ia se maneja como 1: (movimiento aleatorio) 2: (heurística de diferencia de HP) 3: Minimax
-    def configurar_jugador_como_IA(self, num_jugador, nivel_ia, pokemones_disponibles):
+    def configurar_jugador_como_IA(self, num_jugador, nivel_ia, pokemones_disponibles, profundidad):
         equipo = []
 
         for i in range(self.num_pokemones):
@@ -55,9 +82,9 @@ class Juego:
 
         self.estado.setEquipo(equipo, num_jugador)
         if num_jugador == 1:
-            self.jugador1 = IA(nivel_ia, num_jugador)
+            self.jugador1 = IA(nivel_ia, num_jugador, profundidad_minimax = profundidad)
         else:
-            self.jugador2 = IA(nivel_ia, num_jugador)
+            self.jugador2 = IA(nivel_ia, num_jugador, profundidad_minimax = profundidad)
 
     def configurar_jugador_como_humano(self, num_jugador, equipo_elegido):
         self.estado.setEquipo(equipo_elegido, num_jugador)
@@ -77,7 +104,6 @@ class Juego:
     #La UI debe identificar si se espera la entrada de un jugador durante el combate. Cuando no se espere más entradas se asume que inicia el combate
     #La UI recibirá si ya existe un ganador
     def iniciar_turno(self, accionP1 = None, accionP2 = None):
-        accion_P1, accion_P2 = self.generar_acciones_IA()
 
         if accionP1 is not None: accion_P1 = accionP1
         if accionP2 is not None: accion_P2 = accionP2

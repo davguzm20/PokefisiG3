@@ -3,7 +3,7 @@ from pokemon.motor.acciones import calcular_daño
 from pokemon.motor.acciones import establecer_vida, obtener_multiplicador_tipos
 from pokemon.motor.combate import Combate
 from pokemon.motor.estado_juego import EstadoJuego
-from pokemon.agenteP.agenteP import AgenteP, elegirMovimientoAleatorio, movimiento_en_base_a_mayor_daño, heuristica_difHP, generar_sucesores, minimax, NodoV2, minimax2, mini_max_recursivo
+from pokemon.agenteP.agenteP import AgenteP, elegirMovimientoAleatorio, movimiento_en_base_a_mayor_daño, heuristica_difHP, generar_sucesores, NodoV2, minimax2, mini_max_recursivo
 import copy, random
 
 def configurar_entidad(num_jugador, disponible):

@@ -11,6 +11,7 @@ class Combate:
 
     def __init__(self, estado_juego):
         self.estado_del_equipo = estado_juego
+        self.es_simulado = estado_juego.esSimulado
     
     def _emit(self, text):
         print(text)
@@ -64,12 +65,12 @@ class Combate:
         elegibles = self.estado_del_equipo.pokemonesElegibles(ctx["id_rival"])
 
         if ctx["tipo_rival"] == 1: # Humano
-            idx_nuevo = random.choice(elegibles)[0]
-            #idx_nuevo = bus_de_eventos_global.disparar("ELEGIR_INTERCAMBIO", elegibles, ctx["tipo_rival"])
+            idx_nuevo = bus_de_eventos_global.disparar("ELEGIR_INTERCAMBIO", elegibles, ctx["id_rival"])
         else: # IA
             idx_nuevo = random.choice(elegibles)[0]
+            self.estado_del_equipo.intercambiarPokemon(idx_nuevo, ctx["id_rival"])
         
-        self.estado_del_equipo.intercambiarPokemon(idx_nuevo, ctx["id_rival"])
+       
 
     def ejecutar_turno_ui(self, pokemonP1, accionElegidaP1, pokemonP2, accionElegidaP2, tipoP1, tipoP2):
         orden = self.ordenar_acciones(pokemonP1, accionElegidaP1, pokemonP2, accionElegidaP2)
@@ -98,37 +99,43 @@ class Combate:
                 if accion.damage_class != DamageClass.STATUS:
                     
                     daño = calcular_daño(atacante, defensor, accion)
-                    self._emit(f"¡{atacante.name} usa {accion.name}!")
-                    self._emit(f"Hace {daño} de daño a {defensor.name}")
+                    if not self.es_simulado:
+                        self._emit(f"¡{atacante.name} usa {accion.name}!")
+                        self._emit(f"Hace {daño} de daño a {defensor.name}")
                     
                     nueva_vida_rival = establecer_vida(defensor, daño)
 
                     if nueva_vida_rival <= 0 :
-                        self._emit(f"¡{defensor.name} se ha debilitado!")
+                        if not self.es_simulado:
+                            self._emit(f"¡{defensor.name} se ha debilitado!")
                         pokemonDesvanecido = True
 
-                        self.resolver_intercambio(ctx)
+                        self.resolver_intercambio_ui(ctx)
 
                     #Si el rival se queda sin pokemones tras el turno ya no hace falta seguir ejecutando movimiento
                     if self.estado_del_equipo.conteo_vivos(ctx["id_rival"]) == 0:
                         return   
                                
                 else:
-                    self._emit(f"¡{atacante.name} usó {accion.name}, que es un estado!")
+                    if not self.es_simulado:
+                        self._emit(f"¡{atacante.name} usó {accion.name}, que es un estado!")
             
             else:
-                self._emit(f"El entrenador del Equipo {ctx['id_player']} retira a su Pokémon...")
+                if not self.es_simulado:
+                    self._emit(f"El entrenador del Equipo {ctx['id_player']} retira a su Pokémon...")
+
                 elegibles = self.estado_del_equipo.pokemonesElegibles(ctx["id_player"])
                 tipo_player = tipoP1 if ctx["id_player"] == 1 else tipoP2
                 
                 if tipo_player == 1:
-                    idx_nuevo = random.choice(elegibles)[0]
+                    self.estado_del_equipo.intercambiarPokemon(ctx["accion"], ctx["id_player"])
+
                 else:
                     idx_nuevo = random.choice(elegibles)[0]
+                    self.estado_del_equipo.intercambiarPokemon(idx_nuevo, ctx["id_player"])
                 
-                self.estado_del_equipo.intercambiarPokemon(idx_nuevo, ctx["id_player"])
-    
-    
+                
+
     def resolver_intercambio(self, ctx):
         if self.estado_del_equipo.conteo_vivos(ctx["id_rival"]) == 0:
             return 

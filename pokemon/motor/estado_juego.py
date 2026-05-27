@@ -9,6 +9,7 @@ class EstadoJuego:
         self.pokemonActivoP2 = None
         self.estado_anterior = None
         self.operador = None
+        self.esSimulado = False
     
     #La UI debería disparar el evento cuando el equipo es armado
     #Pasar una lista de pokemones. El equipo es 1 del jugador o 2 de la IA
@@ -42,8 +43,9 @@ class EstadoJuego:
             self.pokemonActivoP1 = equipo_objetivo[0]
         else:
             self.pokemonActivoP2 = equipo_objetivo[0]
-        
-        self._emit(f'El jugador {equipo}  envía a {equipo_objetivo[0].name}')
+            
+        if not self.esSimulado:
+            self._emit(f'El jugador {equipo}  envía a {equipo_objetivo[0].name}')
     
     def conteo_vivos(self, equipo=1):
         cuenta = 0

@@ -1,4 +1,5 @@
 import pygame
+import random
 from ui.scenes.models.scene import Scene
 from ui.scenes.enums.scene_type import SceneType
 from ui.components.placeholder import Placeholder
@@ -22,6 +23,7 @@ class CombatScene(Scene):
 
         self.combat_messages = []
         bus_de_eventos_global.escuchar("MENSAJE_COMBATE", self.combat_messages.append)
+        bus_de_eventos_global.escuchar("ELEGIR_INTERCAMBIO", self.elegir_intercambio)
         
         self.placeholders = [
             Placeholder(
@@ -193,3 +195,14 @@ class CombatScene(Scene):
             self.move_description.label = ""
         self.move_description.draw(screen)
         self.turn_placeholder.draw(screen)
+    
+    #Elegibles es un arreglo de tuplas, donde cada tupla es (indice de pokemon en el equipo del jugador, referencia al pokemon)
+    def elegir_intercambio(self, elegibles, idJugador):
+        juego = self.scene_manager.juego
+
+        #Esto ahora se maneja aleatoriamente pero debería manejarse usando la lista de elegibles en la interfaz para permitir al jugador elegir el nuevo indice/pokemon entrante
+        idx_nuevo = random.choice(elegibles)[0]
+
+        
+        #=======================================
+        juego.estado.intercambiarPokemon(idx_nuevo, idJugador)

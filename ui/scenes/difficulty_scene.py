@@ -8,6 +8,8 @@ from pokemon.pokemon_factory import PokemonFactory
 from pokemon.motor.bus_de_eventos import bus_de_eventos_global
 from config.controls import Controls
 
+from pokemon.motor.juego_interfaz import Acciones
+
 class DifficultyScene(Scene):
     def __init__(self, scene_manager):
         super().__init__(scene_manager)
@@ -78,9 +80,13 @@ class DifficultyScene(Scene):
             else:
                 sm.difficulty_config[2] = level
                 bus_de_eventos_global.disparar("ESTABLECER_NUM_POKEMONES", 4)
-                bus_de_eventos_global.disparar("ESTABLECER_JUGADOR_COMO_IA", 1, sm.difficulty_config[1], PokemonFactory.pokemons, 2) #El ultimo parametro es la profundidad de minimax si aplica
-                bus_de_eventos_global.disparar("ESTABLECER_JUGADOR_COMO_IA", 2, sm.difficulty_config[2], PokemonFactory.pokemons, 2)
+                bus_de_eventos_global.disparar("ESTABLECER_JUGADOR_COMO_IA", 1, sm.difficulty_config[1], PokemonFactory.pokemons, 4) #El ultimo parametro es la profundidad de minimax si aplica
+                bus_de_eventos_global.disparar("ESTABLECER_JUGADOR_COMO_IA", 2, sm.difficulty_config[2], PokemonFactory.pokemons, 4)
                 bus_de_eventos_global.disparar("INICIALIZAR_COMBATE")
+
+                nuevas_acciones = Acciones()
+                #bus_de_eventos_global.disparar("GENERAR_ACCIONES_IA", nuevas_acciones) #Eventualmente la variable obtendrá
+
                 sm.change_scene(SceneType.COMBAT)
 
     def draw(self, screen):

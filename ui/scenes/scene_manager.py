@@ -5,6 +5,7 @@ from ui.scenes.mode_scene import ModeScene
 from ui.scenes.difficulty_scene import DifficultyScene
 from ui.scenes.team_scene import TeamScene
 from ui.scenes.combat_scene import CombatScene
+import threading
 
 class SceneManager:
     def __init__(self, screen):
@@ -36,6 +37,7 @@ class SceneManager:
     def draw(self):
         self.current_scene.draw(self.screen)
     
+
     @staticmethod
     def run(juego=None):
         pygame.init()

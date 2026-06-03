@@ -9,6 +9,7 @@ from ui.components.move_description import MoveDescription
 from config.controls import Controls
 from config.colors import Colors
 from pokemon.motor.bus_de_eventos import bus_de_eventos_global
+from pokemon.motor.juego_interfaz import Acciones
 
 class CombatScene(Scene):
     def __init__(self, scene_manager):
@@ -25,6 +26,7 @@ class CombatScene(Scene):
         bus_de_eventos_global.escuchar("MENSAJE_COMBATE", self.combat_messages.append)
         bus_de_eventos_global.escuchar("ELEGIR_INTERCAMBIO", self.elegir_intercambio)
         
+
         self.placeholders = [
             Placeholder(
                 position_x=0, position_y=0,
@@ -148,7 +150,9 @@ class CombatScene(Scene):
         juego = self.scene_manager.juego
         self.combat_messages.clear()
         if self._is_ai_vs_ai:
+            #En vez de esperar que la IA genere las acciones lo mejor será que estas acciones ya hayan sido generadas.
             accion_P1, accion_P2 = juego.generar_acciones_IA()
+            
             for i, btn in enumerate(self.move_buttons):
                 if btn.move == accion_P1:
                     self.selected_index = i

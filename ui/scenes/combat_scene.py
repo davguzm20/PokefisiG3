@@ -6,6 +6,7 @@ from ui.components.placeholder import Placeholder
 from ui.components.pokemon_layout import PokemonLayout
 from ui.components.move_button import MoveButton
 from ui.components.move_description import MoveDescription
+from ui.components.health_bar import HealthBar
 from config.controls import Controls
 from config.colors import Colors
 from pokemon.motor.bus_de_eventos import bus_de_eventos_global
@@ -41,6 +42,10 @@ class CombatScene(Scene):
             PokemonLayout(position_x=125, position_y=75, number_player=1),
             PokemonLayout(position_x=350, position_y=50, number_player=2),
         ]
+        self.health_bars = [
+            HealthBar(position_x=5, position_y=115),
+            HealthBar(position_x=565, position_y=115),
+        ]
 
         self._button_columns = 2
         self._button_gap_x = 25
@@ -72,7 +77,6 @@ class CombatScene(Scene):
     def handle_event(self, event):
         if not self.generando_acciones and not self.acciones.acciones_escogidas:
             bus_de_eventos_global.disparar("GENERAR_ACCIONES_IA", self.acciones, self.generando_acciones)
-            print(self.generando_acciones)
             self.generando_acciones = True      
             
 
@@ -92,6 +96,7 @@ class CombatScene(Scene):
                     if now - self._last_pop_time < 500:
                         return
                     self._last_pop_time = now
+                    self._release_hp_snapshot()
                     if self.combat_messages:
                         self.combat_messages.pop(0)
                     if not self.combat_messages:
@@ -136,6 +141,11 @@ class CombatScene(Scene):
             estado = juego.get_combate().estado_del_equipo
             self.pokemon_layouts[0].pokemon = estado.pokemonActivoP1
             self.pokemon_layouts[1].pokemon = estado.pokemonActivoP2
+            for i, pokemon in enumerate([estado.pokemonActivoP1, estado.pokemonActivoP2]):
+                self.health_bars[i].pokemon = pokemon
+                if pokemon:
+                    self.health_bars[i].display_hp = pokemon.hp
+                    self.health_bars[i].display_max_hp = pokemon.current_hp
 
             self.acciones.acciones_escogidas = False
             self.generando_acciones = False # Creo que este es repetitivo pero no se si quitarlo
@@ -163,6 +173,11 @@ class CombatScene(Scene):
     def select_move(self):
         juego = self.scene_manager.juego
         self.combat_messages.clear()
+
+        for bar in self.health_bars:
+            if bar.pokemon:
+                bar.display_hp = bar.pokemon.hp
+                bar.display_max_hp = bar.pokemon.current_hp
 
         #En vez de esperar que la IA genere las acciones lo mejor será que estas acciones ya hayan sido generadas.
         tick = 0
@@ -201,10 +216,13 @@ class CombatScene(Scene):
         if self._is_ai_vs_ai:
             if self.showing_messages:
                 if len(self.combat_messages) > 1 and self._message_timer and pygame.time.get_ticks() >= self._message_timer:
+                    self._release_hp_snapshot()
                     self.combat_messages.pop(0)
                     self._message_timer = pygame.time.get_ticks() + 1500
                 elif not self.combat_messages:
                     self.showing_messages = False
+                    self._rebuild_pokemon_layout()
+                    self._rebuild_move_buttons()
                     self._message_timer = pygame.time.get_ticks() + 1000
             elif not self._game_over:
                 if self._message_timer == 0:
@@ -219,6 +237,9 @@ class CombatScene(Scene):
         for layout in self.pokemon_layouts:
             layout.draw(screen)
 
+        for bar in self.health_bars:
+            bar.draw(screen)
+
         for index, move_button in enumerate(self.move_buttons):
             move_button.draw(screen, is_selected=(index == self.selected_index))
 
@@ -230,6 +251,14 @@ class CombatScene(Scene):
         self.turn_placeholder.draw(screen)
     
     #Elegibles es un arreglo de tuplas, donde cada tupla es (indice de pokemon en el equipo del jugador, referencia al pokemon)
+    def _release_hp_snapshot(self):
+        if self.combat_messages and "daño" in self.combat_messages[0]:
+            for bar in self.health_bars:
+                if hasattr(bar, 'display_hp'):
+                    del bar.display_hp
+                if hasattr(bar, 'display_max_hp'):
+                    del bar.display_max_hp
+
     def elegir_intercambio(self, elegibles, idJugador):
         juego = self.scene_manager.juego
 

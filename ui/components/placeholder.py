@@ -34,6 +34,6 @@ class Placeholder:
         
         if self.label:
             font = Fonts.get_font(self.text_size)
-            text_surface = font.render(self.label, True, text_color)
+            text_surface = font.render(self.label, False, text_color)
             text_rect = text_surface.get_rect(center=rect.center)
             screen.blit(text_surface, text_rect)

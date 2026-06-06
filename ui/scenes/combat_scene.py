@@ -41,6 +41,10 @@ class CombatScene(Scene):
             PokemonLayout(position_x=125, position_y=75, number_player=1),
             PokemonLayout(position_x=350, position_y=50, number_player=2),
         ]
+        self.health_bars = [
+            HealthBar(position_x=5, position_y=115),
+            HealthBar(position_x=530, position_y=115),
+        ]
 
         self._button_columns = 2
         self._button_gap_x = 25
@@ -65,7 +69,7 @@ class CombatScene(Scene):
             height=35,
             asset="assets/ui/frames/cuadro-turno.png",
             text_color=Colors.WHITE,
-            text_size=16,
+            text_size=18,
             label="",
         )
 
@@ -242,6 +246,16 @@ class CombatScene(Scene):
         self.turn_placeholder.draw(screen)
     
     #Elegibles es un arreglo de tuplas, donde cada tupla es (indice de pokemon en el equipo del jugador, referencia al pokemon)
+    def _release_hp_snapshot(self):
+        if self.combat_messages and "daño" in self.combat_messages[0]:
+            name = self.combat_messages[0].split(" a ")[-1].strip().lower()
+            for bar in self.health_bars:
+                if bar.pokemon and bar.pokemon.name == name:
+                    if hasattr(bar, 'display_hp'):
+                        del bar.display_hp
+                        del bar.display_max_hp
+                    break
+
     def elegir_intercambio(self, elegibles, idJugador):
         juego = self.scene_manager.juego
 

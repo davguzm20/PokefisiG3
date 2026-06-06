@@ -3,12 +3,12 @@ from config.colors import Colors
 from ui.utils.fonts import Fonts
 
 class HealthBar:
-    PANEL_W = 70
+    PANEL_W = 105
     PANEL_H = 130
     BAR_W = 16
-    BAR_H = 84
+    BAR_H = 60
     BAR_X = (PANEL_W - BAR_W) // 2
-    BAR_Y = 31
+    BAR_Y = 48
 
     def __init__(self, position_x: int, position_y: int, pokemon=None):
         self.position_x = position_x
@@ -34,13 +34,19 @@ class HealthBar:
         pygame.draw.rect(screen, Colors.DARK_GRAY.value, (px, py, self.PANEL_W, self.PANEL_H), border_radius=4)
         pygame.draw.rect(screen, Colors.LIGHT_GRAY.value, (px, py, self.PANEL_W, self.PANEL_H), 1, border_radius=4)
 
-        font = Fonts.get_font(11)
+        font = Fonts.get_font(18)
         name = self.pokemon.name.capitalize()
         name_surf = font.render(name, False, Colors.WHITE.value)
-        screen.blit(name_surf, (px + (self.PANEL_W - name_surf.get_width()) // 2, py + 3))
+        name_shadow = font.render(name, False, Colors.BLACK.value)
+        name_x = px + (self.PANEL_W - name_surf.get_width()) // 2
+        screen.blit(name_shadow, (name_x + 1, py + 3 + 1))
+        screen.blit(name_surf, (name_x, py + 3))
 
         hp_label = font.render("HP", False, Colors.LIGHT_GRAY.value)
-        screen.blit(hp_label, (px + (self.PANEL_W - hp_label.get_width()) // 2, py + 18))
+        hp_shadow = font.render("HP", False, Colors.BLACK.value)
+        hp_label_x = px + (self.PANEL_W - hp_label.get_width()) // 2
+        screen.blit(hp_shadow, (hp_label_x + 1, py + 26 + 1))
+        screen.blit(hp_label, (hp_label_x, py + 26))
 
         bx = px + self.BAR_X
         by = py + self.BAR_Y
@@ -52,6 +58,9 @@ class HealthBar:
             fill_y = by + self.BAR_H - fill_h
             pygame.draw.rect(screen, bar_color, (bx, fill_y, self.BAR_W, fill_h), border_radius=2)
 
-        hp_text = f"{current_hp}/{max_hp}"
+        hp_text = f"{round(current_hp, 2)}/{round(max_hp, 2)}"
         hp_surf = font.render(hp_text, False, Colors.WHITE.value)
-        screen.blit(hp_surf, (px + (self.PANEL_W - hp_surf.get_width()) // 2, py + self.PANEL_H - hp_surf.get_height() - 4))
+        hp_shadow = font.render(hp_text, False, Colors.BLACK.value)
+        hp_x = px + (self.PANEL_W - hp_surf.get_width()) // 2
+        screen.blit(hp_shadow, (hp_x + 1, py + self.PANEL_H - hp_surf.get_height() - 3 + 1))
+        screen.blit(hp_surf, (hp_x, py + self.PANEL_H - hp_surf.get_height() - 3))

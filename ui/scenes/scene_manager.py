@@ -23,6 +23,8 @@ class SceneManager:
         self.current_scene = self.scenes[SceneType.MENU]
 
     def change_scene(self, scene_type: SceneType):
+        if hasattr(self.current_scene, 'on_exit'):
+            self.current_scene.on_exit()
         if scene_type == SceneType.COMBAT:
             self.current_scene = CombatScene(self)
         else:

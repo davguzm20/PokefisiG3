@@ -23,7 +23,7 @@ class CombatScene(Scene):
         self._last_pop_time = 0
         self.acciones = Acciones()
         self.generando_acciones = False
-        self.turno_terminado = False
+        self._ejecutando_turno = False
 
         self.combat_messages = []
         bus_de_eventos_global.escuchar("MENSAJE_COMBATE", self.combat_messages.append)
@@ -69,12 +69,15 @@ class CombatScene(Scene):
             label="",
         )
 
+    def on_exit(self):
+        bus_de_eventos_global.desuscribir("MENSAJE_COMBATE", self.combat_messages.append)
+        bus_de_eventos_global.desuscribir("ELEGIR_INTERCAMBIO", self.elegir_intercambio)
+
     def handle_event(self, event):
+        
         if not self.generando_acciones and not self.acciones.acciones_escogidas:
-            bus_de_eventos_global.disparar("GENERAR_ACCIONES_IA", self.acciones, self.generando_acciones)
-            print(self.generando_acciones)
-            self.generando_acciones = True      
-            
+            bus_de_eventos_global.disparar("GENERAR_ACCIONES_IA", self.acciones, self)
+            self.generando_acciones = True
 
         if event.type == pygame.KEYDOWN:
             if self._game_over:
@@ -98,6 +101,8 @@ class CombatScene(Scene):
                         self.showing_messages = False
                         self._rebuild_pokemon_layout()
                         self._rebuild_move_buttons()
+                        self.generando_acciones = False
+
                 return
 
             if event.key == Controls.LEFT.value:
@@ -137,11 +142,13 @@ class CombatScene(Scene):
             self.pokemon_layouts[0].pokemon = estado.pokemonActivoP1
             self.pokemon_layouts[1].pokemon = estado.pokemonActivoP2
 
-            self.acciones.acciones_escogidas = False
-            self.generando_acciones = False # Creo que este es repetitivo pero no se si quitarlo
+            
 
         for layout in self.pokemon_layouts:
             layout.rebuild()
+        
+        self.acciones.acciones_escogidas = False
+        
 
     def _rebuild_move_buttons(self):
         juego = self.scene_manager.juego
@@ -165,18 +172,19 @@ class CombatScene(Scene):
         self.combat_messages.clear()
 
         #En vez de esperar que la IA genere las acciones lo mejor será que estas acciones ya hayan sido generadas.
-        tick = 0
-        while self.generando_acciones:
-            if tick == 0:
-                self.combat_messages.append("IA pensando...")
-                tick += 1
-            self.scene_manager.update()
-            self.scene_manager.draw()
-            pygame.display.flip()
-            #print(self.acciones.accionP1, self.acciones.accionP2, self.acciones.acciones_escogidas)
-            if self.acciones.acciones_escogidas:
-                self.combat_messages.clear()
-                self.generando_acciones = False
+        if self._ejecutando_turno:
+            return
+        self._ejecutando_turno = True
+
+        if not self._is_ai_vs_ai:
+            while self.generando_acciones:
+                self.scene_manager.update()
+                self.scene_manager.draw()
+                pygame.display.flip()
+        
+        if not self.acciones.acciones_escogidas:
+            self._ejecutando_turno = False
+            return
 
         if self._is_ai_vs_ai:
             accion_P1, accion_P2 = (self.acciones.accionP1, self.acciones.accionP2)
@@ -194,10 +202,14 @@ class CombatScene(Scene):
             self._game_over = True
         self._turn_count += 1
         self.turn_placeholder.label = f"Turno {self._turn_count}"
-        self._message_timer = pygame.time.get_ticks() + 1500
+        
         self.showing_messages = True
+        self._ejecutando_turno = False
+        
 
     def draw(self, screen):
+        
+            
         if self._is_ai_vs_ai:
             if self.showing_messages:
                 if len(self.combat_messages) > 1 and self._message_timer and pygame.time.get_ticks() >= self._message_timer:

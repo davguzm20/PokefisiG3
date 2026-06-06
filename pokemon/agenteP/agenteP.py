@@ -628,7 +628,7 @@ def minimax_recursivov2(nodo, profundidad, lado_ia, max, pesos):
     beta_antes_de_la_poda = nodo.beta
     alfa_antes_de_la_poda = nodo.alfa
     
-    if profundidad % 2 == 0 and profundidad != 0: #Las siguientes condiciones solo pueden suceder en un estado donde tanto Max como Min hayan elegido una acción
+    if nodo.profundidad % 2 == 0 and nodo.profundidad != 0: #Las siguientes condiciones solo pueden suceder en un estado donde tanto Max como Min hayan elegido una acción
         if estado_actual.conteo_vivos(1) == 0:
             
             if lado_ia == 1: #Si el equipo de esta IA murió debería de dejarse de generar hijos.
@@ -775,7 +775,7 @@ def minimax_recursivov2(nodo, profundidad, lado_ia, max, pesos):
 
     if nodo.profundidad == 1: #Cuando se está en hijos de profundidad 1 la poda es diferente porque en este punto minimax tomará la decisión. Lo importante para el padre es saber el operador
         print(nodo.estado.operador, nodo.padre.profundidad, nodo.padre.turnoMax, nodo.padre.hijo_escogido, nodo.padre.alfa, nodo.padre.beta, nodo.puntaje)
-        
+        if nodo.puntaje == 999999 or nodo.puntaje == -99999: nodo.padre.hijo_escogido = nodo.estado
         if nodo.padre.turnoMax:
             if nodo.puntaje >= nodo.padre.beta:
                 nodo.padre.hijo_escogido = nodo.estado

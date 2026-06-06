@@ -184,26 +184,26 @@ class Juego:
 
         return 
 
-    def generar_acciones_IA_thread(self, acciones, esta_en_proceso):
+    def generar_acciones_IA_thread(self, acciones, ref):
         bus_de_eventos_global.disparar("MENSAJE_COMBATE", "IA pensando...")
-        x = threading.Thread(target=self.generar_acciones_IA_asincrono, args=(acciones, esta_en_proceso))
+        x = threading.Thread(target=self.generar_acciones_IA_asincrono, args=(acciones, ref))
         x.start()
     
-    def generar_acciones_IA_asincrono(self, acciones, esta_en_proceso):
+    def generar_acciones_IA_asincrono(self, acciones, ref):
 
         if not isinstance(acciones, Acciones):
             return
         
         if isinstance(self.jugador1,IA):
-            accionP1 = self.jugador1.elegir_movimiento_ia(self.combate.estado_del_equipo)
+            accionP1 = self.jugador1.elegir_movimiento_ia(copiar_estado(self.combate.estado_del_equipo))
             acciones.accionP1 = accionP1
 
         if isinstance(self.jugador2,IA):
-            accionP2 = self.jugador2.elegir_movimiento_ia(self.combate.estado_del_equipo)
+            accionP2 = self.jugador2.elegir_movimiento_ia(copiar_estado(self.combate.estado_del_equipo))
             acciones.accionP2 = accionP2
 
         acciones.acciones_escogidas = True
-        esta_en_proceso = False
+        ref.generando_acciones = False
 
     def generar_acciones_IA(self):
         accionP1 = None

@@ -44,7 +44,7 @@ class CombatScene(Scene):
         ]
         self.health_bars = [
             HealthBar(position_x=5, position_y=115),
-            HealthBar(position_x=565, position_y=115),
+            HealthBar(position_x=530, position_y=115),
         ]
 
         self._button_columns = 2
@@ -70,7 +70,7 @@ class CombatScene(Scene):
             height=35,
             asset="assets/ui/frames/cuadro-turno.png",
             text_color=Colors.WHITE,
-            text_size=16,
+            text_size=18,
             label="",
         )
 
@@ -183,7 +183,7 @@ class CombatScene(Scene):
         tick = 0
         while self.generando_acciones:
             if tick == 0:
-                self.combat_messages.append("IA pensando...")
+                self.combat_messages.append("Tu turno")
                 tick += 1
             self.scene_manager.update()
             self.scene_manager.draw()
@@ -253,11 +253,13 @@ class CombatScene(Scene):
     #Elegibles es un arreglo de tuplas, donde cada tupla es (indice de pokemon en el equipo del jugador, referencia al pokemon)
     def _release_hp_snapshot(self):
         if self.combat_messages and "daño" in self.combat_messages[0]:
+            name = self.combat_messages[0].split(" a ")[-1].strip().lower()
             for bar in self.health_bars:
-                if hasattr(bar, 'display_hp'):
-                    del bar.display_hp
-                if hasattr(bar, 'display_max_hp'):
-                    del bar.display_max_hp
+                if bar.pokemon and bar.pokemon.name == name:
+                    if hasattr(bar, 'display_hp'):
+                        del bar.display_hp
+                        del bar.display_max_hp
+                    break
 
     def elegir_intercambio(self, elegibles, idJugador):
         juego = self.scene_manager.juego

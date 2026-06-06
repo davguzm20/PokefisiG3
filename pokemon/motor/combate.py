@@ -101,7 +101,7 @@ class Combate:
                     daño = calcular_daño(atacante, defensor, accion)
                     if not self.es_simulado:
                         self._emit(f"¡{atacante.name} usa {accion.name}!")
-                        self._emit(f"Hace {daño} de daño a {defensor.name}")
+                        self._emit(f"Hace {round(daño, 2)} de daño a {defensor.name}")
                     
                     nueva_vida_rival = establecer_vida(defensor, daño)
 
@@ -177,7 +177,7 @@ class Combate:
                     
                     daño = calcular_daño(atacante, defensor, accion)
                     self._emit(f"¡{atacante.name} usa {accion.name}!")
-                    self._emit(f"Hace {daño} de daño a {defensor.name}")
+                    self._emit(f"Hace {round(daño, 2)} de daño a {defensor.name}")
                     
                     nueva_vida_rival = establecer_vida(defensor, daño)
 

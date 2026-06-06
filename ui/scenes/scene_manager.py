@@ -5,6 +5,7 @@ from ui.scenes.mode_scene import ModeScene
 from ui.scenes.difficulty_scene import DifficultyScene
 from ui.scenes.team_scene import TeamScene
 from ui.scenes.combat_scene import CombatScene
+import threading
 
 class SceneManager:
     def __init__(self, screen):
@@ -22,6 +23,8 @@ class SceneManager:
         self.current_scene = self.scenes[SceneType.MENU]
 
     def change_scene(self, scene_type: SceneType):
+        if hasattr(self.current_scene, 'on_exit'):
+            self.current_scene.on_exit()
         if scene_type == SceneType.COMBAT:
             self.current_scene = CombatScene(self)
         else:

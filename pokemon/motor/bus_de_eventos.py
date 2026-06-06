@@ -1,6 +1,7 @@
 ## Utilizamos el bus de eventos para desacoplar componentes. Es implementación del patrón Observer
 ## Aquí se reciben los eventos que se disparan de un componente y se le envía la señal al componente suscrito para realizar la acción que necesite
 
+
 class EventBus:
    
     def __init__(self):
@@ -11,11 +12,14 @@ class EventBus:
         if suscripcion in self.suscripciones:
             for dirfuncion in self.suscripciones[suscripcion]:
                 try:
-                    dirfuncion(*args, **kwargs)
+                    dirfuncion(*args, **kwargs) #Una limitación de este Event Bus es que las funciones se ejecutarán pero retornaran al vacio
                 except TypeError:
                     dirfuncion()
 
-    
+    def desuscribir(self, nombreSuscripcion, dirfuncion):
+        if nombreSuscripcion in self.suscripciones:
+            self.suscripciones[nombreSuscripcion].remove(dirfuncion)
+            
     def escuchar(self, nombreSuscripcion, dirfuncion): #Suscribir
         if nombreSuscripcion not in self.suscripciones:
             self.suscripciones[nombreSuscripcion] = []

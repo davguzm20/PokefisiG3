@@ -1,4 +1,5 @@
 import pygame
+import random
 from ui.scenes.models.scene import Scene
 from ui.scenes.enums.scene_type import SceneType
 from ui.components.placeholder import Placeholder
@@ -8,6 +9,7 @@ from ui.components.move_description import MoveDescription
 from config.controls import Controls
 from config.colors import Colors
 from pokemon.motor.bus_de_eventos import bus_de_eventos_global
+from pokemon.motor.juego_interfaz import Acciones
 
 class CombatScene(Scene):
     def __init__(self, scene_manager):
@@ -19,10 +21,15 @@ class CombatScene(Scene):
         self._message_timer = 0
         self._game_over = False
         self._last_pop_time = 0
+        self.acciones = Acciones()
+        self.generando_acciones = False
+        self._ejecutando_turno = False
 
         self.combat_messages = []
         bus_de_eventos_global.escuchar("MENSAJE_COMBATE", self.combat_messages.append)
+        bus_de_eventos_global.escuchar("ELEGIR_INTERCAMBIO", self.elegir_intercambio)
         
+
         self.placeholders = [
             Placeholder(
                 position_x=0, position_y=0,
@@ -62,9 +69,19 @@ class CombatScene(Scene):
             label="",
         )
 
+    def on_exit(self):
+        bus_de_eventos_global.desuscribir("MENSAJE_COMBATE", self.combat_messages.append)
+        bus_de_eventos_global.desuscribir("ELEGIR_INTERCAMBIO", self.elegir_intercambio)
+
     def handle_event(self, event):
+        
+        if not self.generando_acciones and not self.acciones.acciones_escogidas:
+            bus_de_eventos_global.disparar("GENERAR_ACCIONES_IA", self.acciones, self)
+            self.generando_acciones = True
+
         if event.type == pygame.KEYDOWN:
             if self._game_over:
+                
                 if event.key in Controls.SELECT.value and len(self.combat_messages) > 1:
                     now = pygame.time.get_ticks()
                     if now - self._last_pop_time > 500:
@@ -84,6 +101,8 @@ class CombatScene(Scene):
                         self.showing_messages = False
                         self._rebuild_pokemon_layout()
                         self._rebuild_move_buttons()
+                        self.generando_acciones = False
+
                 return
 
             if event.key == Controls.LEFT.value:
@@ -122,8 +141,14 @@ class CombatScene(Scene):
             estado = juego.get_combate().estado_del_equipo
             self.pokemon_layouts[0].pokemon = estado.pokemonActivoP1
             self.pokemon_layouts[1].pokemon = estado.pokemonActivoP2
+
+            
+
         for layout in self.pokemon_layouts:
             layout.rebuild()
+        
+        self.acciones.acciones_escogidas = False
+        
 
     def _rebuild_move_buttons(self):
         juego = self.scene_manager.juego
@@ -145,24 +170,46 @@ class CombatScene(Scene):
     def select_move(self):
         juego = self.scene_manager.juego
         self.combat_messages.clear()
+
+        #En vez de esperar que la IA genere las acciones lo mejor será que estas acciones ya hayan sido generadas.
+        if self._ejecutando_turno:
+            return
+        self._ejecutando_turno = True
+
+        if not self._is_ai_vs_ai:
+            while self.generando_acciones:
+                self.scene_manager.update()
+                self.scene_manager.draw()
+                pygame.display.flip()
+        
+        if not self.acciones.acciones_escogidas:
+            self._ejecutando_turno = False
+            return
+
         if self._is_ai_vs_ai:
-            accion_P1, accion_P2 = juego.generar_acciones_IA()
+            accion_P1, accion_P2 = (self.acciones.accionP1, self.acciones.accionP2)
+            
             for i, btn in enumerate(self.move_buttons):
                 if btn.move == accion_P1:
                     self.selected_index = i
                     break
             game_over = juego.iniciar_turno(accionP1=accion_P1, accionP2=accion_P2)
         else:
+            accion_P2 = self.acciones.accionP2
             move = self.move_buttons[self.selected_index].move
-            game_over = juego.iniciar_turno(accionP1=move)
+            game_over = juego.iniciar_turno(accionP1=move, accionP2=accion_P2)
         if game_over:
             self._game_over = True
         self._turn_count += 1
         self.turn_placeholder.label = f"Turno {self._turn_count}"
-        self._message_timer = pygame.time.get_ticks() + 1500
+        
         self.showing_messages = True
+        self._ejecutando_turno = False
+        
 
     def draw(self, screen):
+        
+            
         if self._is_ai_vs_ai:
             if self.showing_messages:
                 if len(self.combat_messages) > 1 and self._message_timer and pygame.time.get_ticks() >= self._message_timer:
@@ -193,3 +240,16 @@ class CombatScene(Scene):
             self.move_description.label = ""
         self.move_description.draw(screen)
         self.turn_placeholder.draw(screen)
+    
+    #Elegibles es un arreglo de tuplas, donde cada tupla es (indice de pokemon en el equipo del jugador, referencia al pokemon)
+    def elegir_intercambio(self, elegibles, idJugador):
+        juego = self.scene_manager.juego
+
+        #Esto ahora se maneja aleatoriamente pero debería manejarse usando la lista de elegibles en la interfaz para permitir al jugador elegir el nuevo indice/pokemon entrante
+        idx_nuevo = random.choice(elegibles)[0]
+
+        
+        #=======================================
+        juego.estado.intercambiarPokemon(idx_nuevo, idJugador)
+
+

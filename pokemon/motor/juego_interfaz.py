@@ -4,7 +4,7 @@ from pokemon.motor.combate import Combate
 from pokemon.motor.estado_juego import EstadoJuego
 from pokemon.motor.bus_de_eventos import bus_de_eventos_global
 ##IA
-from pokemon.agenteP.agenteP import AgenteP, elegirMovimientoAleatorio, movimiento_en_base_a_mayor_daño, heuristica_difHP, mini_max_recursivo, copiar_estado, NodoV2
+from pokemon.agenteP.agenteP import AgenteP, elegirMovimientoAleatorio, movimiento_en_base_a_mayor_daño, heuristica_difHP, minimax_recursivov2, copiar_estado, NodoV2
 from pokemon.motor.hilos import mini_max_recursivo_thread
 
 import threading
@@ -15,6 +15,13 @@ pesos_mock = {
     "velocidad": 0.2,
     "tipo": 0.3,
     "vivos": 0.2
+}
+
+pesos_mock = {
+    "hp": 1.0,
+    "velocidad": 0,
+    "tipo": 0,
+    "vivos": 0
 }
 
 #Instancien una única vez esta clase
@@ -45,7 +52,7 @@ class IA:
         copia_estado.esSimulado = True
         nodo = NodoV2(copia_estado)
 
-        raiz = mini_max_recursivo(nodo, self.profundidad_minimax, self.num_jugador, self.num_jugador, self.pesos_heuristicos)
+        raiz = minimax_recursivov2(nodo, self.profundidad_minimax, self.num_jugador, self.num_jugador, self.pesos_heuristicos)
         
         print("La elección de minimax es:")
         if raiz.hijo_escogido.operador["movimiento"] is not None: 
@@ -177,11 +184,12 @@ class Juego:
 
         return 
 
-    def generar_acciones_IA_thread(self, acciones):
-        x = threading.Thread(self.generar_acciones_IA_asincrono, args=(acciones))
+    def generar_acciones_IA_thread(self, acciones, esta_en_proceso):
+        bus_de_eventos_global.disparar("MENSAJE_COMBATE", "IA pensando...")
+        x = threading.Thread(target=self.generar_acciones_IA_asincrono, args=(acciones, esta_en_proceso))
         x.start()
     
-    def generar_acciones_IA_asincrono(self, acciones):
+    def generar_acciones_IA_asincrono(self, acciones, esta_en_proceso):
 
         if not isinstance(acciones, Acciones):
             return
@@ -195,6 +203,7 @@ class Juego:
             acciones.accionP2 = accionP2
 
         acciones.acciones_escogidas = True
+        esta_en_proceso = False
 
     def generar_acciones_IA(self):
         accionP1 = None

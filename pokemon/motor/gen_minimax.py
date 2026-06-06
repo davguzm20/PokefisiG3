@@ -1,6 +1,7 @@
 import random
 import copy
 import time
+import threading
 
 from pokemon.motor.juego_interfaz import Juego, IA
 from pokemon.pokemon_factory import PokemonFactory
@@ -84,7 +85,7 @@ class Individuo:
         
         turno = 0
         while True:
-            
+            inicio = time.perf_counter()
             accionP1, accionP2 = nuevo_juego.generar_acciones_IA()
 
             nuevo_juego.iniciar_turno(accionP1, accionP2)
@@ -124,10 +125,13 @@ class Individuo:
                 nuevo_juego.configurar_jugador_como_IA(1, 3, pokemones_disponibles, 4, self.traducir_pesos_de_cromosoma())
                 nuevo_juego.configurar_jugador_como_IA(2, 2, pokemones_disponibles)
 
+            fin = time.perf_counter()
+            print(f"Tomo: {fin-inicio} segundos")
+
            
         #print(ganadas)
         #print(juegos)
-
+        
         self.aptitud = ganadas/juegos
         return ganadas/juegos
                 
@@ -227,6 +231,8 @@ mejor_individuo = {
     "individuo": None
 }
 
+historial = []
+
 while True:
     inicio = time.perf_counter()
     generacion_actual = generacion_inicial if generacion == 1 else nueva_generacion
@@ -237,7 +243,7 @@ while True:
     for i in range(0, len(generacion_actual.individuos)):
         generacion_actual.individuos[i].evaluar_fitness(20)
         
-        print(f" ========================== Individuo {i} de la generación {generacion} evaluado ==========================")
+        print(f" ========================== Individuo {i} de la generación {generacion} evaluado. Fitness {generacion_actual.individuos[i].aptitud} ==========================")
         if generacion_actual.individuos[i].aptitud > max_aptitud_generacion:
             mejor_de_generacion = generacion_actual.individuos[i]
             max_aptitud_generacion = generacion_actual.individuos[i].aptitud
@@ -246,6 +252,11 @@ while True:
             mejor_individuo["aptitud"] = generacion_actual.individuos[i].aptitud
             mejor_individuo["individuo"] = copy.deepcopy(generacion_actual.individuos[i])
     
+    historial.append({
+        "generacion": generacion,
+        "individuos": [(ind.traducir_pesos_de_cromosoma(), ind.aptitud) for ind in generacion_actual.individuos]
+    })
+
     if generacion == 20 or mejor_individuo["aptitud"] == 1.0: break # La estructura hace necesario que el algoritmo se detenga justo en este momento, después de calcular el fitness de la siguiente generación
 
     #Seleccion por torneo
@@ -276,3 +287,6 @@ while True:
 
 print(f"El mejor individuo encontrado es: {mejor_individuo['individuo']} con una aptitud de {mejor_individuo['aptitud']}")
 print(f"Su cromosoma es {mejor_individuo['individuo'].cromosoma}")
+
+for entrada in historial:
+    print(entrada)

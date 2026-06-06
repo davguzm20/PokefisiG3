@@ -37,7 +37,6 @@ class SceneManager:
     def draw(self):
         self.current_scene.draw(self.screen)
     
-
     @staticmethod
     def run(juego=None):
         pygame.init()

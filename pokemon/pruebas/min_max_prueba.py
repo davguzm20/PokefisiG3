@@ -3,7 +3,7 @@ from pokemon.motor.acciones import calcular_daño
 from pokemon.motor.acciones import establecer_vida, obtener_multiplicador_tipos
 from pokemon.motor.combate import Combate
 from pokemon.motor.estado_juego import EstadoJuego
-from pokemon.agenteP.agenteP import AgenteP, elegirMovimientoAleatorio, movimiento_en_base_a_mayor_daño, heuristica_difHP, generar_sucesores, NodoV2, minimax2, mini_max_recursivo
+from pokemon.agenteP.agenteP import AgenteP, elegirMovimientoAleatorio, movimiento_en_base_a_mayor_daño, heuristica_difHP, generar_sucesores, NodoV2, minimax2, mini_max_recursivo, minimax_recursivov2
 import copy, random
 
 def configurar_entidad(num_jugador, disponible):
@@ -92,6 +92,13 @@ def elegir_movimiento_ia(estado, jugador, nivel_ia):
         return heuristica_difHP(estado, estado.pokemonActivoP2.moves, ia_side=2)
     return elegirMovimientoAleatorio(estado.pokemonActivoP1.moves if jugador == 1 else estado.pokemonActivoP2.moves)
 
+pesos_mock = {
+    "hp": 0.3,
+    "velocidad": 0.2,
+    "tipo": 0.3,
+    "vivos": 0.2
+}
+
 pokemones_disponibles = PokemonFactory.load_all_pokemons("pokemon/pokemones.json")
 
 n_pokes = 3 if int(input("1. 3vs3\n2. 4vs4\nSelección: ")) == 1 else 4
@@ -109,7 +116,7 @@ estado.setEquipo(equipoP2, equipo=2)
 nodo = NodoV2(estado, profundidad=0)
 #motor = Combate(estado)
 print(" ==================== MiniMax =====================")
-nodo = mini_max_recursivo(nodo, 4, 1)
+nodo = minimax_recursivov2(nodo, 4, 1, 1, pesos_mock)
 
 if nodo.hijo_escogido.operador["movimiento"]: print(f'El movimiento escogido es: {nodo.hijo_escogido.operador["movimiento"].name}')
 if nodo.hijo_escogido.operador["intercambio"]:print(f'Se hizo un intercambio con el pokemon de indice: {nodo.hijo_escogido.operador["intercambio"]}')

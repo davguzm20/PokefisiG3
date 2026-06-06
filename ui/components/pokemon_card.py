@@ -41,7 +41,7 @@ class PokemonCard:
             name_surface = font.render(name, False, Colors.WHITE.value)
             name_rect = name_surface.get_rect(centerx=center_x, y=rect.y + 35)
             shadow = font.render(name, False, Colors.BLACK.value)
-            screen.blit(shadow, (name_rect.x + 2, name_rect.y + 2))
+            screen.blit(shadow, (name_rect.x + 1, name_rect.y + 1))
             screen.blit(name_surface, name_rect)
 
             type_icons = [

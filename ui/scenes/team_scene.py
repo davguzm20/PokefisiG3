@@ -30,7 +30,7 @@ class TeamScene(Scene):
             position_x=490, position_y=15,
             width=110, height=36,
             label="CONTINUAR",
-            text_size=14,
+            text_size=16,
             background_color=Colors.BLUE,
         )
         self.selection_cards = self.build_grid()

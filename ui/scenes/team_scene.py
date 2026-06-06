@@ -21,14 +21,14 @@ class TeamScene(Scene):
 
         self.team_pokemons = [None, None, None, None]
         self.team_cards = [
-            PokemonCard(position_x=50, position_y=10),
-            PokemonCard(position_x=140, position_y=10),
-            PokemonCard(position_x=230, position_y=10),
-            PokemonCard(position_x=320, position_y=10),
+            PokemonCard(position_x=35, position_y=5),
+            PokemonCard(position_x=135, position_y=5),
+            PokemonCard(position_x=235, position_y=5),
+            PokemonCard(position_x=335, position_y=5),
         ]
         self.continue_button = Button(
-            position_x=470, position_y=85,
-            width=120, height=36,
+            position_x=490, position_y=15,
+            width=110, height=36,
             label="CONTINUAR",
             text_size=14,
             background_color=Colors.BLUE,
@@ -50,8 +50,8 @@ class TeamScene(Scene):
                 idx = self.scroll_offset + row * 4 + col
                 pokemon = PokemonFactory.pokemons[idx] if idx < len(PokemonFactory.pokemons) else None
                 cards.append(PokemonCard(
-                    position_x=[50, 140, 230, 320][col],
-                    position_y=[98, 184, 270][row],
+                    position_x=[35, 135, 235, 335][col],
+                    position_y=[108, 187, 266][row],
                     pokemon=pokemon,
                 ))
 

@@ -41,10 +41,10 @@ class MoveButton(Button):
         text_font = Fonts.get_font(12)
         move_name_text = self.move.name.upper()
 
-        name_text_surface = text_font.render(move_name_text, True, Colors.WHITE.value)
+        name_text_surface = text_font.render(move_name_text, False, Colors.WHITE.value)
         pp_text_surface = text_font.render(
             f"PP {self.move.current_power_points}/{self.move.power_points}",
-            True, Colors.WHITE.value,
+            False, Colors.WHITE.value,
         )
 
         if background_surface:

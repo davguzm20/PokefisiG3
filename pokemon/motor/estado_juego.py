@@ -25,6 +25,13 @@ class EstadoJuego:
         else: 
             self.equipoP2 = pokemones 
             self.pokemonActivoP2 = pokemones[0]
+        
+    def getEquipo(self, equipo):
+        if (equipo == 1): 
+            return self.equipoP1
+
+        else: 
+            return self.equipoP2
     
     def pokemonesElegibles(self, equipo = 1):
         equipo_objetivo = self.equipoP1 if equipo == 1 else self.equipoP2

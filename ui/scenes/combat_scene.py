@@ -223,7 +223,6 @@ class CombatScene(Scene):
                 bar.display_hp = bar.pokemon.hp
                 bar.display_max_hp = bar.pokemon.current_hp
                 bar._hp_animating = False
-
         #En vez de esperar que la IA genere las acciones lo mejor será que estas acciones ya hayan sido generadas.
         if self._ejecutando_turno:
             return
@@ -293,14 +292,13 @@ class CombatScene(Scene):
 
         for i, bar in enumerate(self.health_bars):
             bar.draw(screen)
-
         for index, move_button in enumerate(self.move_buttons):
             move_button.draw(screen, is_selected=(index == self.selected_index))
 
         if self.combat_messages:
             msg = self.combat_messages[0]
-            if msg == "Tu turno" and not self._is_ai_vs_ai:
-                msg = "IA pensando..."
+            if msg == "IA pensando..." and not self._is_ai_vs_ai:
+                msg = "Tu turno"
             self.move_description.label = msg
         else:
             self.move_description.label = ""

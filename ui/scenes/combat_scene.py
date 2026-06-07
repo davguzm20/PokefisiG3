@@ -90,7 +90,7 @@ class CombatScene(Scene):
             height=35,
             asset="assets/ui/frames/cuadro-turno.png",
             text_color=Colors.WHITE,
-            text_size=18,
+            text_size=20,
             label="",
         )
 
@@ -307,7 +307,7 @@ class CombatScene(Scene):
 
             font = Fonts.get_font(36)
             if self._is_ai_vs_ai:
-                text = "¡EL EQUIPO 1 GANA!" if self._winner == "player" else "¡EL EQUIPO 2 GANA!"
+                text = "¡EL JUGADOR 1 GANA!" if self._winner == "player" else "¡EL JUGADOR 2 GANA!"
             else:
                 text = "VICTORIA" if self._winner == "player" else "DERROTA"
             color = Colors.GREEN.value if self._winner == "player" else Colors.RED.value
@@ -340,7 +340,7 @@ class CombatScene(Scene):
                     self.pokemon_layouts[i].start_faint()
                     break
         elif "gana" in msg:
-            self._winner = "player" if "Equipo 1" in msg else "opponent"
+            self._winner = "player" if "Jugador 1" in msg else "opponent"
 
     def elegir_intercambio(self, elegibles, idJugador):
         juego = self.scene_manager.juego

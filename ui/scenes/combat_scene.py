@@ -83,7 +83,7 @@ class CombatScene(Scene):
         if event.type == pygame.KEYDOWN:
             if self._game_over:
                 
-                if event.key in Controls.SELECT.value and len(self.combat_messages) > 1:
+                if event.key in Controls.SELECT.value and len(self.combat_messages) > 0:
                     now = pygame.time.get_ticks()
                     if now - self._last_pop_time > 500:
                         self._release_hp_snapshot()
@@ -225,7 +225,7 @@ class CombatScene(Scene):
     def draw(self, screen):
         if self._is_ai_vs_ai:
             if self.showing_messages:
-                if len(self.combat_messages) > 1 and self._message_timer and pygame.time.get_ticks() >= self._message_timer:
+                if len(self.combat_messages) > 0 and self._message_timer and pygame.time.get_ticks() >= self._message_timer:
                     self._release_hp_snapshot()
                     self._on_message_popped(self.combat_messages[0])
                     self.combat_messages.pop(0)
@@ -268,19 +268,21 @@ class CombatScene(Scene):
     def _release_hp_snapshot(self):
         if self.combat_messages and "daño" in self.combat_messages[0]:
             name = self.combat_messages[0].split(" a ")[-1].strip().lower()
-            for bar in self.health_bars:
+            for i, bar in enumerate(self.health_bars):
                 if bar.pokemon and bar.pokemon.name == name:
                     if hasattr(bar, 'display_hp') and not getattr(bar, '_hp_animating', False):
                         bar._hp_target = bar.pokemon.hp
                         bar._hp_animating = True
+                    self.pokemon_layouts[i].flash()
                     break
 
     def _on_message_popped(self, msg):
         if "se ha debilitado" in msg:
             name = msg.split(" ")[0].lstrip("¡").strip().lower()
-            for bar in self.health_bars:
+            for i, bar in enumerate(self.health_bars):
                 if bar.pokemon and bar.pokemon.name == name and bar.team_alive > 0:
                     bar.team_alive -= 1
+                    self.pokemon_layouts[i].start_faint()
                     break
 
     def elegir_intercambio(self, elegibles, idJugador):

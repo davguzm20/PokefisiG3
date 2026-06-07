@@ -1,4 +1,5 @@
 import pygame
+import copy
 from ui.scenes.models.scene import Scene
 from ui.scenes.enums.scene_type import SceneType
 from ui.components.pokemon_card import PokemonCard
@@ -74,7 +75,7 @@ class TeamScene(Scene):
                         self.grid_col = c
                         grid_idx = self.scroll_offset + r * 4 + c
                         if grid_idx < len(PokemonFactory.pokemons):
-                            pokemon = PokemonFactory.pokemons[grid_idx]
+                            pokemon = copy.deepcopy(PokemonFactory.pokemons[grid_idx])
                             self.team_pokemons[self.selected_slot] = pokemon
                             self.team_cards[self.selected_slot] = PokemonCard(
                                 position_x=self.team_cards[self.selected_slot].rect.x,
@@ -147,7 +148,7 @@ class TeamScene(Scene):
                     idx = self.scroll_offset + self.grid_row * 4 + self.grid_col
 
                     if idx < len(PokemonFactory.pokemons):
-                        pokemon = PokemonFactory.pokemons[idx]
+                        pokemon = copy.deepcopy(PokemonFactory.pokemons[idx])
                         self.team_pokemons[self.selected_slot] = pokemon
                         self.team_cards[self.selected_slot] = PokemonCard(
                             position_x=self.team_cards[self.selected_slot].rect.x,

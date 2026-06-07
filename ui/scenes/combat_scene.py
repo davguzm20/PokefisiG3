@@ -43,8 +43,8 @@ class CombatScene(Scene):
             PokemonLayout(position_x=350, position_y=50, number_player=2),
         ]
         self.health_bars = [
-            HealthBar(position_x=5, position_y=115),
-            HealthBar(position_x=530, position_y=115),
+            HealthBar(position_x=5, position_y=100),
+            HealthBar(position_x=530, position_y=100),
         ]
 
         self._button_columns = 2
@@ -86,6 +86,8 @@ class CombatScene(Scene):
                 if event.key in Controls.SELECT.value and len(self.combat_messages) > 1:
                     now = pygame.time.get_ticks()
                     if now - self._last_pop_time > 500:
+                        self._release_hp_snapshot()
+                        self._on_message_popped(self.combat_messages[0])
                         self.combat_messages.pop(0)
                         self._last_pop_time = now
                 return
@@ -98,6 +100,7 @@ class CombatScene(Scene):
                     self._last_pop_time = now
                     self._release_hp_snapshot()
                     if self.combat_messages:
+                        self._on_message_popped(self.combat_messages[0])
                         self.combat_messages.pop(0)
                     if not self.combat_messages:
                         self.showing_messages = False
@@ -146,6 +149,10 @@ class CombatScene(Scene):
                 if pokemon:
                     self.health_bars[i].display_hp = pokemon.hp
                     self.health_bars[i].display_max_hp = pokemon.current_hp
+                    equipo = 1 if i == 0 else 2
+                    bar = self.health_bars[i]
+                    bar.team_total = len(estado.equipoP1 if i == 0 else estado.equipoP2)
+                    bar.team_alive = estado.conteo_vivos(equipo)
 
             self.acciones.acciones_escogidas = False
             self.generando_acciones = False # Creo que este es repetitivo pero no se si quitarlo
@@ -217,6 +224,7 @@ class CombatScene(Scene):
             if self.showing_messages:
                 if len(self.combat_messages) > 1 and self._message_timer and pygame.time.get_ticks() >= self._message_timer:
                     self._release_hp_snapshot()
+                    self._on_message_popped(self.combat_messages[0])
                     self.combat_messages.pop(0)
                     self._message_timer = pygame.time.get_ticks() + 1500
                 elif not self.combat_messages:
@@ -237,14 +245,17 @@ class CombatScene(Scene):
         for layout in self.pokemon_layouts:
             layout.draw(screen)
 
-        for bar in self.health_bars:
+        for i, bar in enumerate(self.health_bars):
             bar.draw(screen)
 
         for index, move_button in enumerate(self.move_buttons):
             move_button.draw(screen, is_selected=(index == self.selected_index))
 
         if self.combat_messages:
-            self.move_description.label = self.combat_messages[0]
+            msg = self.combat_messages[0]
+            if msg == "IA pensando..." and not self._is_ai_vs_ai:
+                msg = "Tu turno"
+            self.move_description.label = msg
         else:
             self.move_description.label = ""
         self.move_description.draw(screen)
@@ -261,14 +272,17 @@ class CombatScene(Scene):
                         del bar.display_max_hp
                     break
 
+    def _on_message_popped(self, msg):
+        if "se ha debilitado" in msg:
+            name = msg.split(" ")[0].lstrip("¡").strip().lower()
+            for bar in self.health_bars:
+                if bar.pokemon and bar.pokemon.name == name and bar.team_alive > 0:
+                    bar.team_alive -= 1
+                    break
+
     def elegir_intercambio(self, elegibles, idJugador):
         juego = self.scene_manager.juego
 
-        #Esto ahora se maneja aleatoriamente pero debería manejarse usando la lista de elegibles en la interfaz para permitir al jugador elegir el nuevo indice/pokemon entrante
         idx_nuevo = random.choice(elegibles)[0]
 
-        
-        #=======================================
         juego.estado.intercambiarPokemon(idx_nuevo, idJugador)
-
-

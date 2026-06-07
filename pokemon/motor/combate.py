@@ -95,6 +95,7 @@ class Combate:
 
             #Si es un movimiento se evalua si es de status o un movimiento que hace daño. De otra manera el movimiento sería para intercambiar pokemon
             if isinstance(accion, Move):
+                accion.current_power_points -= 1
 
                 if accion.damage_class != DamageClass.STATUS:
                     
@@ -115,7 +116,7 @@ class Combate:
                     #Si el rival se queda sin pokemones tras el turno ya no hace falta seguir ejecutando movimiento
                     if self.estado_del_equipo.conteo_vivos(ctx["id_rival"]) == 0:
                         return   
-                               
+                                
                 else:
                     if not self.es_simulado:
                         self._emit(f"¡{atacante.name} usó {accion.name}, que es un estado!")
@@ -172,6 +173,7 @@ class Combate:
 
             #Si es un movimiento se evalua si es de status o un movimiento que hace daño. De otra manera el movimiento sería para intercambiar pokemon
             if isinstance(accion, Move):
+                accion.current_power_points -= 1
 
                 if accion.damage_class != DamageClass.STATUS:
                     
@@ -190,7 +192,7 @@ class Combate:
                     #Si el rival se queda sin pokemones tras el turno ya no hace falta seguir ejecutando movimiento
                     if self.estado_del_equipo.conteo_vivos(ctx["id_rival"]) == 0:
                         return   
-                               
+                                
                 else:
                     self._emit(f"¡{atacante.name} usó {accion.name}, que es un estado!")
             

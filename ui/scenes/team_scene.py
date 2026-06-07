@@ -5,6 +5,7 @@ from ui.scenes.enums.scene_type import SceneType
 from ui.components.pokemon_card import PokemonCard
 from ui.components.button import Button
 from ui.components.placeholder import Placeholder
+from ui.components.pokemon_stats import PokemonStats
 from pokemon.pokemon_factory import PokemonFactory
 from pokemon.motor.bus_de_eventos import bus_de_eventos_global
 from config.colors import Colors
@@ -35,6 +36,7 @@ class TeamScene(Scene):
             background_color=Colors.BLUE,
         )
         self.selection_cards = self.build_grid()
+        self.pokemon_stats = PokemonStats(position_x=420, position_y=108)
         self.placeholders = [
             Placeholder(
                 position_x=0, position_y=0,
@@ -57,6 +59,14 @@ class TeamScene(Scene):
                 ))
 
         return cards
+
+    def _update_stats(self):
+        idx = self.scroll_offset + self.grid_row * 4 + self.grid_col
+        if idx < len(PokemonFactory.pokemons):
+            self.pokemon_stats.pokemon = PokemonFactory.pokemons[idx]
+        else:
+            self.pokemon_stats.pokemon = None
+        self.pokemon_stats.rebuild()
 
     def confirm_team(self):
         bus_de_eventos_global.disparar("ESTABLECER_NUM_POKEMONES", 4)
@@ -91,6 +101,7 @@ class TeamScene(Scene):
                         if self.team_pokemons[idx] is None:
                             self.selected_slot = idx
                             self.on_grid = True
+                            self._update_stats()
                         return
 
                 if all(self.team_pokemons) and self.continue_button.is_selected(event.pos):
@@ -114,6 +125,7 @@ class TeamScene(Scene):
                         if self.team_pokemons[self.selected_index] is None:
                             self.selected_slot = self.selected_index
                             self.on_grid = True
+                            self._update_stats()
                     else:
                         self.confirm_team()
 
@@ -123,17 +135,19 @@ class TeamScene(Scene):
             elif self.on_grid:
                 if event.key == Controls.LEFT.value:
                     self.grid_col = (self.grid_col - 1) % 4
+                    self._update_stats()
 
                 elif event.key == Controls.RIGHT.value:
                     self.grid_col = (self.grid_col + 1) % 4
+                    self._update_stats()
 
                 elif event.key == Controls.UP.value:
                     if self.grid_row > 0:
                         self.grid_row -= 1
-
                     elif self.scroll_offset > 0:
                         self.scroll_offset -= 4
                         self.selection_cards = self.build_grid()
+                    self._update_stats()
 
                 elif event.key == Controls.DOWN.value:
                     if self.grid_row < 2:
@@ -143,6 +157,7 @@ class TeamScene(Scene):
                         if self.scroll_offset < max_offset:
                             self.scroll_offset += 4
                             self.selection_cards = self.build_grid()
+                    self._update_stats()
 
                 elif event.key in Controls.SELECT.value:
                     idx = self.scroll_offset + self.grid_row * 4 + self.grid_col
@@ -174,3 +189,5 @@ class TeamScene(Scene):
         for idx, card in enumerate(self.selection_cards):
             r, c = idx // 4, idx % 4
             card.draw(screen, is_selected=(r == self.grid_row and c == self.grid_col and self.on_grid))
+
+        self.pokemon_stats.draw(screen)

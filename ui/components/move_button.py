@@ -38,13 +38,18 @@ class MoveButton(Button):
             f"assets/ui/move-class-icons/{self.move.damage_class.name.lower()}.png"
         )
 
-        text_font = Fonts.get_font(12)
+        text_font = Fonts.get_font(16)
         move_name_text = self.move.name.upper()
 
-        name_text_surface = text_font.render(move_name_text, True, Colors.WHITE.value)
+        name_text_surface = text_font.render(move_name_text, False, Colors.WHITE.value)
+        name_shadow = text_font.render(move_name_text, False, Colors.BLACK.value)
         pp_text_surface = text_font.render(
             f"PP {self.move.current_power_points}/{self.move.power_points}",
-            True, Colors.WHITE.value,
+            False, Colors.WHITE.value,
+        )
+        pp_shadow = text_font.render(
+            f"PP {self.move.current_power_points}/{self.move.power_points}",
+            False, Colors.BLACK.value,
         )
 
         if background_surface:
@@ -98,7 +103,9 @@ class MoveButton(Button):
         name_text_position_y = self.position_y + (self.height - text_block_height) // 2
         pp_text_position_y = name_text_position_y + name_text_surface.get_height() + 2
 
+        screen.blit(name_shadow, (text_block_start_x + 1, name_text_position_y + 1))
         screen.blit(name_text_surface, (text_block_start_x, name_text_position_y))
+        screen.blit(pp_shadow, (text_block_start_x + 1, pp_text_position_y + 1))
         screen.blit(pp_text_surface, (text_block_start_x, pp_text_position_y))
 
         if is_selected:

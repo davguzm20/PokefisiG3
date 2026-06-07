@@ -1,7 +1,6 @@
 import random
 import copy
 import time
-import threading
 
 from pokemon.motor.juego_interfaz import Juego, IA
 from pokemon.pokemon_factory import PokemonFactory

@@ -587,7 +587,7 @@ def poda_alfa_beta(puntaje, nodo):
     
     if nodo.padre.turnoMax:
         if puntaje >= nodo.padre.beta:
-            print(f"{'  ' * nodo.profundidad} >>>> PODA <<<< | Alfa ({puntaje}) >= Beta ({nodo.beta})")
+            #print(f"{'  ' * nodo.profundidad} >>>> PODA <<<< | Alfa ({puntaje}) >= Beta ({nodo.beta})")
             nodo.padre.puntaje = puntaje
             return True
         if puntaje > nodo.padre.alfa:
@@ -597,7 +597,7 @@ def poda_alfa_beta(puntaje, nodo):
     else:
         if puntaje <= nodo.padre.alfa: #Si hay poda no actualizas nada
             nodo.padre.puntaje = puntaje
-            print(f"{'  ' * nodo.profundidad} >>>> PODA <<<< Alfa ({nodo.alfa}) >= Beta ({puntaje})")
+            #print(f"{'  ' * nodo.profundidad} >>>> PODA <<<< Alfa ({nodo.alfa}) >= Beta ({puntaje})")
             return True
         if puntaje < nodo.padre.beta: # Aquí hay un problema. La poda puede suceder después de revisar uno de los hijos y sería necesario revertir el cambio. Porque el nodo ascenderá al padre y lo cambiará
             nodo.padre.beta = puntaje
@@ -623,7 +623,7 @@ def minimax_recursivov2(nodo, profundidad, lado_ia, max, pesos):
     
     equipo_ia, equipo_oponente = (estado_actual.equipoP1, estado_actual.equipoP2)  if lado_ia == 1 else (estado_actual.equipoP2, estado_actual.equipoP1)
     
-    print(f"{'  ' * nodo.profundidad}====> Entrando a Nodo Prof: {nodo.profundidad} | TurnoMax: {nodo.turnoMax} | Alfa: {nodo.alfa} | Beta: {nodo.beta}")
+    #print(f"{'  ' * nodo.profundidad}====> Entrando a Nodo Prof: {nodo.profundidad} | TurnoMax: {nodo.turnoMax} | Alfa: {nodo.alfa} | Beta: {nodo.beta}")
 
     beta_antes_de_la_poda = nodo.beta
     alfa_antes_de_la_poda = nodo.alfa
@@ -636,7 +636,7 @@ def minimax_recursivov2(nodo, profundidad, lado_ia, max, pesos):
             else:
                 nodo.puntaje = 999999
             
-            print(f"{'  ' * nodo.profundidad}<==== Saliendo de Nodo Prof: {nodo.profundidad} | Puntaje asignado: {nodo.puntaje}")
+            #print(f"{'  ' * nodo.profundidad}<==== Saliendo de Nodo Prof: {nodo.profundidad} | Puntaje asignado: {nodo.puntaje}")
             return poda_alfa_beta(nodo.puntaje, nodo)
             
         if estado_actual.conteo_vivos(2) == 0:
@@ -645,7 +645,7 @@ def minimax_recursivov2(nodo, profundidad, lado_ia, max, pesos):
             else:
                 nodo.puntaje = -99999
             
-            print(f"{'  ' * nodo.profundidad}<==== Saliendo de Nodo Prof: {nodo.profundidad} | Puntaje asignado: {nodo.puntaje}")
+            #print(f"{'  ' * nodo.profundidad}<==== Saliendo de Nodo Prof: {nodo.profundidad} | Puntaje asignado: {nodo.puntaje}")
             return poda_alfa_beta(nodo.puntaje, nodo)
 
     if nodo.profundidad == profundidad:
@@ -654,7 +654,7 @@ def minimax_recursivov2(nodo, profundidad, lado_ia, max, pesos):
         #El padre se actualiza los alfas y betas
         if not isinstance(nodo.padre, NodoV2):
             print("padre debe ser instacia de Nodo")
-        print(f"{'  ' * nodo.profundidad}<==== Saliendo de Nodo Prof: {nodo.profundidad} | Puntaje asignado: {nodo.puntaje}")
+        #print(f"{'  ' * nodo.profundidad}<==== Saliendo de Nodo Prof: {nodo.profundidad} | Puntaje asignado: {nodo.puntaje}")
         return poda_alfa_beta(nodo.puntaje, nodo)
         
     if nodo.profundidad != profundidad:
@@ -699,7 +699,7 @@ def minimax_recursivov2(nodo, profundidad, lado_ia, max, pesos):
         else:
             equipoAtacante = equipo_oponente
 
-        movimientos_ordenados = sorted(equipoAtacante[0].moves, key=lambda x: x.power if x.power is not None else 0, reverse=True)
+        movimientos_ordenados = sorted(equipoAtacante[0].moves, key=lambda x: x.power if x.power is not None else 0, reverse=False)
 
         for movimiento in movimientos_ordenados: # =====================
             #print(movimiento.name)
@@ -715,7 +715,7 @@ def minimax_recursivov2(nodo, profundidad, lado_ia, max, pesos):
                 equipo_atacante = estado_sucesor.getEquipo(lado_ia - 1)
                 equipo_defensor = estado_sucesor.getEquipo(lado_ia)
 
-            print(f'se estaría usando el movimiento {movimiento.name} sobre {equipo_defensor[0].name} con hp: {equipo_defensor[0].hp}')
+            #print(f'se estaría usando el movimiento {movimiento.name} sobre {equipo_defensor[0].name} con hp: {equipo_defensor[0].hp}')
 
             danio_final = calcular_daño(equipo_atacante[0], equipo_defensor[0], movimiento)
 
@@ -747,7 +747,7 @@ def minimax_recursivov2(nodo, profundidad, lado_ia, max, pesos):
     # En este punto el nodo entregará su alfa o beta al padre dependiendo de si hubo poda cuando este nodo reviso sus hijos.
     # Si hubo poda lo único que tiene que entregar el nodo al padre es el puntaje del nodo donde hubo poda. Porque el padre necesita ese dato para realizar su poda en como esta planteado este algoritmo
     if nodo.profundidad != 0 and nodo.hay_poda:
-        print(f"Hubo poda entocnes necesito arreglar el alfa/beta de este Nodo Prof: {nodo.profundidad} ALFA: {nodo.alfa} | Beta: {nodo.beta}")
+        #print(f"Hubo poda entocnes necesito arreglar el alfa/beta de este Nodo Prof: {nodo.profundidad} ALFA: {nodo.alfa} | Beta: {nodo.beta}")
         if nodo.turnoMax:
             nodo.alfa = alfa_antes_de_la_poda
         else: #En un turno Min si hubo poda es posible que se haya actualizado el beta de este nodo, es necesario evitar ese camboi
@@ -757,29 +757,29 @@ def minimax_recursivov2(nodo, profundidad, lado_ia, max, pesos):
 
     #Muchas veces sucedía que al entrar al primer hijo de un nodo había poda. Lo que significa que se perdía el puntaje que se supone se asignaría al padre para la poda, haciendo que falle. Aquí se le asigna el puntaje 
     if nodo.profundidad != 0 and not nodo.hay_poda:
-        print(f"{nodo.puntaje} | ALFA: {nodo.alfa} | Beta: {nodo.beta}")
+        #print(f"{nodo.puntaje} | ALFA: {nodo.alfa} | Beta: {nodo.beta}")
         if nodo.profundidad != 1:
             if nodo.turnoMax:
                 nodo.puntaje = nodo.alfa
             else:
                 nodo.puntaje = nodo.beta
-            print(f"{'  ' * nodo.profundidad}<==== Saliendo de Nodo Prof: {nodo.profundidad} | ALFA: {nodo.alfa} | Beta: {nodo.beta} | Puntaje asignado: {nodo.puntaje}")
+            #print(f"{'  ' * nodo.profundidad}<==== Saliendo de Nodo Prof: {nodo.profundidad} | ALFA: {nodo.alfa} | Beta: {nodo.beta} | Puntaje asignado: {nodo.puntaje}")
             return poda_alfa_beta(nodo.puntaje, nodo)
     
     # Si hay poda, la poda del hijo de este nodo se habrá encargado de darle el puntaje necesario (a excepción de si la poda ocurre con el primer hijo) para que el padre de este nodo evalue su poda
     if nodo.profundidad != 0:
         if nodo.profundidad != 1:
-            print(f"{nodo.puntaje} | ALFA: {nodo.alfa} | Beta: {nodo.beta}")
-            print(f"{'  ' * nodo.profundidad}<==== Saliendo de Nodo Prof: {nodo.profundidad} | ALFA: {nodo.alfa} | Beta: {nodo.beta} | Puntaje asignado: {nodo.puntaje}")
+            #print(f"{nodo.puntaje} | ALFA: {nodo.alfa} | Beta: {nodo.beta}")
+            #print(f"{'  ' * nodo.profundidad}<==== Saliendo de Nodo Prof: {nodo.profundidad} | ALFA: {nodo.alfa} | Beta: {nodo.beta} | Puntaje asignado: {nodo.puntaje}")
             return poda_alfa_beta(nodo.puntaje, nodo)
 
     if nodo.profundidad == 1: #Cuando se está en hijos de profundidad 1 la poda es diferente porque en este punto minimax tomará la decisión. Lo importante para el padre es saber el operador
-        print(nodo.estado.operador, nodo.padre.profundidad, nodo.padre.turnoMax, nodo.padre.hijo_escogido, nodo.padre.alfa, nodo.padre.beta, nodo.puntaje)
+        #print(nodo.estado.operador, nodo.padre.profundidad, nodo.padre.turnoMax, nodo.padre.hijo_escogido, nodo.padre.alfa, nodo.padre.beta, nodo.puntaje)
         if nodo.puntaje == 999999 or nodo.puntaje == -99999: nodo.padre.hijo_escogido = nodo.estado
         if nodo.padre.turnoMax:
             if nodo.puntaje >= nodo.padre.beta:
                 nodo.padre.hijo_escogido = nodo.estado
-                print(f"{'  ' * nodo.profundidad}<==== Saliendo de Nodo Prof: {nodo.profundidad} | Puntaje asignado: {nodo.puntaje} | {nodo.padre.hijo_escogido} | {nodo.estado.operador}")
+                #print(f"{'  ' * nodo.profundidad}<==== Saliendo de Nodo Prof: {nodo.profundidad} | Puntaje asignado: {nodo.puntaje} | {nodo.padre.hijo_escogido} | {nodo.estado.operador}")
                 return True
             if nodo.puntaje > nodo.padre.alfa:
                 nodo.padre.alfa = nodo.puntaje
@@ -788,14 +788,14 @@ def minimax_recursivov2(nodo, profundidad, lado_ia, max, pesos):
         else:
             if nodo.puntaje <= nodo.padre.alfa:
                 nodo.padre.hijo_escogido = nodo.estado
-                print(f"{'  ' * nodo.profundidad}<==== Saliendo de Nodo Prof: {nodo.profundidad} | Puntaje asignado: {nodo.puntaje} | {nodo.padre.hijo_escogido} | {nodo.estado}")
+                #print(f"{'  ' * nodo.profundidad}<==== Saliendo de Nodo Prof: {nodo.profundidad} | Puntaje asignado: {nodo.puntaje} | {nodo.padre.hijo_escogido} | {nodo.estado}")
                 return True
             if nodo.puntaje < nodo.padre.beta:
                 nodo.padre.beta = nodo.puntaje
                 nodo.padre.hijo_escogido = nodo.estado
-        print(f"{'  ' * nodo.profundidad}<==== Saliendo de Nodo Prof: {nodo.profundidad} | Puntaje asignado: {nodo.puntaje} | {nodo.padre.hijo_escogido} | {nodo.estado.operador}")
+        #print(f"{'  ' * nodo.profundidad}<==== Saliendo de Nodo Prof: {nodo.profundidad} | Puntaje asignado: {nodo.puntaje} | {nodo.padre.hijo_escogido} | {nodo.estado.operador}")
         return False
         
     if nodo.profundidad == 0:
-        print(nodo.hijo_escogido.operador)
+        #print(nodo.hijo_escogido.operador)
         return nodo

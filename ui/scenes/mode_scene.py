@@ -4,6 +4,7 @@ from ui.scenes.enums.scene_type import SceneType
 from ui.scenes.enums.mode_option import ModeOption
 from ui.components.button import Button
 from ui.components.placeholder import Placeholder
+from ui.components.controls_hint import ControlsHint
 from config.colors import Colors
 from config.controls import Controls
 
@@ -16,12 +17,14 @@ class ModeScene(Scene):
                 position_x=100, position_y=282,
                 width=200, height=44,
                 label="JUGADOR VS IA",
+                text_size=18,
                 background_color=Colors.BLUE,
             ),
             ModeOption.CPU_VS_CPU: Button(
                 position_x=340, position_y=282,
                 width=200, height=44,
                 label="IA VS IA",
+                text_size=18,
                 background_color=Colors.BLUE,
             ),
         }
@@ -37,6 +40,7 @@ class ModeScene(Scene):
                 asset="assets/ui/titles/titulo-principal.png",
             ),
         ]
+        self.controls_hint = ControlsHint(show_back=True, show_click=True)
 
     def handle_event(self, event):
         if event.type == pygame.KEYDOWN:
@@ -75,3 +79,5 @@ class ModeScene(Scene):
 
         for option, button in self.buttons.items():
             button.draw(screen, option == current_option)
+
+        self.controls_hint.draw(screen)

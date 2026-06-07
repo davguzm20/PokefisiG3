@@ -14,6 +14,6 @@ class MoveDescription(Placeholder):
             height=self.HEIGHT,
             asset="assets/ui/frames/cuadro-movimiento-description.png",
             text_color=Colors.WHITE,
-            text_size=16,
+            text_size=20,
             label=text,
         )

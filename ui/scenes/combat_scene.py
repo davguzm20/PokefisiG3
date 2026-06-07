@@ -176,7 +176,7 @@ class CombatScene(Scene):
                 if pokemon:
                     if not getattr(self.health_bars[i], '_hp_animating', False):
                         self.health_bars[i].display_hp = pokemon.hp
-                        self.health_bars[i].display_max_hp = pokemon.current_hp
+                        self.health_bars[i].display_max_hp = pokemon.max_hp
                         self.health_bars[i]._hp_animating = False
                     equipo = 1 if i == 0 else 2
                     bar = self.health_bars[i]
@@ -213,7 +213,7 @@ class CombatScene(Scene):
         for bar in self.health_bars:
             if bar.pokemon:
                 bar.display_hp = bar.pokemon.hp
-                bar.display_max_hp = bar.pokemon.current_hp
+                bar.display_max_hp = bar.pokemon.max_hp
                 bar._hp_animating = False
 
         #En vez de esperar que la IA genere las acciones lo mejor será que estas acciones ya hayan sido generadas.

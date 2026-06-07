@@ -147,8 +147,10 @@ class CombatScene(Scene):
             for i, pokemon in enumerate([estado.pokemonActivoP1, estado.pokemonActivoP2]):
                 self.health_bars[i].pokemon = pokemon
                 if pokemon:
-                    self.health_bars[i].display_hp = pokemon.hp
-                    self.health_bars[i].display_max_hp = pokemon.current_hp
+                    if not getattr(self.health_bars[i], '_hp_animating', False):
+                        self.health_bars[i].display_hp = pokemon.hp
+                        self.health_bars[i].display_max_hp = pokemon.current_hp
+                        self.health_bars[i]._hp_animating = False
                     equipo = 1 if i == 0 else 2
                     bar = self.health_bars[i]
                     bar.team_total = len(estado.equipoP1 if i == 0 else estado.equipoP2)
@@ -185,6 +187,7 @@ class CombatScene(Scene):
             if bar.pokemon:
                 bar.display_hp = bar.pokemon.hp
                 bar.display_max_hp = bar.pokemon.current_hp
+                bar._hp_animating = False
 
         #En vez de esperar que la IA genere las acciones lo mejor será que estas acciones ya hayan sido generadas.
         tick = 0
@@ -267,9 +270,9 @@ class CombatScene(Scene):
             name = self.combat_messages[0].split(" a ")[-1].strip().lower()
             for bar in self.health_bars:
                 if bar.pokemon and bar.pokemon.name == name:
-                    if hasattr(bar, 'display_hp'):
-                        del bar.display_hp
-                        del bar.display_max_hp
+                    if hasattr(bar, 'display_hp') and not getattr(bar, '_hp_animating', False):
+                        bar._hp_target = bar.pokemon.hp
+                        bar._hp_animating = True
                     break
 
     def _on_message_popped(self, msg):

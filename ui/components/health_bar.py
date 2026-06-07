@@ -37,6 +37,24 @@ class HealthBar:
         px, py = self.position_x, self.position_y
         current_hp = max(0, getattr(self, 'display_hp', self.pokemon.hp))
         max_hp = getattr(self, 'display_max_hp', self.pokemon.current_hp)
+
+        if getattr(self, '_hp_animating', False):
+            target = self._hp_target
+            diff = target - current_hp
+            if abs(diff) < 0.5:
+                current_hp = target
+                self._hp_animating = False
+                if hasattr(self, '_hp_target'):
+                    del self._hp_target
+                if hasattr(self, 'display_hp'):
+                    del self.display_hp
+                if hasattr(self, 'display_max_hp'):
+                    del self.display_max_hp
+                max_hp = getattr(self, 'display_max_hp', self.pokemon.current_hp)
+            else:
+                current_hp += diff * 0.2
+                self.display_hp = current_hp
+
         ratio = current_hp / max_hp if max_hp > 0 else 0
 
         pygame.draw.rect(screen, Colors.DARK_GRAY.value, (px, py, self.PANEL_W, self.PANEL_H), border_radius=4)

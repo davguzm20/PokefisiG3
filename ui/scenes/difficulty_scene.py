@@ -4,6 +4,7 @@ from ui.scenes.enums.scene_type import SceneType
 from ui.scenes.enums.difficulty_option import DifficultyOption
 from ui.components.button import Button
 from ui.components.placeholder import Placeholder
+from ui.components.controls_hint import ControlsHint
 from pokemon.pokemon_factory import PokemonFactory
 from pokemon.motor.bus_de_eventos import bus_de_eventos_global
 from config.controls import Controls
@@ -43,6 +44,7 @@ class DifficultyScene(Scene):
                 asset="assets/ui/titles/titulo-principal.png",
             ),
         ]
+        self.controls_hint = ControlsHint(show_back=True, show_click=True)
 
     def handle_event(self, event):
         if event.type == pygame.KEYDOWN:
@@ -95,3 +97,5 @@ class DifficultyScene(Scene):
 
         for option, button in self.buttons.items():
             button.draw(screen, option == current_option)
+
+        self.controls_hint.draw(screen)

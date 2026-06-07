@@ -4,6 +4,7 @@ from ui.scenes.enums.scene_type import SceneType
 from ui.scenes.enums.mode_option import ModeOption
 from ui.components.button import Button
 from ui.components.placeholder import Placeholder
+from ui.components.controls_hint import ControlsHint
 from config.colors import Colors
 from config.controls import Controls
 
@@ -39,6 +40,7 @@ class ModeScene(Scene):
                 asset="assets/ui/titles/titulo-principal.png",
             ),
         ]
+        self.controls_hint = ControlsHint(show_back=True, show_click=True)
 
     def handle_event(self, event):
         if event.type == pygame.KEYDOWN:
@@ -77,3 +79,5 @@ class ModeScene(Scene):
 
         for option, button in self.buttons.items():
             button.draw(screen, option == current_option)
+
+        self.controls_hint.draw(screen)

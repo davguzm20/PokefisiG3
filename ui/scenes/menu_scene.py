@@ -4,6 +4,7 @@ from ui.scenes.enums.scene_type import SceneType
 from ui.scenes.enums.menu_option import MenuOption
 from ui.components.button import Button
 from ui.components.placeholder import Placeholder
+from ui.components.controls_hint import ControlsHint
 from config.controls import Controls
 
 class MenuScene(Scene):
@@ -39,6 +40,7 @@ class MenuScene(Scene):
                 asset="assets/ui/titles/titulo-principal.png",
             ),
         ]
+        self.controls_hint = ControlsHint(show_back=False, show_click=True)
 
     def handle_event(self, event):
         if event.type == pygame.KEYDOWN:
@@ -74,3 +76,5 @@ class MenuScene(Scene):
         
         for option, button in self.buttons.items():
             button.draw(screen, option == current_option)
+
+        self.controls_hint.draw(screen)

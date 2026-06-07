@@ -98,10 +98,9 @@ class TeamScene(Scene):
                 for idx, card in enumerate(self.team_cards):
                     if card.rect.collidepoint(event.pos):
                         self.selected_index = idx
-                        if self.team_pokemons[idx] is None:
-                            self.selected_slot = idx
-                            self.on_grid = True
-                            self._update_stats()
+                        self.selected_slot = idx
+                        self.on_grid = True
+                        self._update_stats()
                         return
 
                 if all(self.team_pokemons) and self.continue_button.is_selected(event.pos):
@@ -122,10 +121,9 @@ class TeamScene(Scene):
 
                 elif event.key in Controls.SELECT.value:
                     if self.selected_index < 4:
-                        if self.team_pokemons[self.selected_index] is None:
-                            self.selected_slot = self.selected_index
-                            self.on_grid = True
-                            self._update_stats()
+                        self.selected_slot = self.selected_index
+                        self.on_grid = True
+                        self._update_stats()
                     else:
                         self.confirm_team()
 

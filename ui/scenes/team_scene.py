@@ -6,6 +6,7 @@ from ui.components.pokemon_card import PokemonCard
 from ui.components.button import Button
 from ui.components.placeholder import Placeholder
 from ui.components.pokemon_stats import PokemonStats
+from ui.components.controls_hint import ControlsHint
 from pokemon.pokemon_factory import PokemonFactory
 from pokemon.motor.bus_de_eventos import bus_de_eventos_global
 from config.colors import Colors
@@ -23,20 +24,20 @@ class TeamScene(Scene):
 
         self.team_pokemons = [None, None, None, None]
         self.team_cards = [
-            PokemonCard(position_x=35, position_y=5),
-            PokemonCard(position_x=135, position_y=5),
-            PokemonCard(position_x=235, position_y=5),
-            PokemonCard(position_x=335, position_y=5),
+            PokemonCard(position_x=25, position_y=10),
+            PokemonCard(position_x=125, position_y=10),
+            PokemonCard(position_x=225, position_y=10),
+            PokemonCard(position_x=325, position_y=10),
         ]
         self.continue_button = Button(
-            position_x=490, position_y=15,
+            position_x=490, position_y=23,
             width=110, height=36,
             label="CONTINUAR",
             text_size=16,
             background_color=Colors.BLUE,
         )
         self.selection_cards = self.build_grid()
-        self.pokemon_stats = PokemonStats(position_x=420, position_y=108)
+        self.pokemon_stats = PokemonStats(position_x=410, position_y=100)
         self.placeholders = [
             Placeholder(
                 position_x=0, position_y=0,
@@ -44,6 +45,12 @@ class TeamScene(Scene):
                 asset="assets/backgrounds/menus/fondo-campo.png",
             ),
         ]
+        self.controls_hint_slot = ControlsHint(show_back=True, select_label="SELECCIONAR", show_click=True)
+        self.controls_hint_grid = ControlsHint(show_left=True, show_right=True,
+                                                show_up=True, show_down=True,
+                                                show_select=True, show_back=True,
+                                                select_label="SELECCIONAR",
+                                                show_click=True)
 
     def build_grid(self):
         cards = []
@@ -53,8 +60,8 @@ class TeamScene(Scene):
                 idx = self.scroll_offset + row * 4 + col
                 pokemon = PokemonFactory.pokemons[idx] if idx < len(PokemonFactory.pokemons) else None
                 cards.append(PokemonCard(
-                    position_x=[35, 135, 235, 335][col],
-                    position_y=[108, 187, 266][row],
+                    position_x=[25, 125, 225, 325][col],
+                    position_y=[100, 178, 256][row],
                     pokemon=pokemon,
                 ))
 
@@ -189,3 +196,8 @@ class TeamScene(Scene):
             card.draw(screen, is_selected=(r == self.grid_row and c == self.grid_col and self.on_grid))
 
         self.pokemon_stats.draw(screen)
+
+        if self.on_grid:
+            self.controls_hint_grid.draw(screen)
+        else:
+            self.controls_hint_slot.draw(screen)

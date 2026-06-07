@@ -8,6 +8,7 @@ from ui.components.move_button import MoveButton
 from ui.components.move_description import MoveDescription
 from ui.components.health_bar import HealthBar
 from ui.components.button import Button
+from ui.components.controls_hint import ControlsHint
 from ui.utils.fonts import Fonts
 from config.controls import Controls
 from config.colors import Colors
@@ -55,7 +56,7 @@ class CombatScene(Scene):
         self._button_gap_y = 10
         self._button_total_width = self._button_columns * 150 + (self._button_columns - 1) * self._button_gap_x
         self._button_start_x = (640 - self._button_total_width) // 2
-        self._button_start_y = 360 - 50 * 2 - self._button_gap_y - 10
+        self._button_start_y = 360 - 50 * 2 - self._button_gap_y - 18
 
         self._rebuild_pokemon_layout()
         self._rebuild_move_buttons()
@@ -64,6 +65,13 @@ class CombatScene(Scene):
             position_y=20,
             text="",
         )
+
+        self.controls_hint = ControlsHint(show_left=True, show_right=True,
+                                           show_up=True, show_down=True,
+                                           show_select=True, show_back=True,
+                                           select_label="SELECCIONAR",
+                                           show_click=True,
+                                           position_y=352)
 
         self.menu_button = Button(
             position_x=220, position_y=220,
@@ -293,6 +301,8 @@ class CombatScene(Scene):
             self.move_description.label = ""
         self.move_description.draw(screen)
         self.turn_placeholder.draw(screen)
+
+        self.controls_hint.draw(screen)
 
         if self._game_over and not self.combat_messages and self._winner:
             overlay = pygame.Surface((640, 360), pygame.SRCALPHA)

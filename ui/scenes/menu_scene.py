@@ -13,17 +13,12 @@ class MenuScene(Scene):
         self.selected_index = 0
         self.buttons = {
             MenuOption.PLAY: Button(
-                position_x=260, position_y=282,
+                position_x=180, position_y=282,
                 width=120, height=44,
                 asset="assets/ui/buttons/button-play.png",
             ),
-            MenuOption.RANKING: Button(
-                position_x=480, position_y=282,
-                width=120, height=44,
-                asset="assets/ui/buttons/button-ranking.png",
-            ),
             MenuOption.QUIT: Button(
-                position_x=40, position_y=282,
+                position_x=340, position_y=282,
                 width=120, height=44,
                 asset="assets/ui/buttons/button-leave.png",
             ),
@@ -63,8 +58,6 @@ class MenuScene(Scene):
 
         if option == MenuOption.PLAY:
             self.scene_manager.change_scene(SceneType.MODE)
-        elif option == MenuOption.RANKING:
-            pass
         elif option == MenuOption.QUIT:
             pygame.event.post(pygame.Event(pygame.QUIT))
 

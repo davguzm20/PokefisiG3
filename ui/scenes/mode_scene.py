@@ -17,14 +17,14 @@ class ModeScene(Scene):
                 position_x=100, position_y=282,
                 width=200, height=44,
                 label="JUGADOR VS IA",
-                text_size=16,
+                text_size=18,
                 background_color=Colors.BLUE,
             ),
             ModeOption.CPU_VS_CPU: Button(
                 position_x=340, position_y=282,
                 width=200, height=44,
                 label="IA VS IA",
-                text_size=16,
+                text_size=18,
                 background_color=Colors.BLUE,
             ),
         }

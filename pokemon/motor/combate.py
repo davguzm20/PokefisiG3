@@ -214,10 +214,10 @@ class Combate:
             estado_juego = self.estado_del_equipo
         
         if estado_juego.conteo_vivos(2) == 0:
-            self._emit("El jugador gana")
+            self._emit("¡El Equipo 1 gana!")
             return True
         elif estado_juego.conteo_vivos(1) == 0:
-            self._emit("El oponente gana")
+            self._emit("¡El Equipo 2 gana!")
             return True
 
         return False

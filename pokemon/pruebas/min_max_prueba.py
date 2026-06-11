@@ -116,7 +116,9 @@ estado.setEquipo(equipoP2, equipo=2)
 nodo = NodoV2(estado, profundidad=0)
 #motor = Combate(estado)
 print(" ==================== MiniMax =====================")
-nodo = minimax_recursivov2(nodo, 4, 1, 1, pesos_mock)
+nodo = minimax_recursivov2(nodo, 2, 1, 1, pesos_mock)
+
+
 
 if nodo.hijo_escogido.operador["movimiento"]: print(f'El movimiento escogido es: {nodo.hijo_escogido.operador["movimiento"].name}')
 if nodo.hijo_escogido.operador["intercambio"]:print(f'Se hizo un intercambio con el pokemon de indice: {nodo.hijo_escogido.operador["intercambio"]}')

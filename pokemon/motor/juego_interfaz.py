@@ -5,7 +5,6 @@ from pokemon.motor.estado_juego import EstadoJuego
 from pokemon.motor.bus_de_eventos import bus_de_eventos_global
 ##IA
 from pokemon.agenteP.agenteP import AgenteP, elegirMovimientoAleatorio, movimiento_en_base_a_mayor_daño, heuristica_difHP, minimax_recursivov2, copiar_estado, NodoV2
-from pokemon.motor.hilos import mini_max_recursivo_thread
 
 import threading
 import time
@@ -17,11 +16,11 @@ pesos_mock = {
     "vivos": 0.2
 }
 
-pesos_mock = {
-    "hp": 1.0,
-    "velocidad": 0,
-    "tipo": 0,
-    "vivos": 0
+pesos_optimizados = {
+    "hp": 0.65,
+    "velocidad": 0.242,
+    "tipo": 0.0,
+    "vivos": 0.151
 }
 
 #Instancien una única vez esta clase
@@ -98,8 +97,6 @@ class Juego:
     def configurar_jugador_como_IA(self, num_jugador, nivel_ia, pokemones_disponibles, profundidad = 4, pesos = pesos_mock):
         equipo = []
 
-        
-
         for i in range(self.num_pokemones):
             p_sel = copy.deepcopy(random.choice(pokemones_disponibles))
             random.shuffle(p_sel.moves)
@@ -127,6 +124,14 @@ class Juego:
         
             print(f"IA {num_jugador} eligió a {p_sel.name} con movimientos aleatorios.")
         print(f"Nivel de IA seleccionado: {nivel_ia}")
+
+        self.estado.setEquipo(equipo, num_jugador)
+        if num_jugador == 1:
+            self.jugador1 = IA(nivel_ia, num_jugador, profundidad_minimax = profundidad, pesos= pesos)
+        else:
+            self.jugador2 = IA(nivel_ia, num_jugador, profundidad_minimax = profundidad, pesos= pesos)
+
+    def configurar_jugador_como_IA_con_equipo(self, num_jugador, nivel_ia, equipo, profundidad = 4, pesos = pesos_mock):
 
         self.estado.setEquipo(equipo, num_jugador)
         if num_jugador == 1:

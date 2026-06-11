@@ -68,7 +68,7 @@ class PokemonStats:
                     screen.blit(icon, (start_x + i * 36, py + 114))
 
         stats = [
-            ("HP", self.pokemon.current_hp),
+            ("HP", self.pokemon.max_hp),
             ("ATK", self.pokemon.attack),
             ("DEF", self.pokemon.defense),
             ("SPA", self.pokemon.special_attack),

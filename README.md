@@ -6,7 +6,7 @@ PokefisiG3 es un simulador de combates Pokémon donde se involucra Inteligencia 
 
 - 30 pokémons disponibles
 - 4 pokémons por equipo
-- Nivel fijo de 75
+- Nivel fijo de 50
 - Sin objetos
 
 ## Requisitos

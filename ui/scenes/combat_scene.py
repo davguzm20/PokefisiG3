@@ -6,6 +6,10 @@ from ui.components.placeholder import Placeholder
 from ui.components.pokemon_layout import PokemonLayout
 from ui.components.move_button import MoveButton
 from ui.components.move_description import MoveDescription
+from ui.components.health_bar import HealthBar
+from ui.components.button import Button
+from ui.components.controls_hint import ControlsHint
+from ui.utils.fonts import Fonts
 from config.controls import Controls
 from config.colors import Colors
 from pokemon.motor.bus_de_eventos import bus_de_eventos_global
@@ -21,6 +25,7 @@ class CombatScene(Scene):
         self._message_timer = 0
         self._game_over = False
         self._last_pop_time = 0
+        self._winner = None
         self.acciones = Acciones()
         self.generando_acciones = False
         self._ejecutando_turno = False
@@ -41,13 +46,17 @@ class CombatScene(Scene):
             PokemonLayout(position_x=125, position_y=75, number_player=1),
             PokemonLayout(position_x=350, position_y=50, number_player=2),
         ]
+        self.health_bars = [
+            HealthBar(position_x=5, position_y=100),
+            HealthBar(position_x=530, position_y=100),
+        ]
 
         self._button_columns = 2
         self._button_gap_x = 25
         self._button_gap_y = 10
         self._button_total_width = self._button_columns * 150 + (self._button_columns - 1) * self._button_gap_x
         self._button_start_x = (640 - self._button_total_width) // 2
-        self._button_start_y = 360 - 50 * 2 - self._button_gap_y - 10
+        self._button_start_y = 360 - 50 * 2 - self._button_gap_y - 18
 
         self._rebuild_pokemon_layout()
         self._rebuild_move_buttons()
@@ -55,6 +64,22 @@ class CombatScene(Scene):
         self.move_description = MoveDescription(
             position_y=20,
             text="",
+        )
+
+        self.controls_hint = ControlsHint(show_left=True, show_right=True,
+                                           show_up=True, show_down=True,
+                                           show_select=True, show_back=True,
+                                           select_label="SELECCIONAR",
+                                           show_click=True,
+                                           position_y=352)
+
+        self.menu_button = Button(
+            position_x=220, position_y=220,
+            width=200, height=44,
+            label="VOLVER AL MENÚ",
+            text_size=16,
+            background_color=Colors.GREEN,
+            selected_color=Colors.GOLD,
         )
 
         move_description_x = (640 - MoveDescription.WIDTH) // 2
@@ -65,7 +90,7 @@ class CombatScene(Scene):
             height=35,
             asset="assets/ui/frames/cuadro-turno.png",
             text_color=Colors.WHITE,
-            text_size=16,
+            text_size=20,
             label="",
         )
 
@@ -76,15 +101,23 @@ class CombatScene(Scene):
     def handle_event(self, event):
         
         if not self.generando_acciones and not self.acciones.acciones_escogidas:
-            bus_de_eventos_global.disparar("GENERAR_ACCIONES_IA", self.acciones, self)
-            self.generando_acciones = True
+            bus_de_eventos_global.disparar("GENERAR_ACCIONES_IA", self.acciones, self.generando_acciones)
+            self.generando_acciones = True      
+            
 
         if event.type == pygame.KEYDOWN:
             if self._game_over:
                 
-                if event.key in Controls.SELECT.value and len(self.combat_messages) > 1:
+                if not self.combat_messages:
+                    if event.key in Controls.SELECT.value:
+                        self.scene_manager.change_scene(SceneType.MENU)
+                    return
+
+                if event.key in Controls.SELECT.value and len(self.combat_messages) > 0:
                     now = pygame.time.get_ticks()
                     if now - self._last_pop_time > 500:
+                        self._release_hp_snapshot()
+                        self._on_message_popped(self.combat_messages[0])
                         self.combat_messages.pop(0)
                         self._last_pop_time = now
                 return
@@ -95,7 +128,9 @@ class CombatScene(Scene):
                     if now - self._last_pop_time < 500:
                         return
                     self._last_pop_time = now
+                    self._release_hp_snapshot()
                     if self.combat_messages:
+                        self._on_message_popped(self.combat_messages[0])
                         self.combat_messages.pop(0)
                     if not self.combat_messages:
                         self.showing_messages = False
@@ -126,7 +161,9 @@ class CombatScene(Scene):
                 self.scene_manager.change_scene(SceneType.MENU)
 
         elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
-            if self._game_over:
+            if self._game_over and not self.combat_messages:
+                if self.menu_button.is_selected(event.pos):
+                    self.scene_manager.change_scene(SceneType.MENU)
                 return
             if self.showing_messages:
                 return
@@ -141,6 +178,17 @@ class CombatScene(Scene):
             estado = juego.get_combate().estado_del_equipo
             self.pokemon_layouts[0].pokemon = estado.pokemonActivoP1
             self.pokemon_layouts[1].pokemon = estado.pokemonActivoP2
+            for i, pokemon in enumerate([estado.pokemonActivoP1, estado.pokemonActivoP2]):
+                self.health_bars[i].pokemon = pokemon
+                if pokemon:
+                    if not getattr(self.health_bars[i], '_hp_animating', False):
+                        self.health_bars[i].display_hp = pokemon.hp
+                        self.health_bars[i].display_max_hp = pokemon.max_hp
+                        self.health_bars[i]._hp_animating = False
+                    equipo = 1 if i == 0 else 2
+                    bar = self.health_bars[i]
+                    bar.team_total = len(estado.equipoP1 if i == 0 else estado.equipoP2)
+                    bar.team_alive = estado.conteo_vivos(equipo)
 
             
 
@@ -171,20 +219,25 @@ class CombatScene(Scene):
         juego = self.scene_manager.juego
         self.combat_messages.clear()
 
-        #En vez de esperar que la IA genere las acciones lo mejor será que estas acciones ya hayan sido generadas.
-        if self._ejecutando_turno:
-            return
-        self._ejecutando_turno = True
+        for bar in self.health_bars:
+            if bar.pokemon:
+                bar.display_hp = bar.pokemon.hp
+                bar.display_max_hp = bar.pokemon.max_hp
+                bar._hp_animating = False
 
-        if not self._is_ai_vs_ai:
-            while self.generando_acciones:
-                self.scene_manager.update()
-                self.scene_manager.draw()
-                pygame.display.flip()
-        
-        if not self.acciones.acciones_escogidas:
-            self._ejecutando_turno = False
-            return
+        #En vez de esperar que la IA genere las acciones lo mejor será que estas acciones ya hayan sido generadas.
+        tick = 0
+        while self.generando_acciones:
+            if tick == 0:
+                self.combat_messages.append("Tu turno")
+                tick += 1
+            self.scene_manager.update()
+            self.scene_manager.draw()
+            pygame.display.flip()
+            #print(self.acciones.accionP1, self.acciones.accionP2, self.acciones.acciones_escogidas)
+            if self.acciones.acciones_escogidas:
+                self.combat_messages.clear()
+                self.generando_acciones = False
 
         if self._is_ai_vs_ai:
             accion_P1, accion_P2 = (self.acciones.accionP1, self.acciones.accionP2)
@@ -212,12 +265,17 @@ class CombatScene(Scene):
             
         if self._is_ai_vs_ai:
             if self.showing_messages:
-                if len(self.combat_messages) > 1 and self._message_timer and pygame.time.get_ticks() >= self._message_timer:
+                if len(self.combat_messages) > 0 and self._message_timer and pygame.time.get_ticks() >= self._message_timer:
+                    self._release_hp_snapshot()
+                    self._on_message_popped(self.combat_messages[0])
                     self.combat_messages.pop(0)
                     self._message_timer = pygame.time.get_ticks() + 1500
                 elif not self.combat_messages:
-                    self.showing_messages = False
-                    self._message_timer = pygame.time.get_ticks() + 1000
+                    if not self._game_over:
+                        self.showing_messages = False
+                        self._rebuild_pokemon_layout()
+                        self._rebuild_move_buttons()
+                        self._message_timer = pygame.time.get_ticks() + 1000
             elif not self._game_over:
                 if self._message_timer == 0:
                     self._message_timer = pygame.time.get_ticks() + 1000
@@ -231,25 +289,75 @@ class CombatScene(Scene):
         for layout in self.pokemon_layouts:
             layout.draw(screen)
 
+        for i, bar in enumerate(self.health_bars):
+            bar.draw(screen)
+
         for index, move_button in enumerate(self.move_buttons):
             move_button.draw(screen, is_selected=(index == self.selected_index))
 
         if self.combat_messages:
-            self.move_description.label = self.combat_messages[0]
+            msg = self.combat_messages[0]
+            if msg == "IA pensando..." and not self._is_ai_vs_ai:
+                msg = "Tu turno"
+            self.move_description.label = msg
         else:
             self.move_description.label = ""
         self.move_description.draw(screen)
         self.turn_placeholder.draw(screen)
+
+        self.controls_hint.draw(screen)
+
+        if self._game_over and not self.combat_messages and self._winner:
+            overlay = pygame.Surface((640, 360), pygame.SRCALPHA)
+            overlay.fill((0, 0, 0, 180))
+            screen.blit(overlay, (0, 0))
+
+            panel = pygame.Surface((320, 180), pygame.SRCALPHA)
+            panel.fill((20, 20, 20, 220))
+            panel_rect = panel.get_rect(center=(320, 150))
+            screen.blit(panel, panel_rect)
+            pygame.draw.rect(screen, Colors.GOLD.value, panel_rect, 3)
+
+            font = Fonts.get_font(36)
+            if self._is_ai_vs_ai:
+                text = "¡EL JUGADOR 1 GANA!" if self._winner == "player" else "¡EL JUGADOR 2 GANA!"
+            else:
+                text = "VICTORIA" if self._winner == "player" else "DERROTA"
+            color = Colors.GREEN.value if self._winner == "player" else Colors.RED.value
+            text_surface = font.render(text, False, color)
+            shadow = font.render(text, False, Colors.BLACK.value)
+            text_rect = text_surface.get_rect(center=(320, 125))
+            screen.blit(shadow, (text_rect.x + 1, text_rect.y + 1))
+            screen.blit(text_surface, text_rect)
+
+            self.menu_button.draw(screen, is_selected=True)
     
     #Elegibles es un arreglo de tuplas, donde cada tupla es (indice de pokemon en el equipo del jugador, referencia al pokemon)
+    def _release_hp_snapshot(self):
+        if self.combat_messages and "daño" in self.combat_messages[0]:
+            name = self.combat_messages[0].split(" a ")[-1].strip().lower()
+            for i, bar in enumerate(self.health_bars):
+                if bar.pokemon and bar.pokemon.name == name:
+                    if hasattr(bar, 'display_hp') and not getattr(bar, '_hp_animating', False):
+                        bar._hp_target = bar.pokemon.hp
+                        bar._hp_animating = True
+                    self.pokemon_layouts[i].flash()
+                    break
+
+    def _on_message_popped(self, msg):
+        if "se ha debilitado" in msg:
+            name = msg.split(" ")[0].lstrip("¡").strip().lower()
+            for i, bar in enumerate(self.health_bars):
+                if bar.pokemon and bar.pokemon.name == name and bar.team_alive > 0:
+                    bar.team_alive -= 1
+                    self.pokemon_layouts[i].start_faint()
+                    break
+        elif "gana" in msg:
+            self._winner = "player" if "Jugador 1" in msg else "opponent"
+
     def elegir_intercambio(self, elegibles, idJugador):
         juego = self.scene_manager.juego
 
-        #Esto ahora se maneja aleatoriamente pero debería manejarse usando la lista de elegibles en la interfaz para permitir al jugador elegir el nuevo indice/pokemon entrante
         idx_nuevo = random.choice(elegibles)[0]
 
-        
-        #=======================================
         juego.estado.intercambiarPokemon(idx_nuevo, idJugador)
-
-

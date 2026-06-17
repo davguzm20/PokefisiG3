@@ -4,6 +4,8 @@ from ui.scenes.enums.scene_type import SceneType
 from ui.scenes.enums.difficulty_option import DifficultyOption
 from ui.components.button import Button
 from ui.components.placeholder import Placeholder
+from ui.components.controls_hint import ControlsHint
+from config.colors import Colors
 from pokemon.pokemon_factory import PokemonFactory
 from pokemon.motor.bus_de_eventos import bus_de_eventos_global
 from config.controls import Controls
@@ -16,17 +18,17 @@ class DifficultyScene(Scene):
         self.selected_index = 0
         self.buttons = {
             DifficultyOption.EASY: Button(
-                position_x=40, position_y=282,
+                position_x=40, position_y=295,
                 width=120, height=44,
                 asset="assets/ui/buttons/button-easy.png",
             ),
             DifficultyOption.INTERMEDIATE: Button(
-                position_x=260, position_y=282,
+                position_x=260, position_y=295,
                 width=120, height=44,
                 asset="assets/ui/buttons/button-intermediate.png",
             ),
             DifficultyOption.HARD: Button(
-                position_x=480, position_y=282,
+                position_x=480, position_y=295,
                 width=120, height=44,
                 asset="assets/ui/buttons/button-hard.png",
             ),
@@ -38,12 +40,27 @@ class DifficultyScene(Scene):
                 asset="assets/backgrounds/menus/fondo-campo.png",
             ),
             Placeholder(
-                position_x=110, position_y=105,
+                position_x=110, position_y=70,
                 width=420, height=135,
                 asset="assets/ui/titles/titulo-principal.png",
             ),
         ]
-    
+        self.title_label = Placeholder(
+            position_x=0, position_y=218,
+            width=640, height=28,
+            text_color=Colors.WHITE,
+            text_size=20,
+            label="",
+        )
+        self.description_label = Placeholder(
+            position_x=0, position_y=250,
+            width=640, height=26,
+            text_color=Colors.WHITE,
+            text_size=18,
+            label="",
+        )
+        self.controls_hint = ControlsHint(show_back=True, show_click=True, position_y=352)
+
     def handle_event(self, event):
         if event.type == pygame.KEYDOWN:
             if event.key == Controls.LEFT.value:
@@ -93,5 +110,23 @@ class DifficultyScene(Scene):
 
         current_option = list(self.buttons.keys())[self.selected_index]
 
+        sm = self.scene_manager
+        if sm.game_mode == "PVAI":
+            self.title_label.label = "SELECCIONANDO IA PARA EL JUGADOR 2"
+        elif sm.game_mode == "AIVSAI":
+            self.title_label.label = f"SELECCIONANDO IA PARA EL JUGADOR {sm.current_ia_setup}"
+
+        descriptions = {
+            DifficultyOption.EASY: "ALEATORIO: La IA selecciona un movimiento al azar sin ninguna estrategia",
+            DifficultyOption.INTERMEDIATE: "HEURÍSTICO: La IA evalúa el daño de cada movimiento y elige el más favorable",
+            DifficultyOption.HARD: "MINIMAX: La IA simula el turno rival y elige según hp, velocidad, tipo, vivos",
+        }
+        self.description_label.label = descriptions[current_option]
+
+        self.title_label.draw(screen)
+        self.description_label.draw(screen)
+
         for option, button in self.buttons.items():
             button.draw(screen, option == current_option)
+
+        self.controls_hint.draw(screen)

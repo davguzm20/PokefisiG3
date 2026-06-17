@@ -4,6 +4,7 @@ from ui.scenes.enums.scene_type import SceneType
 from ui.scenes.enums.menu_option import MenuOption
 from ui.components.button import Button
 from ui.components.placeholder import Placeholder
+from ui.components.controls_hint import ControlsHint
 from config.controls import Controls
 
 class MenuScene(Scene):
@@ -12,17 +13,12 @@ class MenuScene(Scene):
         self.selected_index = 0
         self.buttons = {
             MenuOption.PLAY: Button(
-                position_x=260, position_y=282,
+                position_x=180, position_y=282,
                 width=120, height=44,
                 asset="assets/ui/buttons/button-play.png",
             ),
-            MenuOption.RANKING: Button(
-                position_x=480, position_y=282,
-                width=120, height=44,
-                asset="assets/ui/buttons/button-ranking.png",
-            ),
             MenuOption.QUIT: Button(
-                position_x=40, position_y=282,
+                position_x=340, position_y=282,
                 width=120, height=44,
                 asset="assets/ui/buttons/button-leave.png",
             ),
@@ -39,6 +35,7 @@ class MenuScene(Scene):
                 asset="assets/ui/titles/titulo-principal.png",
             ),
         ]
+        self.controls_hint = ControlsHint(show_back=False, show_click=True)
 
     def handle_event(self, event):
         if event.type == pygame.KEYDOWN:
@@ -61,8 +58,6 @@ class MenuScene(Scene):
 
         if option == MenuOption.PLAY:
             self.scene_manager.change_scene(SceneType.MODE)
-        elif option == MenuOption.RANKING:
-            pass
         elif option == MenuOption.QUIT:
             pygame.event.post(pygame.Event(pygame.QUIT))
 
@@ -74,3 +69,5 @@ class MenuScene(Scene):
         
         for option, button in self.buttons.items():
             button.draw(screen, option == current_option)
+
+        self.controls_hint.draw(screen)

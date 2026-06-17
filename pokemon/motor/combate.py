@@ -95,13 +95,14 @@ class Combate:
 
             #Si es un movimiento se evalua si es de status o un movimiento que hace daño. De otra manera el movimiento sería para intercambiar pokemon
             if isinstance(accion, Move):
+                accion.current_power_points -= 1
 
                 if accion.damage_class != DamageClass.STATUS:
                     
                     daño = calcular_daño(atacante, defensor, accion)
                     if not self.es_simulado:
                         self._emit(f"¡{atacante.name} usa {accion.name}!")
-                        self._emit(f"Hace {daño} de daño a {defensor.name}")
+                        self._emit(f"Hace {round(daño, 2)} de daño a {defensor.name}")
                     
                     nueva_vida_rival = establecer_vida(defensor, daño)
 
@@ -115,7 +116,7 @@ class Combate:
                     #Si el rival se queda sin pokemones tras el turno ya no hace falta seguir ejecutando movimiento
                     if self.estado_del_equipo.conteo_vivos(ctx["id_rival"]) == 0:
                         return   
-                               
+                                
                 else:
                     if not self.es_simulado:
                         self._emit(f"¡{atacante.name} usó {accion.name}, que es un estado!")
@@ -172,12 +173,13 @@ class Combate:
 
             #Si es un movimiento se evalua si es de status o un movimiento que hace daño. De otra manera el movimiento sería para intercambiar pokemon
             if isinstance(accion, Move):
+                accion.current_power_points -= 1
 
                 if accion.damage_class != DamageClass.STATUS:
                     
                     daño = calcular_daño(atacante, defensor, accion)
                     self._emit(f"¡{atacante.name} usa {accion.name}!")
-                    self._emit(f"Hace {daño} de daño a {defensor.name}")
+                    self._emit(f"Hace {round(daño, 2)} de daño a {defensor.name}")
                     
                     nueva_vida_rival = establecer_vida(defensor, daño)
 
@@ -190,7 +192,7 @@ class Combate:
                     #Si el rival se queda sin pokemones tras el turno ya no hace falta seguir ejecutando movimiento
                     if self.estado_del_equipo.conteo_vivos(ctx["id_rival"]) == 0:
                         return   
-                               
+                                
                 else:
                     self._emit(f"¡{atacante.name} usó {accion.name}, que es un estado!")
             
@@ -212,10 +214,10 @@ class Combate:
             estado_juego = self.estado_del_equipo
         
         if estado_juego.conteo_vivos(2) == 0:
-            self._emit("El jugador gana")
+            self._emit("¡El Jugador 1 gana!")
             return True
         elif estado_juego.conteo_vivos(1) == 0:
-            self._emit("El oponente gana")
+            self._emit("¡El Jugador 2 gana!")
             return True
 
         return False

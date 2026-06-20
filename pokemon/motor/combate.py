@@ -1,6 +1,7 @@
 from pokemon.models.move import Move
 import random
 import math
+from pokemon.models.pokemon import Pokemon
 from pokemon.motor.acciones import calcular_daño, establecer_vida, obtener_multiplicador_tipos
 from pokemon.motor.estado_juego import EstadoJuego
 from pokemon.enums.damage_class import DamageClass
@@ -119,8 +120,8 @@ class Combate:
                                 
                 else:
 
-                    resolver_movimiento_de_status()
-                    
+                    self.resolver_movimiento_de_status(accion, atacante, defensor)
+
                     if not self.es_simulado:
                         self._emit(f"¡{atacante.name} usó {accion.name}, que es un estado!")
             
@@ -190,7 +191,7 @@ class Combate:
                         self._emit(f"¡{defensor.name} se ha debilitado!")
                         pokemonDesvanecido = True
 
-                        self.resolver_intercambio(ctx)
+                        self.resolver_intercambio(ctx, atacante, defensor)
 
                     #Si el rival se queda sin pokemones tras el turno ya no hace falta seguir ejecutando movimiento
                     if self.estado_del_equipo.conteo_vivos(ctx["id_rival"]) == 0:
@@ -225,8 +226,20 @@ class Combate:
 
         return False
     
-    def resolver_movimiento_de_status():
+    def resolver_movimiento_de_status(movimiento: Move, atacante: Pokemon, defensor: Pokemon):
         """
-        En base al nombre del movimiento ejecuta la acción que se describe
+        En base al nombre del movimiento ejecuta la acción que se espera
         """
-        return
+
+        movimiento_nombre = movimiento.name
+
+        match(movimiento_nombre):
+            case "curse":
+                
+                ## Aquí poner la lógica del movimiento curse
+
+                print("Curse")
+            #Agregar para los demás casos
+            
+            case _:
+                print("Este movimiento no está soportado")

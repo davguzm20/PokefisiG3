@@ -118,6 +118,9 @@ class Combate:
                         return   
                                 
                 else:
+
+                    resolver_movimiento_de_status()
+                    
                     if not self.es_simulado:
                         self._emit(f"¡{atacante.name} usó {accion.name}, que es un estado!")
             
@@ -221,3 +224,9 @@ class Combate:
             return True
 
         return False
+    
+    def resolver_movimiento_de_status():
+        """
+        En base al nombre del movimiento ejecuta la acción que se describe
+        """
+        return

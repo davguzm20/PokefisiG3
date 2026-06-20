@@ -3,6 +3,7 @@ from pokemon.motor.estado_juego import EstadoJuego
 from pokemon.motor.acciones import calcular_daño, obtener_multiplicador_tipos, establecer_vida
 from pokemon.models.pokemon import Pokemon
 from pokemon.models.pokemon import Move
+from pokemon.motor.combate import Combate
 #Esta es una idea sin fundamento por el momento, pero si se puede usar luego entonces genial
 
 #Usarlo para recordar los pokemones y sus movimientos que ya hayan sido usados del oponente
@@ -149,36 +150,32 @@ def heuristica_avanzada(estado_juego, movimiento, pesos):
 
 #La función heuristica se usa con minimax. Pero siempre debe centrarse en valorar el equipo de Max, porque se está valorando en qué posición queda Max parado
 def funcion_heuristica_avanzada(estado_juego, operador, pesos, lado_ia, estado_anterior = None):
-    #if estado_anterior != None: 
-    #    ant_pokemon_lado_ia, ant_pokemon_lado_oponente, ant_hp_poke_ia, ant_hp_poke_oponente = resolver_lados(estado_anterior, lado_ia)
     
     if isinstance(operador, dict):
-        indice_intercambio = operador["intercambio"]
         movimiento = operador["movimiento"] if operador["movimiento"] else None
     
     pokemon_lado_ia, pokemon_lado_oponente, hp_poke_ia, hp_poke_oponente = resolver_lados(estado_juego, lado_ia)
-    #equipo_ia = estado_juego.equipoP1 if lado_ia == 1 else estado_juego.equipoP2
 
     # Normalizar cada componente entre 0 y 1
     if isinstance(estado_juego, EstadoJuego):
-        #danio_hecho = ant_hp_poke_oponente - hp_poke_oponente
-        #danio_recibido = ant_hp_poke_ia - hp_poke_ia 
         velocidad = (pokemon_lado_ia.speed - pokemon_lado_oponente.speed) / max(pokemon_lado_ia.speed + pokemon_lado_oponente.speed, 1)
         hp_ratio = (hp_poke_ia - hp_poke_oponente) / max(hp_poke_ia + hp_poke_oponente, 1)
 
         if isinstance(movimiento, Move):
-            if movimiento.power == 0: return 0.0 #Por ahora no hay estados 
-            ventaja_tipo = obtener_multiplicador_tipos(movimiento, estado_juego.pokemonActivoP1, estado_juego.pokemonActivoP2)
-
+            if movimiento.power == 0: return 0.0 #Por ahora no hay movs de soporte 
+            multiplicador = obtener_multiplicador_tipos(movimiento, estado_juego.pokemonActivoP1, estado_juego.pokemonActivoP2)
+            if multiplicador > 2:
+                ventaja_tipo = 2
+            elif multiplicador > 1:
+                ventaja_tipo = 1
+            elif multiplicador == 1:
+                ventaja_tipo = 0
+            elif multiplicador > 0.5:
+                ventaja_tipo = -1
+            else:
+                ventaja_tipo = -2
         else:
-            ventaja_tipo = 0
-            
-        #     pokemon_entrante = equipo_ia[indice_intercambio]
-        #     print(pokemon_entrante.name)
-        #     ventajas = [
-        #         obtener_multiplicador_tipos(mv, pokemon_entrante, pokemon_lado_oponente) for mv in pokemon_entrante.moves if mv.power > 0
-        #     ]
-        #     ventaja_tipo = max(ventajas) if ventajas else 0
+            ventaja_tipo = 0.5
 
         pokemons_vivos = (estado_juego.conteo_vivos(2) - estado_juego.conteo_vivos(1)) / max(len(estado_juego.equipoP1), len(estado_juego.equipoP2), 1)
     
@@ -861,3 +858,150 @@ def minimax_recursivov2(nodo, profundidad, lado_ia, max, pesos):
     if nodo.profundidad == 0:
         print(nodo.hijo_escogido.operador)
         return nodo
+
+# ======================= Minimax de libro
+
+def resolver_accion(acciones, lado_ia):
+    accion_ia = None
+    accion_oponente = None
+
+    ia_intercambio = acciones["accion_ia"]["intercambio_index"]
+    ia_movimiento = acciones["accion_ia"]["movimiento"]
+    
+    oponente_intercambio = acciones["accion_oponente"]["intercambio_index"]
+    oponente_movimiento = acciones["accion_oponente"]["movimiento"]
+
+    if ia_intercambio is None:
+        accion_ia = ia_movimiento
+    else:
+        accion_ia = ia_intercambio
+    
+    if oponente_intercambio is None:
+        accion_oponente = oponente_movimiento
+    else:
+        accion_oponente = oponente_intercambio
+    
+    if lado_ia == 1:
+        return (accion_ia, accion_oponente)
+    else:
+        return (accion_oponente, accion_ia)
+
+def minimax_simplificado(nodo: NodoV2, profundidad, acciones, lado_ia, alfa, beta, pesos):
+
+    estado_actual = copiar_estado(nodo.estado)
+    estado_actual.esSimulado = True
+    mejor_accion = None
+    id_ia = lado_ia
+    id_oponente = lado_ia - 1
+    
+    print(nodo.profundidad, alfa, beta, acciones)
+    
+    if estado_actual.conteo_vivos(id_oponente) == 0:
+        return 99999
+    if estado_actual.conteo_vivos(id_ia) == 0:
+        return -99999
+    
+    if nodo.profundidad == profundidad:
+        
+        operador = {
+            "movimiento": acciones["accion_ia"] if acciones else None,
+            #No hace falta considerar intercambio pues el estado ya contendrá la información del intercambio
+        }
+        puntaje = funcion_heuristica_avanzada(nodo.estado, operador, pesos, lado_ia)
+        #print(puntaje)
+        return puntaje
+    
+
+    if nodo.turnoMax:
+        mejor_valor = -float('inf')
+        for accion in estado_actual.obtener_acciones_posibles():
+            nodo_resultante = NodoV2(nodo.estado, None, not nodo.turnoMax, nodo.profundidad + 1)
+            valor = minimax_simplificado(nodo_resultante, profundidad,
+                                         {"accion_ia": accion,
+                                          "accion_oponente": None},
+                                           lado_ia, alfa, beta, pesos)
+            
+            mejor_valor = max(mejor_valor, valor)
+            if nodo.profundidad == 0:
+                #print(f"Rama explorada para max es: {mejor_accion} con {valor}")
+                if mejor_valor == valor:
+                    #print("Se encontro algun nuevo candidato para Max")
+                    mejor_accion = accion
+            alfa = max (alfa, mejor_valor)
+
+            if beta <= alfa:
+                break
+        
+        if nodo.profundidad == 0:
+            return mejor_accion
+        return mejor_valor
+    
+    else:
+        mejor_valor = float('inf')
+
+        for accion in estado_actual.obtener_acciones_posibles():
+            estado_resultante = copiar_estado(estado_actual)
+            estado_resultante.esSimulado = True
+
+            acciones["accion_oponente"] = accion
+            accion_p1, accion_p2 = resolver_accion(acciones, lado_ia)
+
+            nuevo_combate = Combate(estado_resultante)
+            nuevo_combate.ejecutar_turno_ui(estado_resultante.pokemonActivoP1, accion_p1, estado_resultante.pokemonActivoP2, accion_p2, 2, 2)
+
+            estado_resultante = nuevo_combate.estado_del_equipo
+            
+            hubo_caida = False
+            poda_activada = False
+
+            # Caso A: Se debilitó el Pokémon del Jugador 1
+            if estado_resultante.pokemonActivoP1.hp == 0:
+                hubo_caida = True
+                elegibles = estado_resultante.pokemonesElegibles(1)
+                for id_pokemon, pokemon in elegibles:
+                    nuevo_estado = copiar_estado(estado_resultante)
+                    nuevo_estado.esSimulado = True
+                    nuevo_estado.intercambiarPokemon(id_pokemon, 1)
+
+                    # CORREGIDO: Usamos nuevo_estado
+                    nodo_resultante = NodoV2(nuevo_estado, None, not nodo.turnoMax, nodo.profundidad + 1)
+                    valor = minimax_simplificado(nodo_resultante, profundidad, acciones, lado_ia, alfa, beta, pesos)
+                    mejor_valor = min(mejor_valor, valor)
+                    beta = min(beta, mejor_valor)
+                    if beta <= alfa:
+                        poda_activada = True
+                        break
+                if poda_activada:
+                    break
+
+            # Caso B: Se debilitó el Pokémon del Jugador 2
+            elif estado_resultante.pokemonActivoP2.hp == 0:
+                hubo_caida = True
+                elegibles = estado_resultante.pokemonesElegibles(2)
+                for id_pokemon, pokemon in elegibles:
+                    nuevo_estado = copiar_estado(estado_resultante)
+                    nuevo_estado.esSimulado = True
+                    nuevo_estado.intercambiarPokemon(id_pokemon, 2)
+
+                    # CORREGIDO: Usamos nuevo_estado
+                    nodo_resultante = NodoV2(nuevo_estado, None, not nodo.turnoMax, nodo.profundidad + 1)
+                    valor = minimax_simplificado(nodo_resultante, profundidad, acciones, lado_ia, alfa, beta, pesos)
+                    mejor_valor = min(mejor_valor, valor)
+                    beta = min(beta, mejor_valor)
+                    if beta <= alfa:
+                        poda_activada = True
+                        break
+                if poda_activada:
+                    break
+
+            # Caso C: Flujo normal (Nadie murió en este turno)
+            if not hubo_caida:
+                nodo_resultante = NodoV2(estado_resultante, None, not nodo.turnoMax, nodo.profundidad + 1)
+                valor = minimax_simplificado(nodo_resultante, profundidad, acciones, lado_ia, alfa, beta, pesos)
+                
+                mejor_valor = min(mejor_valor, valor)
+                beta = min(beta, mejor_valor)
+                if beta <= alfa:
+                    break
+        
+        return mejor_valor

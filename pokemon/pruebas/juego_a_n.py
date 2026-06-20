@@ -14,6 +14,22 @@ pesos_mock = {
     "tipo": 0.3,
     "vivos": 0.2
 }
+
+
+pesos_optimos = {
+    "hp": 0.242,
+    "velocidad": 0.607,
+    "tipo": 0.0,
+    "vivos": 0.151
+}
+
+
+def configurar_juego(juego):
+    juego.configurar_jugador_como_IA(1, 3, pokemones_disponibles, 4, pesos_mock)
+    juego.configurar_jugador_como_IA(2, 2, pokemones_disponibles, 4, pesos_mock)
+
+tiempos = []
+
 def evaluar_fitness(num_juegos): #obtener el win rate de 30 partidasS
         nuevo_juego = Juego()
         nuevo_juego.inicializar_combate()
@@ -21,8 +37,7 @@ def evaluar_fitness(num_juegos): #obtener el win rate de 30 partidasS
         juegos = 0
         ganadas = 0
 
-        nuevo_juego.configurar_jugador_como_IA(1, 3, pokemones_disponibles, 4, pesos_mock)
-        nuevo_juego.configurar_jugador_como_IA(2, 2, pokemones_disponibles)
+        configurar_juego(nuevo_juego)
         
         turno = 0
         while True:
@@ -31,18 +46,20 @@ def evaluar_fitness(num_juegos): #obtener el win rate de 30 partidasS
 
             nuevo_juego.iniciar_turno(accionP1, accionP2)
 
+            fin = time.perf_counter()
+            tiempos.append(fin-inicio)
+            print(f"Tomo: {fin-inicio} segundos")
+
             #Revisión de ganador y creación de nuevo juego
             turno += 1
             if turno >= 20:
-                nuevo_juego.configurar_jugador_como_IA(1, 3, pokemones_disponibles, 4, pesos_mock)
-                nuevo_juego.configurar_jugador_como_IA(2, 2, pokemones_disponibles)
-                juegos = juegos +1
-                turno = 0
                 if juegos == num_juegos:
                     break
-
+                configurar_juego(nuevo_juego)
+                juegos = juegos +1
+                turno = 0
                 
-                
+     
             if nuevo_juego.combate.estado_del_equipo.conteo_vivos(1) == 0:
                 
                 juegos = juegos +1
@@ -51,8 +68,7 @@ def evaluar_fitness(num_juegos): #obtener el win rate de 30 partidasS
                     break
 
                 turno = 0
-                nuevo_juego.configurar_jugador_como_IA(1, 3, pokemones_disponibles, 4, pesos_mock)
-                nuevo_juego.configurar_jugador_como_IA(2, 2, pokemones_disponibles)
+                configurar_juego(nuevo_juego)
 
             elif nuevo_juego.combate.estado_del_equipo.conteo_vivos(2) == 0:
 
@@ -63,14 +79,14 @@ def evaluar_fitness(num_juegos): #obtener el win rate de 30 partidasS
                     break
 
                 turno = 0
-                nuevo_juego.configurar_jugador_como_IA(1, 3, pokemones_disponibles, 4, pesos_mock)
-                nuevo_juego.configurar_jugador_como_IA(2, 2, pokemones_disponibles)
+                configurar_juego(nuevo_juego)
 
-            fin = time.perf_counter()
-            print(f"Tomo: {fin-inicio} segundos")
+            
 
         
-        
+        print(ganadas)
         return ganadas/juegos
 
-evaluar_fitness(1)
+print(evaluar_fitness(1))
+
+print(tiempos)

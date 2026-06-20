@@ -60,7 +60,6 @@ class DifficultyScene(Scene):
             label="",
         )
         self.controls_hint = ControlsHint(show_back=True, show_click=True, position_y=352)
-
     def handle_event(self, event):
         if event.type == pygame.KEYDOWN:
             if event.key == Controls.LEFT.value:

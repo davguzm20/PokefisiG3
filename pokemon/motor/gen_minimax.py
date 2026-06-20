@@ -1,12 +1,40 @@
 import random
 import copy
 import time
-import threading
 
 from pokemon.motor.juego_interfaz import Juego, IA
 from pokemon.pokemon_factory import PokemonFactory
 
+
+def seleccionar_pokemon_con_movimientos(nombre):
+    PokemonFactory("")
+    p_sel = copy.deepcopy(random.choice(pokemones_disponibles))
+    random.shuffle(p_sel.moves)
+
+    cuenta_movimientos_de_daño = 0
+    was_index = 0
+
+    movimientos = []
+    for i in range(0, len(p_sel.moves)):
+        if p_sel.moves[i].power is not None:
+            
+            movimientos.append(p_sel.moves[i])
+            cuenta_movimientos_de_daño += 1
+
+            if cuenta_movimientos_de_daño == 2:
+                was_index = i
+                break
+    
+    if was_index+2 >= len(p_sel.moves):
+        p_sel.moves = movimientos + p_sel.moves[was_index-3:was_index-1]
+    else:
+        p_sel.moves = movimientos + p_sel.moves[was_index+1:was_index+3]
+    return 
+
 pokemones_disponibles = PokemonFactory.load_all_pokemons("pokemon/pokemones.json")
+equipos = {
+    1: PokemonFactory.create_pokemon(),
+}
 
 def funcion_normalizadora(lista):
     sum = 0

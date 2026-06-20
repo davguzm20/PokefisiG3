@@ -14,7 +14,7 @@ pesos_mock = {
     "tipo": 0.3,
     "vivos": 0.2
 }
-def evaluar_fitness(num_juegos): #obtener el win rate de 30 partidas
+def evaluar_fitness(num_juegos): #obtener el win rate de 30 partidasS
         nuevo_juego = Juego()
         nuevo_juego.inicializar_combate()
 

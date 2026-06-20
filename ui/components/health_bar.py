@@ -36,7 +36,7 @@ class HealthBar:
 
         px, py = self.position_x, self.position_y
         current_hp = max(0, getattr(self, 'display_hp', self.pokemon.hp))
-        max_hp = getattr(self, 'display_max_hp', self.pokemon.current_hp)
+        max_hp = getattr(self, 'display_max_hp', self.pokemon.max_hp)
 
         if getattr(self, '_hp_animating', False):
             target = self._hp_target
@@ -50,7 +50,7 @@ class HealthBar:
                     del self.display_hp
                 if hasattr(self, 'display_max_hp'):
                     del self.display_max_hp
-                max_hp = getattr(self, 'display_max_hp', self.pokemon.current_hp)
+                max_hp = getattr(self, 'display_max_hp', self.pokemon.max_hp)
             else:
                 current_hp += diff * 0.2
                 self.display_hp = current_hp

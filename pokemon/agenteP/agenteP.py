@@ -859,5 +859,5 @@ def minimax_recursivov2(nodo, profundidad, lado_ia, max, pesos):
         return nodo
         
     if nodo.profundidad == 0:
-        #print(nodo.hijo_escogido.operador)
+        print(nodo.hijo_escogido.operador)
         return nodo

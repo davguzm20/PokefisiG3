@@ -13,7 +13,7 @@ class Pokemon:
         self.abilities = abilities
         self.moves = moves
         self.hp = hp
-        self.current_hp = hp
+        self.max_hp = hp
         self.attack = attack
         self.defense = defense
         self.special_attack = special_attack
@@ -23,4 +23,4 @@ class Pokemon:
         self.sprites = sprites
 
     def is_alive(self) -> bool:
-        return self.current_hp > 0
+        return self.hp > 0

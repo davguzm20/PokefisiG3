@@ -5,7 +5,6 @@ from pokemon.motor.estado_juego import EstadoJuego
 from pokemon.motor.bus_de_eventos import bus_de_eventos_global
 ##IA
 from pokemon.agenteP.agenteP import AgenteP, elegirMovimientoAleatorio, movimiento_en_base_a_mayor_daño, heuristica_difHP, minimax_recursivov2, copiar_estado, NodoV2
-from pokemon.motor.hilos import mini_max_recursivo_thread
 
 import threading
 import time
@@ -17,12 +16,13 @@ pesos_mock = {
     "vivos": 0.2
 }
 
-pesos_mock = {
-    "hp": 1.0,
-    "velocidad": 0,
-    "tipo": 0,
-    "vivos": 0
+pesos_optimizados = {
+    "hp": 0.65,
+    "velocidad": 0.242,
+    "tipo": 0.0,
+    "vivos": 0.151
 }
+
 
 #Instancien una única vez esta clase
 class IA:

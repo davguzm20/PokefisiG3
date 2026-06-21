@@ -836,6 +836,7 @@ def minimax_recursivov2(nodo, profundidad, lado_ia, max, pesos):
                 nodo.padre.hijo_escogido = nodo.estado
                 print(f"{'  ' * nodo.profundidad}<==== Saliendo de Nodo Prof: {nodo.profundidad} | Puntaje asignado: {nodo.puntaje} | {nodo.padre.hijo_escogido} | {nodo.estado.operador}")
                 return True
+                
             if nodo.puntaje > nodo.padre.alfa:
                 nodo.padre.alfa = nodo.puntaje
                 nodo.padre.hijo_escogido = nodo.estado
@@ -887,18 +888,30 @@ def resolver_accion(acciones, lado_ia):
         return (accion_oponente, accion_ia)
 
 def minimax_simplificado(nodo: NodoV2, profundidad, acciones, lado_ia, alfa, beta, pesos):
+    """
+    Minimax con poda simula todos los estados convenientes de simular según la profundidad, tratando de elegir en base a un criterio la mejor acción a realizar.
+    El número de turnos simulados es la profundidad/2.
+    Puntua el estado de un combate dependiendo de la profundidad o si es terminal.
+    El criterio está dado por funcion_heuristica_avanzada()
+
+    Retorna un diccionario
+    {"intercambio_index": int, "movimiento": Move}
+    """
 
     estado_actual = copiar_estado(nodo.estado)
     estado_actual.esSimulado = True
     mejor_accion = None
+
     id_ia = lado_ia
     id_oponente = lado_ia - 1
     
-    print(nodo.profundidad, alfa, beta, acciones)
+    #print(nodo.profundidad, alfa, beta, acciones)
     
     if estado_actual.conteo_vivos(id_oponente) == 0:
+        #print(f"------ > Este nodo fue puntuado con: {puntaje}")
         return 99999
     if estado_actual.conteo_vivos(id_ia) == 0:
+        #print(f"------ > Este nodo fue puntuado con: {puntaje}")
         return -99999
     
     if nodo.profundidad == profundidad:
@@ -908,31 +921,37 @@ def minimax_simplificado(nodo: NodoV2, profundidad, acciones, lado_ia, alfa, bet
             #No hace falta considerar intercambio pues el estado ya contendrá la información del intercambio
         }
         puntaje = funcion_heuristica_avanzada(nodo.estado, operador, pesos, lado_ia)
-        #print(puntaje)
+        #print(f"------ > Este nodo fue puntuado con: {puntaje}")
         return puntaje
     
 
     if nodo.turnoMax:
         mejor_valor = -float('inf')
+
         for accion in estado_actual.obtener_acciones_posibles():
+
             nodo_resultante = NodoV2(nodo.estado, None, not nodo.turnoMax, nodo.profundidad + 1)
+            
             valor = minimax_simplificado(nodo_resultante, profundidad,
                                          {"accion_ia": accion,
                                           "accion_oponente": None},
                                            lado_ia, alfa, beta, pesos)
             
             mejor_valor = max(mejor_valor, valor)
+
             if nodo.profundidad == 0:
-                #print(f"Rama explorada para max es: {mejor_accion} con {valor}")
+                ##print(f"Rama explorada para max es: {mejor_accion} con {valor}")
                 if mejor_valor == valor:
-                    #print("Se encontro algun nuevo candidato para Max")
+                    ##print("Se encontro algun nuevo candidato para Max")
                     mejor_accion = accion
+            
             alfa = max (alfa, mejor_valor)
 
             if beta <= alfa:
                 break
         
         if nodo.profundidad == 0:
+            print(f"Puntaje final escogido es: {mejor_valor}")
             return mejor_accion
         return mejor_valor
     
@@ -940,6 +959,7 @@ def minimax_simplificado(nodo: NodoV2, profundidad, acciones, lado_ia, alfa, bet
         mejor_valor = float('inf')
 
         for accion in estado_actual.obtener_acciones_posibles():
+
             estado_resultante = copiar_estado(estado_actual)
             estado_resultante.esSimulado = True
 
@@ -954,54 +974,146 @@ def minimax_simplificado(nodo: NodoV2, profundidad, acciones, lado_ia, alfa, bet
             hubo_caida = False
             poda_activada = False
 
-            # Caso A: Se debilitó el Pokémon del Jugador 1
-            if estado_resultante.pokemonActivoP1.hp == 0:
+            #Caso 0: Se debilitaron ambos pokemones
+            if estado_resultante.pokemonActivoP1.hp == 0 and estado_resultante.pokemonActivoP2.hp == 0:
                 hubo_caida = True
-                elegibles = estado_resultante.pokemonesElegibles(1)
-                for id_pokemon, pokemon in elegibles:
-                    nuevo_estado = copiar_estado(estado_resultante)
-                    nuevo_estado.esSimulado = True
-                    nuevo_estado.intercambiarPokemon(id_pokemon, 1)
+                #La lógica del combate determinará quien gana dependiendo de la ejecución del turno
+                if nuevo_combate.estado_del_equipo.esTerminal:
+                    if nuevo_combate.estado_del_equipo.ganaP1:
+                        valor = 99999 if lado_ia == 1 else -99999
+                        mejor_valor = min(mejor_valor, valor)
+                        beta = min(beta, mejor_valor)
 
-                    # CORREGIDO: Usamos nuevo_estado
-                    nodo_resultante = NodoV2(nuevo_estado, None, not nodo.turnoMax, nodo.profundidad + 1)
-                    valor = minimax_simplificado(nodo_resultante, profundidad, acciones, lado_ia, alfa, beta, pesos)
+                        if beta <= alfa:
+                            poda_activada = True
+                            #print(f"(!!!!!) Hay poda (!!!!!) con puntaje: {mejor_valor}")
+                            break
+
+                    elif nuevo_combate.estado_del_equipo.ganaP2:
+                        valor = 99999 if lado_ia == 2 else -99999
+                        mejor_valor = min(mejor_valor, valor)
+                        beta = min(beta, mejor_valor)
+
+                        if beta <= alfa:
+                            poda_activada = True
+                            #print(f"(!!!!!) Hay poda (!!!!!) con puntaje: {mejor_valor}")
+                            break
+                #Si no es terminal ambos jugadores deberán elegir un pokemon de relevo
+                else:
+                    elegiblesP1 = estado_resultante.pokemonesElegibles(1)
+                    elegiblesP2 = estado_resultante.pokemonesElegibles(2)
+
+                    for id_pokemonP1, pokemonP1 in elegiblesP1:
+                        for id_pokemonP2, pokemonP2 in elegiblesP2:
+                            nuevo_estado = copiar_estado(estado_resultante)
+                            nuevo_estado.esSimulado = True
+                            
+                            nuevo_combate.estado_del_equipo = nuevo_estado
+                            nuevo_combate.ejecutar_intercambios_por_debilitamiento(id_pokemonP1, id_pokemonP2)
+                            
+                            nodo_resultante = NodoV2(nuevo_estado, None, not nodo.turnoMax, nodo.profundidad + 1)
+
+                            valor = minimax_simplificado(nodo_resultante, profundidad, acciones, lado_ia, alfa, beta, pesos)
+                            mejor_valor = min(mejor_valor, valor)
+                            beta = min(beta, mejor_valor)
+
+                            if beta <= alfa:
+                                poda_activada = True
+                                break
+                        if beta <= alfa:
+                            poda_activada = True
+                            break
+                    if poda_activada:
+                        #print(f"(!!!!!) Hay poda (!!!!!) con puntaje: {mejor_valor}")
+                        break
+            
+            # Caso 1: Se debilitó el Pokémon del Jugador 1.
+            elif estado_resultante.pokemonActivoP1.hp == 0:
+                hubo_caida = True
+
+                elegibles = estado_resultante.pokemonesElegibles(1)
+                
+                if elegibles:
+                    for id_pokemon, pokemon in elegibles:
+                        #Se crea nuevos estados pues la acción abrió la posibilidad a distintas elecciones de intercambio
+                        nuevo_estado = copiar_estado(estado_resultante)
+                        nuevo_estado.esSimulado = True
+                        nuevo_estado.intercambiarPokemon(id_pokemon, 1)
+
+
+                        nodo_resultante = NodoV2(nuevo_estado, None, not nodo.turnoMax, nodo.profundidad + 1)
+
+                        valor = minimax_simplificado(nodo_resultante, profundidad, acciones, lado_ia, alfa, beta, pesos)
+                        mejor_valor = min(mejor_valor, valor)
+                        beta = min(beta, mejor_valor)
+
+                        if beta <= alfa:
+                            poda_activada = True
+                            break
+                    if poda_activada:
+                        #print(f"(!!!!!) Hay poda (!!!!!) con puntaje: {mejor_valor}")
+                        break
+
+                else: #Lista vacia entonces no hay intercambio. Estado es terminal.
+                    nodo_resultante = NodoV2(estado_resultante, None, not nodo.turnoMax, nodo.profundidad + 1)
+
+                    valor = minimax_simplificado(nodo_resultante, profundidad, acciones, lado_ia, alfa, beta, pesos) 
                     mejor_valor = min(mejor_valor, valor)
                     beta = min(beta, mejor_valor)
-                    if beta <= alfa:
-                        poda_activada = True
-                        break
-                if poda_activada:
-                    break
 
-            # Caso B: Se debilitó el Pokémon del Jugador 2
+                    if beta <= alfa:
+                        #print(f"(!!!!!) Hay poda (!!!!!) con puntaje: {mejor_valor}")
+                        break    
+
+            # Caso 2: Se debilitó el Pokémon del Jugador 2
             elif estado_resultante.pokemonActivoP2.hp == 0:
                 hubo_caida = True
-                elegibles = estado_resultante.pokemonesElegibles(2)
-                for id_pokemon, pokemon in elegibles:
-                    nuevo_estado = copiar_estado(estado_resultante)
-                    nuevo_estado.esSimulado = True
-                    nuevo_estado.intercambiarPokemon(id_pokemon, 2)
 
-                    # CORREGIDO: Usamos nuevo_estado
-                    nodo_resultante = NodoV2(nuevo_estado, None, not nodo.turnoMax, nodo.profundidad + 1)
-                    valor = minimax_simplificado(nodo_resultante, profundidad, acciones, lado_ia, alfa, beta, pesos)
+                elegibles = estado_resultante.pokemonesElegibles(2)
+                
+                if elegibles:
+                    for id_pokemon, pokemon in elegibles:
+                        #Se crea nuevos estados pues la acción abrió la posibilidad a distintas elecciones de intercambio
+                        nuevo_estado = copiar_estado(estado_resultante)
+                        nuevo_estado.esSimulado = True
+                        nuevo_estado.intercambiarPokemon(id_pokemon, 2)
+
+
+                        nodo_resultante = NodoV2(nuevo_estado, None, not nodo.turnoMax, nodo.profundidad + 1)
+
+                        valor = minimax_simplificado(nodo_resultante, profundidad, acciones, lado_ia, alfa, beta, pesos)
+                        mejor_valor = min(mejor_valor, valor)
+                        beta = min(beta, mejor_valor)
+
+                        if beta <= alfa:
+                            poda_activada = True
+                            break
+                    if poda_activada:
+                        #print(f"(!!!!!) Hay poda (!!!!!) con puntaje: {mejor_valor}")
+                        break
+
+                else: #Lista vacia entonces no hay intercambio. Estado es terminal.
+                    nodo_resultante = NodoV2(estado_resultante, None, not nodo.turnoMax, nodo.profundidad + 1)
+
+                    valor = minimax_simplificado(nodo_resultante, profundidad, acciones, lado_ia, alfa, beta, pesos) 
                     mejor_valor = min(mejor_valor, valor)
                     beta = min(beta, mejor_valor)
-                    if beta <= alfa:
-                        poda_activada = True
-                        break
-                if poda_activada:
-                    break
 
-            # Caso C: Flujo normal (Nadie murió en este turno)
+                    if beta <= alfa:
+                        #print(f"(!!!!!) Hay poda (!!!!!) con puntaje: {mejor_valor}")
+                        break
+
+
+            # Caso 3: Ningún Pokémon se debilitó
             if not hubo_caida:
                 nodo_resultante = NodoV2(estado_resultante, None, not nodo.turnoMax, nodo.profundidad + 1)
-                valor = minimax_simplificado(nodo_resultante, profundidad, acciones, lado_ia, alfa, beta, pesos)
                 
+                valor = minimax_simplificado(nodo_resultante, profundidad, acciones, lado_ia, alfa, beta, pesos)
                 mejor_valor = min(mejor_valor, valor)
                 beta = min(beta, mejor_valor)
+
                 if beta <= alfa:
+                    #print(f"(!!!!!) Hay poda (!!!!!) con puntaje: {mejor_valor}")
                     break
         
         return mejor_valor

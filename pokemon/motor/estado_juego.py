@@ -10,6 +10,9 @@ class EstadoJuego:
         self.estado_anterior = None
         self.operador = None
         self.esSimulado = False
+        self.esTerminal = False
+        self.ganaP1 = False
+        self.ganaP2 = False
     
     #La UI debería disparar el evento cuando el equipo es armado
     #Pasar una lista de pokemones. El equipo es 1 del jugador o 2 de la IA
@@ -80,11 +83,12 @@ class EstadoJuego:
 
         pokemonActivo = self.pokemonActivoP1 if equipo == 1 else self.pokemonActivoP2
 
-        for movimiento in pokemonActivo.moves:
-            acciones.append({
-                "intercambio_index": None,
-                "movimiento": movimiento
-            })
+        if pokemonActivo.hp > 0:
+            for movimiento in pokemonActivo.moves:
+                acciones.append({
+                    "intercambio_index": None,
+                    "movimiento": movimiento
+                })
 
         for indice_cambio, ref_pokemon in posibles_cambios:
             acciones.append({

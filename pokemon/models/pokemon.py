@@ -21,6 +21,8 @@ class Pokemon:
         self.speed = speed
         self.weight = weight
         self.sprites = sprites
+        self.efecto = None
+        self.turnos_restantes_estado = 0
 
     def is_alive(self) -> bool:
         return self.hp > 0

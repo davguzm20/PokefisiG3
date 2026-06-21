@@ -10,6 +10,9 @@ class EstadoJuego:
         self.estado_anterior = None
         self.operador = None
         self.esSimulado = False
+        self.esTerminal = False
+        self.ganaP1 = False
+        self.ganaP2 = False
     
     #La UI debería disparar el evento cuando el equipo es armado
     #Pasar una lista de pokemones. El equipo es 1 del jugador o 2 de la IA
@@ -36,7 +39,14 @@ class EstadoJuego:
     def pokemonesElegibles(self, equipo = 1):
         equipo_objetivo = self.equipoP1 if equipo == 1 else self.equipoP2
 
-        return [(i, p) for i, p in enumerate(equipo_objetivo) if p.hp > 0]
+        lista = []
+
+        for index, ref_pokemon in enumerate(equipo_objetivo):
+            if ref_pokemon.hp > 0:
+                if index != 0:
+                    lista.append((index, ref_pokemon))
+
+        return lista
     
     #Pasale el indice del pokemon al que quieres cambiar. La 
     def intercambiarPokemon(self, indicePokemonDentro, equipo=1):
@@ -66,5 +76,26 @@ class EstadoJuego:
 
         return cuenta
 
+    def obtener_acciones_posibles(self, equipo = 1) -> list[dict]:
+
+        acciones = []
+        posibles_cambios = self.pokemonesElegibles(equipo)
+
+        pokemonActivo = self.pokemonActivoP1 if equipo == 1 else self.pokemonActivoP2
+
+        if pokemonActivo.hp > 0:
+            for movimiento in pokemonActivo.moves:
+                acciones.append({
+                    "intercambio_index": None,
+                    "movimiento": movimiento
+                })
+
+        for indice_cambio, ref_pokemon in posibles_cambios:
+            acciones.append({
+                "intercambio_index": indice_cambio,
+                "movimiento": None
+            })
+
+        return acciones
         
     

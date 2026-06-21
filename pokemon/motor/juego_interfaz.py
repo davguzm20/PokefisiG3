@@ -4,7 +4,7 @@ from pokemon.motor.combate import Combate
 from pokemon.motor.estado_juego import EstadoJuego
 from pokemon.motor.bus_de_eventos import bus_de_eventos_global
 ##IA
-from pokemon.agenteP.agenteP import AgenteP, elegirMovimientoAleatorio, movimiento_en_base_a_mayor_daño, heuristica_difHP, minimax_recursivov2, copiar_estado, NodoV2
+from pokemon.agenteP.agenteP import AgenteP, elegirMovimientoAleatorio, movimiento_en_base_a_mayor_daño, heuristica_difHP, minimax_recursivov2, copiar_estado, NodoV2, minimax_simplificado
 
 import threading
 import time
@@ -33,6 +33,7 @@ class IA:
         self.pesos_heuristicos = pesos
     
     def elegir_movimiento_ia(self, estado):
+        """Devuelve una acción. Si el nivel de la IA es 3 (Minimax) puede devolver un entero (intercambio) o un Movimiento"""
 
         if self.nivel_IA == 1:
             return elegirMovimientoAleatorio(estado.pokemonActivoP1.moves if self.num_jugador == 1 else estado.pokemonActivoP2.moves)
@@ -47,6 +48,23 @@ class IA:
                 
 
     def elegir_movimiento_con_minimax(self, estado):
+    
+        copia_estado = copiar_estado(estado)
+        copia_estado.esSimulado = True
+        nodo = NodoV2(copia_estado)
+
+        accion = minimax_simplificado(nodo, self.profundidad_minimax, None, self.num_jugador, -float('inf'), float('inf'), self.pesos_heuristicos)
+        
+        print("La elección de minimax es:")
+        if accion["movimiento"] is not None: 
+            print(f'# Usar: {accion["movimiento"].name}')
+            return accion["movimiento"]
+        
+        if accion["intercambio_index"] is not None:
+            print(f'# Intercambiar el pokemon con el de indice: {accion["intercambio_index"]}')
+            return accion["intercambio_index"]
+        
+    def elegir_movimiento_con_minimax_antiguo(self, estado):
     
         copia_estado = copiar_estado(estado)
         copia_estado.esSimulado = True
@@ -152,6 +170,15 @@ class Juego:
     #La UI debe identificar si se espera la entrada de un jugador durante el combate. Cuando no se espere más entradas se asume que inicia el combate
     #La UI recibirá si ya existe un ganador
     def iniciar_turno(self, accionP1 = None, accionP2 = None):
+        """
+        Ejecuta el conjunto de acciones elegidas por ambos jugadores.
+        Devuelve True si la ejecución devuelve un ganador y Devuelve False si no.
+
+        En caso haya ganador usar los atributos de estado para comprobar quién es.
+        Antes de pasar al siguiente turno comprobar si existe algún pokemon se debilitó con los atributos de combate. 
+        Capturar los datos para el intercambio y luego usar la función ejecutar_intercambio_por_debilitamiento() de la clase combate.
+        Si ambos están debilitados usar ejecutar_intercambios_por_debilitamiento() de la clase combate.
+        """
 
         if accionP1 is not None: accion_P1 = accionP1
         if accionP2 is not None: accion_P2 = accionP2
@@ -179,8 +206,7 @@ class Juego:
         if isinstance(self.jugador2,IA): tipo_P2 = 2
 
         self.combate.ejecutar_turno_ui(self.combate.estado_del_equipo.pokemonActivoP1, accion_P1, self.combate.estado_del_equipo.pokemonActivoP2, accion_P2, tipo_P1, tipo_P2)
-        
-        #El combate habrá modificado el estado. Solo lo extraemos y lo copiamos??
+
 
         return 
 

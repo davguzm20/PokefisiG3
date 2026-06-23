@@ -5,6 +5,7 @@ from pokemon.models.pokemon import Pokemon
 from pokemon.motor.acciones import calcular_daño, establecer_vida, obtener_multiplicador_tipos
 from pokemon.motor.estado_juego import EstadoJuego
 from pokemon.enums.damage_class import DamageClass
+from pokemon.enums.effects import Effects
 from pokemon.motor.bus_de_eventos import bus_de_eventos_global
 
 class Combate:
@@ -113,6 +114,8 @@ class Combate:
 
                 #Revisión de efectos, entornos y habilidades antes del ataque
                 self.resolver_efecto_MID(atacante) ### También es posible que hayan habilidades que se ejecuten después de atacar. Pero por el momento no consideremos habilidades
+                if not atacante.puede_atacar:
+                    continue
 
                 if accion.damage_class != DamageClass.STATUS:
                     
@@ -278,7 +281,7 @@ class Combate:
 
         return False
     
-    def resolver_movimiento_de_status(movimiento: Move, atacante: Pokemon, defensor: Pokemon):
+    def resolver_movimiento_de_status(self, movimiento: Move, atacante: Pokemon, defensor: Pokemon):
         """
         En base al nombre del movimiento ejecuta la acción que se espera
         """
@@ -294,9 +297,10 @@ class Combate:
             #Agregar para los demás casos
 
             case _:
-                print(f"El movimiento {movimiento_nombre} no está soportado")
+                #print(f"El movimiento {movimiento_nombre} no está soportado")
+                return
 
-    def resolver_efecto_START(afectado: Pokemon):
+    def resolver_efecto_START(self, afectado: Pokemon):
         """
         En base al nombre del efecto se ejecuta consecuencias sobre el afectado al inicio del turno
         """
@@ -312,9 +316,10 @@ class Combate:
             #Agregar para los demás casos
 
             case _:
-                print(f"El efecto: {efecto_nombre} no está soportado")
+                #print(f"El efecto: {efecto_nombre} no está soportado")
+                return
 
-    def resolver_efecto_MID(afectado: Pokemon):
+    def resolver_efecto_MID(self, afectado: Pokemon):
         """
         En base al nombre del efecto se ejecuta consecuencias sobre el afectado justo antes de atacar
         """
@@ -322,17 +327,46 @@ class Combate:
         efecto_nombre = afectado.efecto
 
         match(efecto_nombre):
-            case "curse":
-                
-                ## Aquí poner la lógica de efecto en este momento
+            case Effects.SLEEP:
+                afectado.turnos_restantes_estado -= 1
 
-                print("Curse")
+                if afectado.turnos_restantes_estado == 0:
+                    afectado.efecto = None
+                    afectado.puede_atacar = True
+                else:
+                    print(f"{afectado.name} Está durmiendo y no puede atacar")
+                    afectado.puede_atacar = False
+
             #Agregar para los demás casos
+            case Effects.CONFUSION:
+                afectado.turnos_restantes_estado -= 1
+
+                if afectado.turnos_restantes_estado == 0:
+                    print(f"{afectado.name} salió de la confusión")
+                    afectado.efecto = None
+                    afectado.puede_atacar = True
+                else:
+                    rn = random.random()
+                    if rn > 1/3:
+                        afectado.puede_atacar = False
+                        daño_confusion = round(afectado.max_hp/3, 2)
+                        establecer_vida(afectado, daño_confusion)
+
+                        print(f"{afectado.name} Está confundido y se hace daño a sí mismo")
+            
+            case Effects.PARALYSIS:
+                rn = random.random()
+                if rn > 0.125:
+                    afectado.puede_atacar = False
+                    print(f"{afectado.name} Está paralizado y no puede atacar")
+                    
+
 
             case _:
-                print(f"El efecto: {efecto_nombre} no está soportado")
+                #print(f"El efecto: {efecto_nombre} no está soportado")
+                return
 
-    def resolver_efecto_END(afectado: Pokemon):
+    def resolver_efecto_END(self, afectado: Pokemon):
         """
         En base al nombre del efecto se ejecuta consecuencias sobre el afectado antes de finalizar el turno
         """
@@ -340,12 +374,16 @@ class Combate:
         efecto_nombre = afectado.efecto
 
         match(efecto_nombre):
-            case "curse":
-                
-                ## Aquí poner la lógica de efecto en este momento
+            case Effects.POISON:
+                daño_veneno = round(afectado.max_hp/8, 2)
+                establecer_vida(afectado, daño_veneno)
+                #Falta algo que actualize la vida en la UI
 
-                print("Curse")
-            #Agregar para los demás casos
+            case Effects.TOXIC:
+                daño_veneno = round(afectado.max_hp/16, 2)
+                daño_veneno = daño_veneno * afectado.multiplicador_toxico
+                establecer_vida(afectado, daño_veneno)
 
             case _:
-                print(f"El efecto: {efecto_nombre} no está soportado")
+                #print(f"El efecto: {efecto_nombre} no está soportado")
+                return

@@ -5,6 +5,7 @@ import threading
 
 from pokemon.motor.juego_interfaz import Juego, IA
 from pokemon.pokemon_factory import PokemonFactory
+from pokemon.enums.effects import Effects
 
 pokemones_disponibles = PokemonFactory.load_all_pokemons("pokemon/pokemones.json")
 
@@ -38,6 +39,10 @@ def evaluar_fitness(num_juegos): #obtener el win rate de 30 partidasS
         ganadas = 0
 
         configurar_juego(nuevo_juego)
+
+        pokeP2 = nuevo_juego.combate.estado_del_equipo.pokemonActivoP2
+        pokeP2.efecto = Effects.SLEEP
+        pokeP2.turnos_restantes_estado = 3
         
         turno = 0
         while True:

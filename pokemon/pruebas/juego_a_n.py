@@ -41,8 +41,7 @@ def evaluar_fitness(num_juegos): #obtener el win rate de 30 partidasS
         configurar_juego(nuevo_juego)
 
         pokeP2 = nuevo_juego.combate.estado_del_equipo.pokemonActivoP2
-        pokeP2.efecto = Effects.SLEEP
-        pokeP2.turnos_restantes_estado = 3
+        pokeP2.efecto = Effects.TOXIC
         
         turno = 0
         while True:

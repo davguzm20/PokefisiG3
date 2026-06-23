@@ -318,3 +318,4 @@ print(f"Su cromosoma es {mejor_individuo['individuo'].cromosoma}")
 
 for entrada in historial:
     print(entrada)
+    

@@ -6,3 +6,4 @@ class Effects(Enum):
     POISON = "poison"
     TOXIC = "toxic"
     SLEEP = "sleep"
+    ATTRACT = "attract"

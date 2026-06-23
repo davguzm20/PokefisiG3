@@ -1,5 +1,6 @@
 from pokemon.enums.damage_class import DamageClass
 from pokemon.enums.pokemon_type import PokemonType
+from pokemon.models.pokemon import Pokemon
 
 efectividad_base = {
     PokemonType.NORMAL: {PokemonType.ROCK: 0.5, PokemonType.GHOST: 0.0, PokemonType.STEEL: 0.5},
@@ -37,13 +38,13 @@ def obtener_multiplicador_tipos(tipo_ataque, tipos_defensor, tipos_atacante):
     if tipo_ataque in tipos_atacante: multiplicador *= 1.5
     return multiplicador
 
-def calcular_daño(atacante, defensor, movimiento):
+def calcular_daño(atacante: Pokemon, defensor: Pokemon, movimiento):
     if movimiento.damage_class == DamageClass.PHYSICAL:
-        ataque = atacante.attack
-        defensa = defensor.defense
+        ataque = atacante.obtener_stat_efectiva(atacante.attack, "attack")
+        defensa = defensor.obtener_stat_efectiva(defensor.defense, "defense")
     elif movimiento.damage_class == DamageClass.SPECIAL:
-        ataque = atacante.special_attack
-        defensa = defensor.special_defense
+        ataque = atacante.obtener_stat_efectiva(atacante.special_attack, "special_attack")
+        defensa = defensor.obtener_stat_efectiva(defensor.special_defense, "special_defense")
 
     poder = movimiento.power
     nivel = 50  #Esto podría ponerse en otro lugar

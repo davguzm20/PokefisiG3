@@ -1,12 +1,14 @@
 from pokemon.motor.bus_de_eventos import bus_de_eventos_global
+from pokemon.models.pokemon import Pokemon
+from pokemon.enums.effects import Effects
 
 class EstadoJuego:
     
     def __init__(self):
-        self.equipoP1 = []
-        self.equipoP2 = []        
-        self.pokemonActivoP1 = None
-        self.pokemonActivoP2 = None
+        self.equipoP1: list[Pokemon] = []
+        self.equipoP2: list[Pokemon] = []        
+        self.pokemonActivoP1: Pokemon = None
+        self.pokemonActivoP2: Pokemon = None
         self.estado_anterior = None
         self.operador = None
         self.esSimulado = False
@@ -51,7 +53,10 @@ class EstadoJuego:
     #Pasale el indice del pokemon al que quieres cambiar. La 
     def intercambiarPokemon(self, indicePokemonDentro, equipo=1):
         equipo_objetivo = self.equipoP1 if equipo == 1 else self.equipoP2
-        
+
+        if equipo_objetivo[0].efecto == Effects.TOXIC: equipo_objetivo[0].multiplicador_toxico = 1
+        if equipo_objetivo[0].efecto == Effects.AQUA_RING: equipo_objetivo[0].efecto = None
+
         temp = equipo_objetivo[0]
         equipo_objetivo[0] = equipo_objetivo[indicePokemonDentro]
         equipo_objetivo[indicePokemonDentro] = temp

@@ -48,6 +48,30 @@ class Pokemon:
         self.vida_pendiente_wish = 0
         self.vida_pendiente = 0
 
+        self.lock_on_activo: bool = False
+        self.endure_activo = False
+
+    def calcular_probabilidad_acierto(self, movimiento, defensor):
+        """
+        Calcula la probabilidad de que el movimiento acierte, considerando
+        la precisión base del movimiento y las etapas de accuracy/evasion.
+        Devuelve un valor entre 0 y 1. Si movimiento.accuracy es None, siempre acierta.
+        """
+        if movimiento.accuracy is None:
+            return 1.0
+        
+        etapa_accuracy = self.modificadores_stats["accuracy"]
+        etapa_evasion = defensor.modificadores_stats["evasion"]
+        etapa_neta = etapa_accuracy - etapa_evasion
+        etapa_neta = max(-6, min(6, etapa_neta))
+        
+        if etapa_neta >= 0:
+            multiplicador = (3 + etapa_neta) / 3
+        else:
+            multiplicador = 3 / (3 - etapa_neta)
+        
+        probabilidad = (movimiento.accuracy / 100) * multiplicador
+        return max(0.0, min(1.0, probabilidad))
     def aplicar_buff_debuff(self, stat: str, cantidad: int):
         self.modificadores_stats[stat] = max(-6 ,min(6, self.modificadores_stats[stat]+cantidad))
 

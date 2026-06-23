@@ -54,14 +54,14 @@
                 "tipo": "normal"
             },
             {
-                "precision": null,
-                "nombre": "sleep-talk",
-                "clase_daño": "status",
-                "descripcion": "Mientras duerme, usa uno de sus movimientos\nelegido al azar.",
-                "poder": null,
+                "precision": 100,
+                "nombre": "sludge-bomb",
+                "clase_daño": "special",
+                "descripcion": "Ataca lanzando lodo asqueroso. Puede llegar a envenenar al objetivo.",
+                "poder": 90,
                 "pp": 10,
                 "prioridad": 0,
-                "tipo": "normal"
+                "tipo": "poison"
             },
             {
                 "precision": 95,
@@ -157,14 +157,14 @@
         "peso": 225,
         "movimientos": [
             {
-                "precision": null,
-                "nombre": "helping-hand",
-                "clase_daño": "status",
-                "descripcion": "El usuario ayuda a un aliado reforzando la\npotencia de su ataque.",
-                "poder": null,
-                "pp": 20,
-                "prioridad": 5,
-                "tipo": "normal"
+                "precision": 100,
+                "nombre": "surf",
+                "clase_daño": "special",
+                "descripcion": "Inunda el campo de batalla con una ola gigante.\nFuera de batalla sirve para moverse sobre el agua.",
+                "poder": 90,
+                "pp": 15,
+                "prioridad": 0,
+                "tipo": "water"
             },
             {
                 "precision": 95,
@@ -325,14 +325,14 @@
                 "tipo": "fighting"
             },
             {
-                "precision": 100,
-                "nombre": "trick",
+                "precision": 90,
+                "nombre": "thunder-wave",
                 "clase_daño": "status",
-                "descripcion": "Engaña al objetivo desprevenido e intercambia\nobjetos.",
+                "descripcion": "Una ligera descarga que paraliza al objetivo si lo\nalcanza.",
                 "poder": null,
-                "pp": 10,
+                "pp": 20,
                 "prioridad": 0,
-                "tipo": "psychic"
+                "tipo": "electric"
             },
             {
                 "precision": 90,
@@ -442,14 +442,14 @@
                 "tipo": "normal"
             },
             {
-                "precision": 100,
-                "nombre": "disable",
-                "clase_daño": "status",
-                "descripcion": "Desactiva el último movimiento del objetivo\ndurante cuatro turnos.",
-                "poder": null,
-                "pp": 20,
+                "precision": 80,
+                "nombre": "hydro-pump",
+                "clase_daño": "special",
+                "descripcion": "Lanza una gran masa de agua a presión para\natacar.",
+                "poder": 110,
+                "pp": 5,
                 "prioridad": 0,
-                "tipo": "normal"
+                "tipo": "water"
             },
             {
                 "precision": 85,
@@ -590,14 +590,14 @@
                 "tipo": "poison"
             },
             {
-                "precision": null,
-                "nombre": "mimic",
-                "clase_daño": "status",
-                "descripcion": "Copia el último movimiento usado por el objetivo.\nDicho movimiento se podrá usar mientras el\nPokémon no sea cambiado.",
-                "poder": null,
+                "precision": 100,
+                "nombre": "earthquake",
+                "clase_daño": "physical",
+                "descripcion": "Un terremoto que afecta a los Pokémon de\nalrededor en combate.",
+                "poder": 100,
                 "pp": 10,
                 "prioridad": 0,
-                "tipo": "normal"
+                "tipo": "ground"
             },
             {
                 "precision": 70,
@@ -773,14 +773,14 @@
                 "tipo": "normal"
             },
             {
-                "precision": null,
-                "nombre": "mimic",
-                "clase_daño": "status",
-                "descripcion": "Copia el último movimiento usado por el objetivo.\nDicho movimiento se podrá usar mientras el\nPokémon no sea cambiado.",
-                "poder": null,
-                "pp": 10,
+                "precision": 100,
+                "nombre": "flamethrower",
+                "clase_daño": "special",
+                "descripcion": "Ataca con una gran ráfaga de fuego que puede\ncausar quemaduras.",
+                "poder": 90,
+                "pp": 15,
                 "prioridad": 0,
-                "tipo": "normal"
+                "tipo": "fire"
             },
             {
                 "precision": 100,
@@ -1277,12 +1277,12 @@
                 "tipo": "normal"
             },
             {
-                "precision": null,
-                "nombre": "electric-terrain",
-                "clase_daño": "status",
-                "descripcion": "Durante cinco turnos, crea un campo eléctrico en\nel terreno de combate que impide dormirse a los\nPokémon que estén en contacto con el suelo.",
-                "poder": null,
-                "pp": 10,
+                "precision": 100,
+                "nombre": "thunderbolt",
+                "clase_daño": "special",
+                "descripcion": "Potente ataque eléctrico que puede paralizar al\nobjetivo.",
+                "poder": 90,
+                "pp": 15,
                 "prioridad": 0,
                 "tipo": "electric"
             },
@@ -1613,14 +1613,14 @@
                 "tipo": "fairy"
             },
             {
-                "precision": null,
-                "nombre": "sleep-talk",
-                "clase_daño": "status",
-                "descripcion": "Mientras duerme, usa uno de sus movimientos\nelegido al azar.",
-                "poder": null,
-                "pp": 10,
+                "precision": 100,
+                "nombre": "surf",
+                "clase_daño": "special",
+                "descripcion": "Inunda el campo de batalla con una ola gigante.\nFuera de batalla sirve para moverse sobre el agua.",
+                "poder": 90,
+                "pp": 15,
                 "prioridad": 0,
-                "tipo": "normal"
+                "tipo": "water"
             }
         ],
         "sprites": {
@@ -1751,14 +1751,14 @@
                 "tipo": "rock"
             },
             {
-                "precision": null,
-                "nombre": "gravity",
-                "clase_daño": "status",
-                "descripcion": "La gravedad aumenta durante cinco turnos, lo que\nimpide acciones que impliquen volar o levitar.",
-                "poder": null,
-                "pp": 5,
+                "precision": 100,
+                "nombre": "flash-cannon",
+                "clase_daño": "special",
+                "descripcion": "Concentra toda su energía luminosa y la libera de\ngolpe. Puede bajar la Defensa Especial del oponente.",
+                "poder": 80,
+                "pp": 10,
                 "prioridad": 0,
-                "tipo": "psychic"
+                "tipo": "steel"
             }
         ],
         "sprites": {
@@ -1952,11 +1952,11 @@
             },
             {
                 "precision": null,
-                "nombre": "mimic",
+                "nombre": "swords-dance",
                 "clase_daño": "status",
-                "descripcion": "Copia el último movimiento usado por el objetivo.\nDicho movimiento se podrá usar mientras el\nPokémon no sea cambiado.",
+                "descripcion": "Baile frenético que aumenta mucho el Ataque.",
                 "poder": null,
-                "pp": 10,
+                "pp": 20,
                 "prioridad": 0,
                 "tipo": "normal"
             },
@@ -1991,14 +1991,14 @@
                 "tipo": "steel"
             },
             {
-                "precision": null,
-                "nombre": "metronome",
-                "clase_daño": "status",
-                "descripcion": "El usuario mueve un dedo y estimula su cerebro\npara usar al azar casi cualquier movimiento.",
-                "poder": null,
-                "pp": 10,
+                "precision": 100,
+                "nombre": "close-combat",
+                "clase_daño": "physical",
+                "descripcion": "Lucha abiertamente contra el objetivo sin\nprotegerse. También reduce la Defensa y la\nDefensa Especial del usuario.",
+                "poder": 120,
+                "pp": 5,
                 "prioridad": 0,
-                "tipo": "normal"
+                "tipo": "fighting"
             },
             {
                 "precision": 100,
@@ -2069,11 +2069,11 @@
         "movimientos": [
             {
                 "precision": null,
-                "nombre": "gravity",
+                "nombre": "amnesia",
                 "clase_daño": "status",
-                "descripcion": "La gravedad aumenta durante cinco turnos, lo que\nimpide acciones que impliquen volar o levitar.",
+                "descripcion": "El usuario olvida sus preocupaciones y aumenta\nmucho la Defensa Especial.",
                 "poder": null,
-                "pp": 5,
+                "pp": 20,
                 "prioridad": 0,
                 "tipo": "psychic"
             },
@@ -2098,21 +2098,21 @@
                 "tipo": "dark"
             },
             {
-                "precision": null,
-                "nombre": "role-play",
+                "precision": 100,
+                "nombre": "flash",
                 "clase_daño": "status",
-                "descripcion": "Imita al objetivo por completo y copia su habilidad.",
+                "descripcion": "Luz cegadora que baja la Precisión del objetivo.",
                 "poder": null,
-                "pp": 10,
+                "pp": 20,
                 "prioridad": 0,
-                "tipo": "psychic"
+                "tipo": "normal"
             },
             {
-                "precision": null,
-                "nombre": "skill-swap",
-                "clase_daño": "status",
-                "descripcion": "Usa el poder psíquico para intercambiar\nhabilidades con el objetivo.",
-                "poder": null,
+                "precision": 100,
+                "nombre": "psychic",
+                "clase_daño": "special",
+                "descripcion": "Fuerte ataque psíquico que puede bajar la Defensa\nEspecial del objetivo.",
+                "poder": 90,
                 "pp": 10,
                 "prioridad": 0,
                 "tipo": "psychic"
@@ -2138,23 +2138,23 @@
                 "tipo": "water"
             },
             {
-                "precision": null,
-                "nombre": "snatch",
-                "clase_daño": "status",
-                "descripcion": "Roba el efecto de los movimientos de curación\no de cambio de características que se usen.",
-                "poder": null,
+                "precision": 100,
+                "nombre": "dazzling-gleam",
+                "clase_daño": "special",
+                "descripcion": "Inflige daño a los oponentes con una potente luz. ",
+                "poder": 80,
                 "pp": 10,
-                "prioridad": 4,
-                "tipo": "dark"
+                "prioridad": 0,
+                "tipo": "fairy"
             },
             {
-                "precision": null,
-                "nombre": "magic-coat",
-                "clase_daño": "status",
-                "descripcion": "Barrera capaz de devolver al agresor movimientos\ncomo Drenadoras y otros que alteran el estado o\nlas características.",
-                "poder": null,
-                "pp": 15,
-                "prioridad": 4,
+                "precision": 100,
+                "nombre": "psybeam",
+                "clase_daño": "special",
+                "descripcion": "Lanza un peculiar rayo de luz que puede llegar a\nconfundir al objetivo.",
+                "poder": 65,
+                "pp": 20,
+                "prioridad": 0,
                 "tipo": "psychic"
             },
             {
@@ -2237,11 +2237,11 @@
             },
             {
                 "precision": null,
-                "nombre": "skill-swap",
+                "nombre": "rest",
                 "clase_daño": "status",
-                "descripcion": "Usa el poder psíquico para intercambiar\nhabilidades con el objetivo.",
+                "descripcion": "Restaura todos los PS y cura todos los problemas\nde estado del usuario. Duerme los dos próximos\nturnos.",
                 "poder": null,
-                "pp": 10,
+                "pp": 5,
                 "prioridad": 0,
                 "tipo": "psychic"
             },
@@ -2297,13 +2297,13 @@
             },
             {
                 "precision": 100,
-                "nombre": "taunt",
-                "clase_daño": "status",
-                "descripcion": "Enfurece al objetivo para que solo use\nmovimientos de ataque durante tres turnos.",
-                "poder": null,
-                "pp": 20,
+                "nombre": "hyper-voice",
+                "clase_daño": "special",
+                "descripcion": "Ataca emitiendo una terrible onda sonora de gran\npotencia.",
+                "poder": 90,
+                "pp": 10,
                 "prioridad": 0,
-                "tipo": "dark"
+                "tipo": "normal"
             }
         ],
         "sprites": {
@@ -2530,14 +2530,14 @@
                 "tipo": "fairy"
             },
             {
-                "precision": 100,
-                "nombre": "embargo",
+                "precision": 90,
+                "nombre": "toxic",
                 "clase_daño": "status",
-                "descripcion": "Impide al objetivo usar el objeto que lleva. Su\nEntrenador tampoco puede usar objetos con él.",
+                "descripcion": "Envenena gravemente al objetivo y causa un daño\nmayor en cada turno.",
                 "poder": null,
-                "pp": 15,
+                "pp": 10,
                 "prioridad": 0,
-                "tipo": "dark"
+                "tipo": "poison"
             },
             {
                 "precision": 90,
@@ -2560,14 +2560,14 @@
                 "tipo": "normal"
             },
             {
-                "precision": null,
-                "nombre": "skill-swap",
-                "clase_daño": "status",
-                "descripcion": "Usa el poder psíquico para intercambiar\nhabilidades con el objetivo.",
-                "poder": null,
-                "pp": 10,
+                "precision": 100,
+                "nombre": "shadow-ball",
+                "clase_daño": "special",
+                "descripcion": "Lanza una bola negra de energía oculta. Puede\ndisminuir la Defensa Especial del objetivo.",
+                "poder": 80,
+                "pp": 15,
                 "prioridad": 0,
-                "tipo": "psychic"
+                "tipo": "ghost"
             }
         ],
         "sprites": {
@@ -2678,14 +2678,14 @@
                 "tipo": "ground"
             },
             {
-                "precision": null,
-                "nombre": "stealth-rock",
-                "clase_daño": "status",
-                "descripcion": "Una trampa de rocas que flota en el aire y daña a\nlos objetivos que entran en combate.",
-                "poder": null,
-                "pp": 20,
+                "precision": 100,
+                "nombre": "earthquake",
+                "clase_daño": "physical",
+                "descripcion": "Un terremoto que afecta a los Pokémon de\nalrededor en combate.",
+                "poder": 100,
+                "pp": 10,
                 "prioridad": 0,
-                "tipo": "rock"
+                "tipo": "ground"
             },
             {
                 "precision": 90,
@@ -2803,13 +2803,13 @@
             },
             {
                 "precision": 100,
-                "nombre": "taunt",
-                "clase_daño": "status",
-                "descripcion": "Enfurece al objetivo para que solo use\nmovimientos de ataque durante tres turnos.",
-                "poder": null,
-                "pp": 20,
+                "nombre": "poison-fang",
+                "clase_daño": "physical",
+                "descripcion": "Inyecta un fiero veneno con colmillos afilados.\nPuede llegar a envenenar gravemente al objetivo.",
+                "poder": 50,
+                "pp": 15,
                 "prioridad": 0,
-                "tipo": "dark"
+                "tipo": "poison"
             },
             {
                 "precision": null,
@@ -2896,24 +2896,24 @@
                 "tipo": "normal"
             },
             {
-                "precision": 100,
-                "nombre": "worry-seed",
+                "precision": null,
+                "nombre": "synthesis",
                 "clase_daño": "status",
-                "descripcion": "Se planta una semilla en el objetivo que le causa\npesar. Evita el sueño gracias a la habilidad\nInsomnio.",
+                "descripcion": "Restaura PS del usuario. La cantidad varía según\nel tiempo que haga.",
                 "poder": null,
-                "pp": 10,
+                "pp": 5,
                 "prioridad": 0,
                 "tipo": "grass"
             },
             {
-                "precision": null,
-                "nombre": "curse",
+                "precision": 90,
+                "nombre": "toxic",
                 "clase_daño": "status",
-                "descripcion": "Un movimiento que tiene efectos distintos si el\nusuario es de tipo Fantasma o no.",
+                "descripcion": "Envenena gravemente al objetivo y causa un daño\nmayor en cada turno.",
                 "poder": null,
                 "pp": 10,
                 "prioridad": 0,
-                "tipo": "ghost"
+                "tipo": "poison"
             },
             {
                 "precision": 100,
@@ -2926,14 +2926,14 @@
                 "tipo": "normal"
             },
             {
-                "precision": null,
-                "nombre": "reflect",
-                "clase_daño": "status",
-                "descripcion": "Pared de luz que reduce durante cinco turnos el\ndaño producido por los ataques físicos.",
-                "poder": null,
-                "pp": 20,
+                "precision": 100,
+                "nombre": "giga-drain",
+                "clase_daño": "special",
+                "descripcion": "Absorbe la mitad del daño producido en el objetivo\npara restaurar los PS del usuario.",
+                "poder": 75,
+                "pp": 10,
                 "prioridad": 0,
-                "tipo": "psychic"
+                "tipo": "grass"
             },
             {
                 "precision": null,
@@ -3030,13 +3030,13 @@
             },
             {
                 "precision": null,
-                "nombre": "reflect",
+                "nombre": "charge",
                 "clase_daño": "status",
-                "descripcion": "Pared de luz que reduce durante cinco turnos el\ndaño producido por los ataques físicos.",
+                "descripcion": "Recarga energía para potenciar el siguiente\nmovimiento de tipo Eléctrico. También sube la\nDefensa Especial.",
                 "poder": null,
                 "pp": 20,
                 "prioridad": 0,
-                "tipo": "psychic"
+                "tipo": "electric"
             },
             {
                 "precision": 100,
@@ -3049,14 +3049,14 @@
                 "tipo": "fire"
             },
             {
-                "precision": null,
-                "nombre": "after-you",
-                "clase_daño": "status",
-                "descripcion": "Si el usuario es el más rápido, permite al objetivo\nusar un movimiento justo tras él, adelantándose a\nPokémon más rápidos.",
-                "poder": null,
+                "precision": 100,
+                "nombre": "thunderbolt",
+                "clase_daño": "special",
+                "descripcion": "Potente ataque eléctrico que puede paralizar al\nobjetivo.",
+                "poder": 90,
                 "pp": 15,
                 "prioridad": 0,
-                "tipo": "normal"
+                "tipo": "electric"
             },
             {
                 "precision": 100,
@@ -3172,14 +3172,14 @@
                 "tipo": "normal"
             },
             {
-                "precision": null,
-                "nombre": "teleport",
+                "precision": 90,
+                "nombre": "thunder-wave",
                 "clase_daño": "status",
-                "descripcion": "Permite huir al instante de combates contra\nPokémon salvajes o viajar al último Centro\nPokémon visitado.",
+                "descripcion": "Una ligera descarga que paraliza al objetivo si lo\nalcanza.",
                 "poder": null,
                 "pp": 20,
-                "prioridad": -6,
-                "tipo": "psychic"
+                "prioridad": 0,
+                "tipo": "electric"
             },
             {
                 "precision": 70,
@@ -3192,14 +3192,14 @@
                 "tipo": "electric"
             },
             {
-                "precision": null,
-                "nombre": "curse",
-                "clase_daño": "status",
-                "descripcion": "Un movimiento que tiene efectos distintos si el\nusuario es de tipo Fantasma o no.",
-                "poder": null,
-                "pp": 10,
+                "precision": 100,
+                "nombre": "thunder-punch",
+                "clase_daño": "physical",
+                "descripcion": "Puñetazo eléctrico de gran potencia que puede\nllegar a paralizar al objetivo.",
+                "poder": 75,
+                "pp": 15,
                 "prioridad": 0,
-                "tipo": "ghost"
+                "tipo": "electric"
             },
             {
                 "precision": 70,
@@ -3326,13 +3326,13 @@
             },
             {
                 "precision": null,
-                "nombre": "substitute",
+                "nombre": "dragon-dance",
                 "clase_daño": "status",
-                "descripcion": "Utiliza parte de los PS propios para crear un\nsustituto que actúa como señuelo.",
+                "descripcion": "Danza mística que sube el Ataque y la Velocidad.",
                 "poder": null,
-                "pp": 10,
+                "pp": 20,
                 "prioridad": 0,
-                "tipo": "normal"
+                "tipo": "dragon"
             },
             {
                 "precision": 50,
@@ -3635,14 +3635,14 @@
                 "tipo": "normal"
             },
             {
-                "precision": null,
-                "nombre": "substitute",
-                "clase_daño": "status",
-                "descripcion": "Utiliza parte de los PS propios para crear un\nsustituto que actúa como señuelo.",
-                "poder": null,
-                "pp": 10,
+                "precision": 100,
+                "nombre": "moonblast",
+                "clase_daño": "special",
+                "descripcion": "Ataca con el poder de la luna. Puede disminuir el\nAtaque Especial del objetivo.",
+                "poder": 95,
+                "pp": 15,
                 "prioridad": 0,
-                "tipo": "normal"
+                "tipo": "fairy"
             }
         ],
         "sprites": {
@@ -3689,21 +3689,21 @@
             },
             {
                 "precision": 100,
-                "nombre": "flame-burst",
-                "clase_daño": "special",
-                "descripcion": "Golpea al objetivo con una llamarada que afecta\ntambién a los Pokémon adyacentes.",
-                "poder": 70,
+                "nombre": "fire-punch",
+                "clase_daño": "physical",
+                "descripcion": "Puñetazo ardiente. Puede quemar.",
+                "poder": 75,
                 "pp": 15,
                 "prioridad": 0,
                 "tipo": "fire"
             },
             {
-                "precision": 100,
-                "nombre": "flame-burst",
+                "precision": 85,
+                "nombre": "fire-blast",
                 "clase_daño": "special",
-                "descripcion": "Golpea al objetivo con una llamarada que afecta\ntambién a los Pokémon adyacentes.",
-                "poder": 70,
-                "pp": 15,
+                "descripcion": "Llama intensa que chamusca y puede causar\nquemaduras.",
+                "poder": 110,
+                "pp": 5,
                 "prioridad": 0,
                 "tipo": "fire"
             },
@@ -3728,24 +3728,24 @@
                 "tipo": "fire"
             },
             {
-                "precision": null,
-                "nombre": "substitute",
-                "clase_daño": "status",
-                "descripcion": "Utiliza parte de los PS propios para crear un\nsustituto que actúa como señuelo.",
-                "poder": null,
-                "pp": 10,
+                "precision": 100,
+                "nombre": "flamethrower",
+                "clase_daño": "special",
+                "descripcion": "Ataca con una gran ráfaga de fuego que puede\ncausar quemaduras.",
+                "poder": 90,
+                "pp": 15,
                 "prioridad": 0,
-                "tipo": "normal"
+                "tipo": "fire"
             },
             {
-                "precision": null,
-                "nombre": "curse",
-                "clase_daño": "status",
-                "descripcion": "Un movimiento que tiene efectos distintos si el\nusuario es de tipo Fantasma o no.",
-                "poder": null,
-                "pp": 10,
+                "precision": 100,
+                "nombre": "slash",
+                "clase_daño": "physical",
+                "descripcion": "Cuchillada que corta con garras o guadañas.\nSuele ser un golpe crítico.",
+                "poder": 70,
+                "pp": 20,
                 "prioridad": 0,
-                "tipo": "ghost"
+                "tipo": "normal"
             },
             {
                 "precision": 100,
@@ -3895,22 +3895,22 @@
                 "tipo": "fairy"
             },
             {
-                "precision": null,
-                "nombre": "reflect",
-                "clase_daño": "status",
-                "descripcion": "Pared de luz que reduce durante cinco turnos el\ndaño producido por los ataques físicos.",
-                "poder": null,
-                "pp": 20,
+                "precision": 100,
+                "nombre": "hyper-voice",
+                "clase_daño": "special",
+                "descripcion": "Ataca emitiendo una terrible onda sonora de gran\npotencia.",
+                "poder": 90,
+                "pp": 10,
                 "prioridad": 0,
-                "tipo": "psychic"
+                "tipo": "normal"
             },
             {
-                "precision": null,
-                "nombre": "electric-terrain",
-                "clase_daño": "status",
-                "descripcion": "Durante cinco turnos, crea un campo eléctrico en\nel terreno de combate que impide dormirse a los\nPokémon que estén en contacto con el suelo.",
-                "poder": null,
-                "pp": 10,
+                "precision": 100,
+                "nombre": "thunderbolt",
+                "clase_daño": "special",
+                "descripcion": "Potente ataque eléctrico que puede paralizar al\nobjetivo.",
+                "poder": 90,
+                "pp": 15,
                 "prioridad": 0,
                 "tipo": "electric"
             }
@@ -4028,14 +4028,14 @@
                 "tipo": "grass"
             },
             {
-                "precision": null,
-                "nombre": "helping-hand",
-                "clase_daño": "status",
-                "descripcion": "El usuario ayuda a un aliado reforzando la\npotencia de su ataque.",
-                "poder": null,
-                "pp": 20,
-                "prioridad": 5,
-                "tipo": "normal"
+                "precision": 100,
+                "nombre": "giga-drain",
+                "clase_daño": "special",
+                "descripcion": "Absorbe la mitad del daño producido en el objetivo\npara restaurar los PS del usuario.",
+                "poder": 75,
+                "pp": 10,
+                "prioridad": 0,
+                "tipo": "grass"
             },
             {
                 "precision": 100,

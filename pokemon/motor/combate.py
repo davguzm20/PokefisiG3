@@ -7,6 +7,7 @@ from pokemon.motor.estado_juego import EstadoJuego
 from pokemon.enums.damage_class import DamageClass
 from pokemon.enums.effects import Effects
 from pokemon.enums.weather import Weather
+from pokemon.enums.pokemon_type import PokemonType
 from pokemon.motor.bus_de_eventos import bus_de_eventos_global
 
 class Combate:
@@ -105,6 +106,7 @@ class Combate:
             defensor = self.estado_del_equipo.pokemonActivoP2 if ctx["id_player"] == 1 else self.estado_del_equipo.pokemonActivoP1
             atacante.protegido = False
             atacante.puede_atacar = True
+            atacante.endure_activo = False
 
             accion = ctx["accion"]
             
@@ -127,6 +129,18 @@ class Combate:
                     if defensor.protegido:
                         self._emit(f"¡{defensor.name} se ha protegido!")
                         continue
+                    
+                    if atacante.lock_on_activo:
+                        acierta = True
+                        atacante.lock_on_activo = False
+                    else:
+                        probabilidad_acierto = atacante.calcular_probabilidad_acierto(accion, defensor)
+                        acierta = random.random() < probabilidad_acierto
+                    
+                    if not acierta:
+                        if not self.es_simulado:
+                            self._emit(f"¡{atacante.name} usó {accion.name}, pero falló!")
+                        continue
 
                     #Sería mejor si fuera accion.ejecutar()
                     daño = calcular_daño(atacante, defensor, accion)
@@ -137,6 +151,15 @@ class Combate:
                     
                     vida_previa = defensor.hp
                     nueva_vida_rival = establecer_vida(defensor, daño)
+
+                    ##Para endure
+                    if defensor.endure_activo and nueva_vida_rival <= 0:
+                        nueva_vida_rival = 1
+                        defensor.hp = 1
+                        defensor.endure_activo = False
+                        if not self.es_simulado:
+                            self._emit(f"¡{defensor.name} resistió el golpe con Aguante!")
+
                     atacante.reciente_daño_hecho = vida_previa - nueva_vida_rival #### Añadido para movimientos que roban vida
                     
                     #Si el rival se queda sin pokemones tras el turno ya no hace falta seguir ejecutando movimientos ni intercambios
@@ -158,6 +181,14 @@ class Combate:
                         self.hay_intercambioP1 = True if ctx["id_rival"] == 1 else False
                         self.hay_intercambioP2 = True if ctx["id_rival"] == 2 else False                
                 else:
+
+                    probabilidad_acierto = atacante.calcular_probabilidad_acierto(accion, defensor)
+                    acierta = random.random() < probabilidad_acierto
+                    
+                    if not acierta:
+                        if not self.es_simulado:
+                            self._emit(f"¡{atacante.name} usó {accion.name}, pero falló!")
+                        continue
  
                     self.resolver_movimiento_de_soporte(accion, atacante, defensor)
 
@@ -173,6 +204,8 @@ class Combate:
         #Revisión de efectos, entornos y habilidades que tienen consecuencias tardías
         self.resolver_efecto_END(pokemonP1)
         self.resolver_efecto_END(pokemonP2)
+        self.resolver_entorno_END(pokemonP1)
+        self.resolver_entorno_END(pokemonP2)
         
         if self.estado_del_equipo.esTerminal == True: #Si ya se definio el ganador, las consecuencias de los efectos no deberían impactar en el resultado.
             return
@@ -331,6 +364,87 @@ class Combate:
 
         match(movimiento_nombre):
 
+            case "lock-on":
+                atacante.lock_on_activo = True
+                if not self.es_simulado:
+                    self._emit(f"¡{atacante.name} fijó el blanco!")
+
+            case "venom-drench":
+                if defensor.efecto in (Effects.POISON, Effects.TOXIC):
+                    defensor.aplicar_buff_debuff("attack", -1)
+                    defensor.aplicar_buff_debuff("special_attack", -1)
+                    defensor.aplicar_buff_debuff("speed", -1)
+                    if not self.es_simulado:
+                        self._emit(f"¡Las estadísticas de {defensor.name} bajaron por el veneno!")
+                elif not self.es_simulado:
+                    self._emit(f"¡No tuvo efecto en {defensor.name}!")
+
+            case "endure":
+                rn = random.random()
+                prob_fail = atacante.protects_seguidos * (1/3)
+                if rn > prob_fail:
+                    atacante.endure_activo = True
+                    atacante.protects_seguidos += 1
+                    if not self.es_simulado:
+                        self._emit(f"¡{atacante.name} se preparó para resistir!")
+                else:
+                    atacante.protects_seguidos = 0
+                    atacante.endure_activo = False
+                    if not self.es_simulado:
+                        self._emit(f"¡Falló el aguante de {atacante.name}!")
+
+            case "haze":
+                p1 = self.estado_del_equipo.pokemonActivoP1
+                p2 = self.estado_del_equipo.pokemonActivoP2
+                for stat in p1.modificadores_stats:
+                    p1.modificadores_stats[stat] = 0
+                    p2.modificadores_stats[stat] = 0
+                if not self.es_simulado:
+                    self._emit("¡Se eliminaron todos los cambios de estadísticas!")
+
+            case "power-swap":
+                p1 = self.estado_del_equipo.pokemonActivoP1
+                p2 = self.estado_del_equipo.pokemonActivoP2
+                p1.modificadores_stats["attack"], p2.modificadores_stats["attack"] = \
+                    p2.modificadores_stats["attack"], p1.modificadores_stats["attack"]
+                p1.modificadores_stats["special_attack"], p2.modificadores_stats["special_attack"] = \
+                    p2.modificadores_stats["special_attack"], p1.modificadores_stats["special_attack"]
+                if not self.es_simulado:
+                    self._emit(f"¡{atacante.name} intercambió cambios de Ataque con {defensor.name}!")
+
+            case "guard-split":
+                p1 = self.estado_del_equipo.pokemonActivoP1
+                p2 = self.estado_del_equipo.pokemonActivoP2
+                promedio_def = round((p1.defense + p2.defense) / 2)
+                promedio_spdef = round((p1.special_defense + p2.special_defense) / 2)
+                p1.defense = p2.defense = promedio_def
+                p1.special_defense = p2.special_defense = promedio_spdef
+                if not self.es_simulado:
+                    self._emit(f"¡{atacante.name} compartió su Defensa con {defensor.name}!")
+
+            case "rain-dance":
+                self.entorno_activo = Weather.RAIN
+                self.entorno_turnos_restantes = 5
+                if not self.es_simulado:
+                    self._emit("¡Empezó a llover!")
+
+            case "sunny-day":
+                self.entorno_activo = Weather.SUNNY
+                self.entorno_turnos_restantes = 5
+                if not self.es_simulado:
+                    self._emit("¡El sol empezó a brillar con fuerza!")
+
+            case "sandstorm":
+                self.entorno_activo = Weather.SANDSTORM
+                self.entorno_turnos_restantes = 5
+                if not self.es_simulado:
+                    self._emit("¡Se desató una tormenta de arena!")
+
+            case "hail":
+                self.entorno_activo = Weather.HAIL
+                self.entorno_turnos_restantes = 5
+                if not self.es_simulado:
+                    self._emit("¡Empezó a granizar!")
             case "tail-whip":
                 defensor.aplicar_buff_debuff("defense", -1)
                 if not self.es_simulado: self._emit(f"¡La Defensa de {defensor.name} bajó!")
@@ -585,11 +699,34 @@ class Combate:
         nombre_movimiento = movimiento.name
 
         match(nombre_movimiento):
-            case "absorb" | "draining-kiss":
+            case "absorb" | "draining-kiss" | "giga-drain":
                 if atacante.reciente_daño_hecho == 0: return
 
                 vida_robada = atacante.reciente_daño_hecho/2
                 if not self.es_simulado: print(f"{atacante.name} Recuperó algo de vida")
                 establecer_vida(atacante, -vida_robada)
+    
+    def resolver_entorno_END(self, pokemon: Pokemon):
+        if self.entorno_activo is not None:
+            self.entorno_turnos_restantes -= 1
+            if self.entorno_turnos_restantes <= 0:
+                if not self.es_simulado:
+                    self._emit("¡El clima volvió a la normalidad!")
+                self.entorno_activo = None
+        
+        match(self.entorno_activo):
+
+            case Weather.SANDSTORM:
+                if PokemonType.STEEL not in pokemon.types or PokemonType.GROUND not in pokemon.types or PokemonType.ROCK not in pokemon.types:
+                    daño_entorno = round(pokemon.max_hp/16, 2)
+                    establecer_vida(pokemon, daño_entorno)
+                    if not self.es_simulado: print(f"{pokemon.name} Recibió daño de la tormenta de arena")
+
+            case Weather.HAIL:
+                if PokemonType.ICE not in pokemon.types:
+                    daño_entorno = round(pokemon.max_hp/16, 2)
+                    establecer_vida(pokemon, daño_entorno)
+                    if not self.es_simulado: print(f"{pokemon.name} Recibió daño por el granizo")
+
 
             

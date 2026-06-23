@@ -55,7 +55,7 @@ class EstadoJuego:
         equipo_objetivo = self.equipoP1 if equipo == 1 else self.equipoP2
 
         if equipo_objetivo[0].efecto == Effects.TOXIC: equipo_objetivo[0].multiplicador_toxico = 1
-        if equipo_objetivo[0].efecto == Effects.AQUA_RING: equipo_objetivo[0].efecto = None
+        if equipo_objetivo[0].aqua_ring_activo: equipo_objetivo[0].aqua_ring_activo = False
 
         temp = equipo_objetivo[0]
         equipo_objetivo[0] = equipo_objetivo[indicePokemonDentro]

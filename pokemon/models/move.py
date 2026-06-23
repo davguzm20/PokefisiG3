@@ -6,6 +6,7 @@ class Move:
                     power: int, power_points: int, type: PokemonType, priority: int):
         self.accuracy = accuracy
         self.name = name
+        self.accuracy = accuracy
         self.damage_class = damage_class
         self.description = description
         self.power = power

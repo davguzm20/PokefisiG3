@@ -650,14 +650,14 @@
                 "tipo": "fighting"
             },
             {
-                "precision": null,
-                "nombre": "guard-split",
-                "clase_daño": "status",
-                "descripcion": "El usuario emplea sus poderes para hacer la media\nde su Defensa y Defensa Especial con las de su\nobjetivo y compartirlas.",
-                "poder": null,
+                "precision": 100,
+                "nombre": "earthquake",
+                "clase_daño": "physical",
+                "descripcion": "Un terremoto que afecta a los Pokémon de\nalrededor en combate.",
+                "poder": 100,
                 "pp": 10,
                 "prioridad": 0,
-                "tipo": "psychic"
+                "tipo": "ground"
             },
             {
                 "precision": 100,

@@ -4,37 +4,27 @@ import time
 
 from pokemon.motor.juego_interfaz import Juego, IA
 from pokemon.pokemon_factory import PokemonFactory
-
-
-def seleccionar_pokemon_con_movimientos(nombre):
-    PokemonFactory("")
-    p_sel = copy.deepcopy(random.choice(pokemones_disponibles))
-    random.shuffle(p_sel.moves)
-
-    cuenta_movimientos_de_daño = 0
-    was_index = 0
-
-    movimientos = []
-    for i in range(0, len(p_sel.moves)):
-        if p_sel.moves[i].power is not None:
-            
-            movimientos.append(p_sel.moves[i])
-            cuenta_movimientos_de_daño += 1
-
-            if cuenta_movimientos_de_daño == 2:
-                was_index = i
-                break
-    
-    if was_index+2 >= len(p_sel.moves):
-        p_sel.moves = movimientos + p_sel.moves[was_index-3:was_index-1]
-    else:
-        p_sel.moves = movimientos + p_sel.moves[was_index+1:was_index+3]
-    return 
+from pokemon.helpers.TeamFactory import TeamFactory
 
 pokemones_disponibles = PokemonFactory.load_all_pokemons("pokemon/pokemones.json")
-equipos = {
-    1: PokemonFactory.create_pokemon(),
-}
+
+def configurar_juego(juego, num_juegos, pesos):
+    juego.configurar_jugador_como_IA(1, 3, pokemones_disponibles, 4, pesos)
+    juego.configurar_jugador_como_IA(2, 2, pokemones_disponibles, 4, pesos)
+    index_equipo = random.randint(0,19)
+    equipo_ia = TeamFactory.generar_equipo_predefinido(index_equipo, juego.num_pokemones)
+        
+    index_equipo_op = num_juegos
+    equipo_op = TeamFactory.generar_equipo_predefinido(index_equipo_op, juego.num_pokemones)
+        
+    juego.combate.estado_del_equipo.setEquipo(equipo_ia, 1)
+    juego.combate.estado_del_equipo.setEquipo(equipo_op, 2)
+
+    juego.inicializar_combate()
+    juego.estado.esTerminal = False
+    juego.estado.ganaP1 = False
+    juego.estado.ganaP2 = False
+        
 
 def funcion_normalizadora(lista):
     sum = 0
@@ -78,7 +68,7 @@ class Individuo:
     
     def generar_cromosoma(self):
         
-        max = 10
+        max = 20
 
         for i in range(0, self.numgenes):
 
@@ -101,67 +91,80 @@ class Individuo:
         }
 
 
-    def evaluar_fitness(self, num_juegos): #obtener el win rate de 30 partidas
+    def evaluar_fitness(self, num_juegos): # obtener el win rate de N partidas
         nuevo_juego = Juego()
         nuevo_juego.inicializar_combate()
 
         juegos = 0
         ganadas = 0
 
-        nuevo_juego.configurar_jugador_como_IA(1, 3, pokemones_disponibles, 4, self.traducir_pesos_de_cromosoma())
-        nuevo_juego.configurar_jugador_como_IA(2, 2, pokemones_disponibles)
+        pesos_dict = self.traducir_pesos_de_cromosoma()
+        print(pesos_dict)
+
+        configurar_juego(nuevo_juego, juegos, pesos_dict)
         
         turno = 0
         while True:
             inicio = time.perf_counter()
             accionP1, accionP2 = nuevo_juego.generar_acciones_IA()
 
-            nuevo_juego.iniciar_turno(accionP1, accionP2)
-
-            #Revisión de ganador y creación de nuevo juego
+            hay_ganador = nuevo_juego.iniciar_turno(accionP1, accionP2)
             turno += 1
-            if turno >= 20:
-                nuevo_juego.configurar_jugador_como_IA(1, 3, pokemones_disponibles, 4, self.traducir_pesos_de_cromosoma())
-                nuevo_juego.configurar_jugador_como_IA(2, 2, pokemones_disponibles)
-                juegos = juegos +1
+            
+            if turno == 50:
+                juegos = juegos + 1
+
+                if juegos == num_juegos: break
+                configurar_juego(nuevo_juego, juegos, pesos_dict)
                 turno = 0
-                if juegos == num_juegos:
-                    break
-
+                continue
                 
+            if hay_ganador:
+                juegos = juegos + 1
+                if nuevo_juego.combate.estado_del_equipo.ganaP1:
+                    ganadas = ganadas + 1
+                    
+                    if juegos == num_juegos: break
+                    configurar_juego(nuevo_juego, juegos, pesos_dict)
+                    turno = 0
+                    continue
                 
-            if nuevo_juego.combate.estado_del_equipo.conteo_vivos(1) == 0:
-                
-                juegos = juegos +1
 
-                if juegos == num_juegos:
-                    break
+                elif nuevo_juego.combate.estado_del_equipo.ganaP2:
+                    if juegos == num_juegos: break
+                    configurar_juego(nuevo_juego, juegos, pesos_dict)
+                    turno = 0
+                    continue
+            else:
+                index_intercambioP1 = 0
+                index_intercambioP2 = 0
+                necesita_intercambio = False
 
-                turno = 0
-                nuevo_juego.configurar_jugador_como_IA(1, 3, pokemones_disponibles, 4, self.traducir_pesos_de_cromosoma())
-                nuevo_juego.configurar_jugador_como_IA(2, 2, pokemones_disponibles)
+                if nuevo_juego.combate.hay_intercambioP1:
+                    necesita_intercambio = True
+                    if nuevo_juego.jugador1.nivel_IA == 3:
+                        decision = nuevo_juego.jugador1.elegir_movimiento_ia(nuevo_juego.combate.estado_del_equipo)
+                        index_intercambioP1 = decision if isinstance(decision, int) else nuevo_juego.combate.generar_intercambio_aleatorio(1)
+                    else:
+                        index_intercambioP1 = nuevo_juego.combate.generar_intercambio_aleatorio(1)
 
-            elif nuevo_juego.combate.estado_del_equipo.conteo_vivos(2) == 0:
+                if nuevo_juego.combate.hay_intercambioP2:
+                    necesita_intercambio = True
+                    if nuevo_juego.jugador2.nivel_IA == 3:
+                        decision = nuevo_juego.jugador2.elegir_movimiento_ia(nuevo_juego.combate.estado_del_equipo)
+                        index_intercambioP2 = decision if isinstance(decision, int) else nuevo_juego.combate.generar_intercambio_aleatorio(2)
+                    else:
+                        index_intercambioP2 = nuevo_juego.combate.generar_intercambio_aleatorio(2)
 
-                ganadas = ganadas +1
-                juegos = juegos +1
-
-                if juegos == num_juegos:
-                    break
-
-                turno = 0
-                nuevo_juego.configurar_jugador_como_IA(1, 3, pokemones_disponibles, 4, self.traducir_pesos_de_cromosoma())
-                nuevo_juego.configurar_jugador_como_IA(2, 2, pokemones_disponibles)
+                if necesita_intercambio:
+                    nuevo_juego.combate.ejecutar_intercambios_por_debilitamiento(index_intercambioP1, index_intercambioP2)
 
             fin = time.perf_counter()
-            print(f"Tomo: {fin-inicio} segundos")
 
-           
-        #print(ganadas)
-        #print(juegos)
-        
-        self.aptitud = ganadas/juegos
-        return ganadas/juegos
+            print(f"Tomo {fin-inicio} segundos")
+
+        self.aptitud = ganadas / juegos
+        return ganadas / juegos
                 
 
 

@@ -39,7 +39,7 @@ class Pokemon:
             "evasion": 0
         }
 
-        self.aqua_ring_activo: bool = True
+        self.aqua_ring_activo: bool = False
         self.puede_atacar: bool = True
         self.se_hace_daño: bool = True
         self.protects_seguidos: int = 0

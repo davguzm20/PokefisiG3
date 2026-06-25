@@ -9,12 +9,14 @@ class PokemonCard:
 
     def __init__(self, position_x: int, position_y: int, pokemon: Pokemon | None = None,
                  selected_color: Colors = Colors.GOLD,
-                 show_hp: bool = False):
+                 show_hp: bool = False,
+                 disabled: bool = False):
         self.position_x = position_x
         self.position_y = position_y
         self.pokemon = pokemon
         self.selected_color = selected_color.value
         self.show_hp = show_hp
+        self.disabled = disabled
 
     @property
     def rect(self):
@@ -48,8 +50,9 @@ class PokemonCard:
 
             if self.show_hp:
                 hp_text = f"{self.pokemon.hp}/{self.pokemon.max_hp}"
-                hp_font = Fonts.get_font(14)
-                hp_surface = hp_font.render(hp_text, False, Colors.WHITE.value)
+                hp_font = Fonts.get_font(18)
+                hp_color = Colors.RED.value if self.disabled else Colors.WHITE.value
+                hp_surface = hp_font.render(hp_text, False, hp_color)
                 hp_rect = hp_surface.get_rect(centerx=center_x, y=rect.y + 53)
                 hp_shadow = hp_font.render(hp_text, False, Colors.BLACK.value)
                 screen.blit(hp_shadow, (hp_rect.x + 1, hp_rect.y + 1))
@@ -67,5 +70,10 @@ class PokemonCard:
                         if icon:
                             screen.blit(icon, (start_x + i * 35, rect.y + 53))
 
-        if is_selected:
+        if is_selected and not self.disabled:
             pygame.draw.rect(screen, self.selected_color, rect, 3)
+
+        if self.disabled:
+            overlay = pygame.Surface((self.SIZE, self.SIZE), pygame.SRCALPHA)
+            overlay.fill((255, 0, 0, 80))
+            screen.blit(overlay, rect)

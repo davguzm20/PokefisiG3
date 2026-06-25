@@ -50,8 +50,10 @@ class EstadoJuego:
     
     #Pasale el indice del pokemon al que quieres cambiar. La 
     def intercambiarPokemon(self, indicePokemonDentro, equipo=1):
+        if indicePokemonDentro == 0: return
+
         equipo_objetivo = self.equipoP1 if equipo == 1 else self.equipoP2
-        
+            
         temp = equipo_objetivo[0]
         equipo_objetivo[0] = equipo_objetivo[indicePokemonDentro]
         equipo_objetivo[indicePokemonDentro] = temp
@@ -62,7 +64,7 @@ class EstadoJuego:
             self.pokemonActivoP2 = equipo_objetivo[0]
             
         if not self.esSimulado:
-            self._emit(f'El jugador {equipo}  envía a {equipo_objetivo[0].name}')
+            self._emit(f'El jugador {equipo} envía a {equipo_objetivo[0].name}')
     
     def conteo_vivos(self, equipo=1):
         cuenta = 0

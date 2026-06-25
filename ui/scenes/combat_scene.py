@@ -252,13 +252,14 @@ class CombatScene(Scene):
         if self._ejecutando_turno:
             return
         
-        if not self._is_ai_vs_ai:
-            if self.generando_acciones:
-                self.combat_messages.append("IA pensando...")
+        if self.generando_acciones:
+            self._ejecutando_turno = True
+            self.combat_messages.append("IA pensando...")
             while self.generando_acciones:
                 self.scene_manager.update()
                 self.scene_manager.draw()
                 pygame.display.flip()
+            self._ejecutando_turno = False
             self.combat_messages.clear()
         
         if not self.acciones.acciones_escogidas:
@@ -285,6 +286,8 @@ class CombatScene(Scene):
         self.turn_placeholder.label = f"Turno {self._turn_count}"
         
         self.showing_messages = True
+        if self._is_ai_vs_ai:
+            self._message_timer = pygame.time.get_ticks() + 1500
         self._ejecutando_turno = False
         
 
@@ -304,6 +307,9 @@ class CombatScene(Scene):
                         self._rebuild_pokemon_layout()
                         if self._gestionar_swaps():
                             return
+                        if not self.acciones.acciones_escogidas:
+                            bus_de_eventos_global.disparar("GENERAR_ACCIONES_IA", self.acciones, self)
+                            self.generando_acciones = True
                         self._rebuild_move_buttons()
                         self._message_timer = pygame.time.get_ticks() + 1000
             elif not self._game_over:

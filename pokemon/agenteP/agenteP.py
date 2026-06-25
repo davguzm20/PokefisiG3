@@ -140,7 +140,7 @@ def heuristica_avanzada(estado_juego, movimiento, pesos):
     
         
 
-    return (
+    return +(
         pesos["hp"] * hp_ratio +
         pesos["velocidad"] * velocidad +
         pesos["tipo"] * ventaja_tipo +
@@ -162,7 +162,10 @@ def funcion_heuristica_avanzada(estado_juego, operador, pesos, lado_ia, estado_a
         hp_ratio = (hp_poke_ia - hp_poke_oponente) / max(hp_poke_ia + hp_poke_oponente, 1)
 
         if isinstance(movimiento, Move):
-            if movimiento.power == 0: return 0.0 #Por ahora no hay movs de soporte 
+            if movimiento.power == 0: 
+                if movimiento.name in ["wish", "synthesis", "rest"] and hp_poke_ia >= pokemon_lado_ia.max_hp - (pokemon_lado_ia.max_hp/6) :
+                    return -1.0
+                ventaja_tipo = -0.2
             multiplicador = obtener_multiplicador_tipos(movimiento, estado_juego.pokemonActivoP1, estado_juego.pokemonActivoP2)
             if multiplicador > 2:
                 ventaja_tipo = 2
@@ -175,9 +178,15 @@ def funcion_heuristica_avanzada(estado_juego, operador, pesos, lado_ia, estado_a
             else:
                 ventaja_tipo = -2
         else:
-            ventaja_tipo = 0.5
+            ventaja_tipo = -0.8
 
-        pokemons_vivos = (estado_juego.conteo_vivos(2) - estado_juego.conteo_vivos(1)) / max(len(estado_juego.equipoP1), len(estado_juego.equipoP2), 1)
+        lado_oponente = 2 if lado_ia == 1 else 1
+
+        vivos_ia = estado_juego.conteo_vivos(lado_ia)
+        vivos_op = estado_juego.conteo_vivos(lado_oponente)
+        
+        max_equipo = max(len(estado_juego.equipoP1), len(estado_juego.equipoP2), 1)
+        pokemons_vivos = (vivos_ia - vivos_op) / max_equipo
     
     return (
         pesos["hp"] * hp_ratio +
@@ -211,12 +220,18 @@ class Nodo:
 def copiar_estado(estado_juego):
     if not isinstance(estado_juego, EstadoJuego):
         print("estado_juego debe ser instacia de EstadoJuego")
-        return
+        return None
     
     estado_copia = EstadoJuego()
+    
     estado_copia.setEquipo(copy.deepcopy(estado_juego.equipoP1), 1)
     estado_copia.setEquipo(copy.deepcopy(estado_juego.equipoP2), 2)
-    estado_copia.estado_anterior = copy.deepcopy(estado_juego)
+    
+    
+    estado_copia.esSimulado = True
+    estado_copia.esTerminal = estado_juego.esTerminal
+    estado_copia.ganaP1 = estado_juego.ganaP1
+    estado_copia.ganaP2 = estado_juego.ganaP2
     
     return estado_copia
     
@@ -904,14 +919,14 @@ def minimax_simplificado(nodo: NodoV2, profundidad, acciones, lado_ia, alfa, bet
 
     id_ia = lado_ia
     id_oponente = lado_ia - 1
-    
+    if nodo.profundidad == 0: print(f"Se evalua para {estado_actual.getEquipo(id_ia)[0].name} con {estado_actual.getEquipo(id_ia)[0].hp}")
     #print(nodo.profundidad, alfa, beta, acciones)
     
     if estado_actual.conteo_vivos(id_oponente) == 0:
-        #print(f"------ > Este nodo fue puntuado con: {puntaje}")
+        #print(f"------ > Este nodo fue puntuado con: 99999")
         return 99999
     if estado_actual.conteo_vivos(id_ia) == 0:
-        #print(f"------ > Este nodo fue puntuado con: {puntaje}")
+        #print(f"------ > Este nodo fue puntuado con: -99999")
         return -99999
     
     if nodo.profundidad == profundidad:
@@ -928,7 +943,7 @@ def minimax_simplificado(nodo: NodoV2, profundidad, acciones, lado_ia, alfa, bet
     if nodo.turnoMax:
         mejor_valor = -float('inf')
 
-        for accion in estado_actual.obtener_acciones_posibles():
+        for accion in estado_actual.obtener_acciones_posibles(id_ia):
 
             nodo_resultante = NodoV2(nodo.estado, None, not nodo.turnoMax, nodo.profundidad + 1)
             
@@ -940,9 +955,9 @@ def minimax_simplificado(nodo: NodoV2, profundidad, acciones, lado_ia, alfa, bet
             mejor_valor = max(mejor_valor, valor)
 
             if nodo.profundidad == 0:
-                ##print(f"Rama explorada para max es: {mejor_accion} con {valor}")
+                print(f"Rama explorada para max es: {accion} con {valor}")
                 if mejor_valor == valor:
-                    ##print("Se encontro algun nuevo candidato para Max")
+                    ###print("Se encontro algun nuevo candidato para Max")
                     mejor_accion = accion
             
             alfa = max (alfa, mejor_valor)
@@ -951,14 +966,14 @@ def minimax_simplificado(nodo: NodoV2, profundidad, acciones, lado_ia, alfa, bet
                 break
         
         if nodo.profundidad == 0:
-            print(f"Puntaje final escogido es: {mejor_valor}")
+            print(f"Puntaje final escogido es: {mejor_valor} con {mejor_accion}")
             return mejor_accion
         return mejor_valor
     
     else:
         mejor_valor = float('inf')
 
-        for accion in estado_actual.obtener_acciones_posibles():
+        for accion in estado_actual.obtener_acciones_posibles(id_oponente):
 
             estado_resultante = copiar_estado(estado_actual)
             estado_resultante.esSimulado = True

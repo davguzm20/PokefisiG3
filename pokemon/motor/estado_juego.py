@@ -1,4 +1,5 @@
 from pokemon.motor.bus_de_eventos import bus_de_eventos_global
+import copy
 
 class EstadoJuego:
     
@@ -22,11 +23,11 @@ class EstadoJuego:
 
     def setEquipo(self, pokemones, equipo=1):
         if (equipo == 1): 
-            self.equipoP1 = pokemones 
+            self.equipoP1 = pokemones
             self.pokemonActivoP1 = pokemones[0]
 
         else: 
-            self.equipoP2 = pokemones 
+            self.equipoP2 = pokemones
             self.pokemonActivoP2 = pokemones[0]
         
     def getEquipo(self, equipo):
@@ -48,10 +49,11 @@ class EstadoJuego:
 
         return lista
     
-    #Pasale el indice del pokemon al que quieres cambiar. La 
     def intercambiarPokemon(self, indicePokemonDentro, equipo=1):
+        if indicePokemonDentro == 0: return
+
         equipo_objetivo = self.equipoP1 if equipo == 1 else self.equipoP2
-        
+            
         temp = equipo_objetivo[0]
         equipo_objetivo[0] = equipo_objetivo[indicePokemonDentro]
         equipo_objetivo[indicePokemonDentro] = temp
@@ -62,17 +64,17 @@ class EstadoJuego:
             self.pokemonActivoP2 = equipo_objetivo[0]
             
         if not self.esSimulado:
-            self._emit(f'El jugador {equipo}  envía a {equipo_objetivo[0].name}')
+            self._emit(f'El jugador {equipo} envía a {equipo_objetivo[0].name}')
     
     def conteo_vivos(self, equipo=1):
         cuenta = 0
         
         if(equipo==1):
             for pokemon in self.equipoP1:
-                if pokemon.hp != 0: cuenta = cuenta + 1
+                if pokemon.hp > 0: cuenta = cuenta + 1
         else:
             for pokemon in self.equipoP2:
-                if pokemon.hp != 0: cuenta = cuenta + 1
+                if pokemon.hp > 0: cuenta = cuenta + 1
 
         return cuenta
 
@@ -81,6 +83,7 @@ class EstadoJuego:
         acciones = []
         posibles_cambios = self.pokemonesElegibles(equipo)
 
+        
         pokemonActivo = self.pokemonActivoP1 if equipo == 1 else self.pokemonActivoP2
 
         if pokemonActivo.hp > 0:
@@ -89,7 +92,7 @@ class EstadoJuego:
                     "intercambio_index": None,
                     "movimiento": movimiento
                 })
-
+    
         for indice_cambio, ref_pokemon in posibles_cambios:
             acciones.append({
                 "intercambio_index": indice_cambio,

@@ -20,7 +20,6 @@ class SceneManager:
             SceneType.MENU: MenuScene(self),
             SceneType.MODE: ModeScene(self),
             SceneType.DIFFICULTY: DifficultyScene(self),
-            SceneType.TEAM: TeamScene(self),
         }
         self.current_scene = self.scenes[SceneType.MENU]
 
@@ -28,7 +27,13 @@ class SceneManager:
         if hasattr(self.current_scene, 'on_exit'):
             self.current_scene.on_exit()
         if scene_type == SceneType.COMBAT:
+            if self.juego:
+                self.juego.estado.esTerminal = False
+                self.juego.estado.ganaP1 = False
+                self.juego.estado.ganaP2 = False
             self.current_scene = CombatScene(self)
+        elif scene_type == SceneType.TEAM:
+            self.current_scene = TeamScene(self)
         else:
             self.current_scene = self.scenes[scene_type]
 

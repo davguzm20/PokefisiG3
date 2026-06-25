@@ -16,7 +16,10 @@ class EventBus:
                 except TypeError:
                     dirfuncion()
 
-    
+    def desuscribir(self, nombreSuscripcion, dirfuncion):
+        if nombreSuscripcion in self.suscripciones:
+            self.suscripciones[nombreSuscripcion].remove(dirfuncion)
+            
     def escuchar(self, nombreSuscripcion, dirfuncion): #Suscribir
         if nombreSuscripcion not in self.suscripciones:
             self.suscripciones[nombreSuscripcion] = []

@@ -60,7 +60,6 @@ class DifficultyScene(Scene):
             label="",
         )
         self.controls_hint = ControlsHint(show_back=True, show_click=True, position_y=352)
-
     def handle_event(self, event):
         if event.type == pygame.KEYDOWN:
             if event.key == Controls.LEFT.value:
@@ -98,8 +97,8 @@ class DifficultyScene(Scene):
             else:
                 sm.difficulty_config[2] = level
                 bus_de_eventos_global.disparar("ESTABLECER_NUM_POKEMONES", 4)
-                bus_de_eventos_global.disparar("ESTABLECER_JUGADOR_COMO_IA", 1, sm.difficulty_config[1], PokemonFactory.pokemons, 2) #El ultimo parametro es la profundidad de minimax si aplica
-                bus_de_eventos_global.disparar("ESTABLECER_JUGADOR_COMO_IA", 2, sm.difficulty_config[2], PokemonFactory.pokemons, 2)
+                bus_de_eventos_global.disparar("ESTABLECER_JUGADOR_COMO_IA", 1, sm.difficulty_config[1], PokemonFactory.pokemons, 4) #El ultimo parametro es la profundidad de minimax si aplica
+                bus_de_eventos_global.disparar("ESTABLECER_JUGADOR_COMO_IA", 2, sm.difficulty_config[2], PokemonFactory.pokemons, 4)
                 bus_de_eventos_global.disparar("INICIALIZAR_COMBATE")
 
                 sm.change_scene(SceneType.COMBAT)

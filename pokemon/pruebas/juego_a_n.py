@@ -26,8 +26,8 @@ pesos_optimos = {
 
 
 def configurar_juego(juego: Juego):
-    juego.configurar_jugador_como_IA(1, 3, pokemones_disponibles, 4, pesos_optimos)
-    juego.configurar_jugador_como_IA(2, 3, pokemones_disponibles, 4, pesos_mock)
+    juego.configurar_jugador_como_IA(1, 3, pokemones_disponibles, 4, pesos_mock)
+    juego.configurar_jugador_como_IA(2, 1, pokemones_disponibles, 4, pesos_mock)
 
     juego.configurar_equipo_aleatoriamente(1, pokemones_disponibles)
     juego.configurar_equipo_aleatoriamente(2, pokemones_disponibles)
@@ -82,26 +82,28 @@ def evaluar_fitness(num_juegos): #obtener el win rate de 30 partidasS
                     turno = 0
                     continue
                 
-                
-
             else:
                 index_intercambioP1 = 0
                 index_intercambioP2 = 0
                 necesita_intercambio = False
+                
+                print("REVISANDO SI HAY INTERCAMBIOS")
 
                 if nuevo_juego.combate.hay_intercambioP1:
                     necesita_intercambio = True
                     if nuevo_juego.jugador1.nivel_IA == 3:
+
                         decision = nuevo_juego.jugador1.elegir_movimiento_ia(nuevo_juego.combate.estado_del_equipo)
-                        index_intercambioP1 = decision if isinstance(decision, int) else nuevo_juego.combate.generar_intercambio_aleatorio(1)
+                        index_intercambioP1 = decision
                     else:
                         index_intercambioP1 = nuevo_juego.combate.generar_intercambio_aleatorio(1)
 
                 if nuevo_juego.combate.hay_intercambioP2:
                     necesita_intercambio = True
                     if nuevo_juego.jugador2.nivel_IA == 3:
+
                         decision = nuevo_juego.jugador2.elegir_movimiento_ia(nuevo_juego.combate.estado_del_equipo)
-                        index_intercambioP2 = decision if isinstance(decision, int) else nuevo_juego.combate.generar_intercambio_aleatorio(2)
+                        index_intercambioP2 = decision
                     else:
                         index_intercambioP2 = nuevo_juego.combate.generar_intercambio_aleatorio(2)
 
@@ -115,7 +117,7 @@ def evaluar_fitness(num_juegos): #obtener el win rate de 30 partidasS
         print(ganadas)
         return ganadas/juegos
 
-print(evaluar_fitness(50))
+print(evaluar_fitness(100))
 
 it = 0
 sum = 0

@@ -58,7 +58,7 @@
                 "nombre": "natural-gift",
                 "clase_daño": "physical",
                 "descripcion": "La baya que lleva presta su fuerza para atacar. El\ntipo de ataque y su fuerza dependen de la baya.",
-                "poder": null,
+                "poder": 60,
                 "pp": 15,
                 "prioridad": 0,
                 "tipo": "normal"
@@ -118,7 +118,7 @@
                 "nombre": "wring-out",
                 "clase_daño": "special",
                 "descripcion": "Estruja con fuerza al objetivo. Cuantos más PS\ntenga el objetivo, más fuerza tendrá el ataque.",
-                "poder": null,
+                "poder": 60,
                 "pp": 5,
                 "prioridad": 0,
                 "tipo": "normal"
@@ -212,7 +212,7 @@
                 "nombre": "return",
                 "clase_daño": "physical",
                 "descripcion": "Cuanto mayor sea la amistad con el Entrenador,\nmás poderoso será este ataque.",
-                "poder": null,
+                "poder": 60,
                 "pp": 20,
                 "prioridad": 0,
                 "tipo": "normal"
@@ -242,7 +242,7 @@
                 "nombre": "return",
                 "clase_daño": "physical",
                 "descripcion": "Cuanto mayor sea la amistad con el Entrenador,\nmás poderoso será este ataque.",
-                "poder": null,
+                "poder": 60,
                 "pp": 20,
                 "prioridad": 0,
                 "tipo": "normal"
@@ -361,7 +361,7 @@
                 "nombre": "natural-gift",
                 "clase_daño": "physical",
                 "descripcion": "La baya que lleva presta su fuerza para atacar. El\ntipo de ataque y su fuerza dependen de la baya.",
-                "poder": null,
+                "poder": 60,
                 "pp": 15,
                 "prioridad": 0,
                 "tipo": "normal"
@@ -381,7 +381,7 @@
                 "nombre": "natural-gift",
                 "clase_daño": "physical",
                 "descripcion": "La baya que lleva presta su fuerza para atacar. El\ntipo de ataque y su fuerza dependen de la baya.",
-                "poder": null,
+                "poder": 60,
                 "pp": 15,
                 "prioridad": 0,
                 "tipo": "normal"
@@ -588,7 +588,7 @@
                 "nombre": "heavy-slam",
                 "clase_daño": "physical",
                 "descripcion": "El usuario golpea con todo su cuerpo. Cuanto\nmayor sea su peso comparado con el del objetivo,\nmás daño causará.",
-                "poder": null,
+                "poder": 60,
                 "pp": 10,
                 "prioridad": 0,
                 "tipo": "steel"
@@ -850,7 +850,7 @@
                 "nombre": "frustration",
                 "clase_daño": "physical",
                 "descripcion": "Cuanto menor sea la amistad con el Entrenador,\nmás poderoso será este ataque.",
-                "poder": null,
+                "poder": 60,
                 "pp": 20,
                 "prioridad": 0,
                 "tipo": "normal"
@@ -1018,7 +1018,7 @@
                 "nombre": "natural-gift",
                 "clase_daño": "physical",
                 "descripcion": "La baya que lleva presta su fuerza para atacar. El\ntipo de ataque y su fuerza dependen de la baya.",
-                "poder": null,
+                "poder": 60,
                 "pp": 15,
                 "prioridad": 0,
                 "tipo": "normal"
@@ -1146,7 +1146,7 @@
                 "nombre": "seismic-toss",
                 "clase_daño": "physical",
                 "descripcion": "La gravedad derriba al objetivo. Se restarán tantos\nPS como nivel tenga el agresor.",
-                "poder": null,
+                "poder": 60,
                 "pp": 20,
                 "prioridad": 0,
                 "tipo": "fighting"
@@ -1687,7 +1687,7 @@
                 "nombre": "sonic-boom",
                 "clase_daño": "special",
                 "descripcion": "Lanza ondas de choque que restan 20 PS al\nobjetivo.",
-                "poder": null,
+                "poder": 60,
                 "pp": 20,
                 "prioridad": 0,
                 "tipo": "normal"
@@ -1757,7 +1757,7 @@
                 "nombre": "sonic-boom",
                 "clase_daño": "special",
                 "descripcion": "Lanza ondas de choque que restan 20 PS al\nobjetivo.",
-                "poder": null,
+                "poder": 60,
                 "pp": 20,
                 "prioridad": 0,
                 "tipo": "normal"
@@ -2009,7 +2009,7 @@
                 "nombre": "frustration",
                 "clase_daño": "physical",
                 "descripcion": "Cuanto menor sea la amistad con el Entrenador,\nmás poderoso será este ataque.",
-                "poder": null,
+                "poder": 60,
                 "pp": 20,
                 "prioridad": 0,
                 "tipo": "normal"
@@ -2117,7 +2117,7 @@
                 "nombre": "psywave",
                 "clase_daño": "special",
                 "descripcion": "Ataque con una onda de energía de intensidad\nvariable.",
-                "poder": null,
+                "poder": 60,
                 "pp": 15,
                 "prioridad": 0,
                 "tipo": "psychic"
@@ -2167,7 +2167,7 @@
                 "nombre": "psywave",
                 "clase_daño": "special",
                 "descripcion": "Ataque con una onda de energía de intensidad\nvariable.",
-                "poder": null,
+                "poder": 60,
                 "pp": 15,
                 "prioridad": 0,
                 "tipo": "psychic"
@@ -2256,7 +2256,7 @@
                 "nombre": "return",
                 "clase_daño": "physical",
                 "descripcion": "Cuanto mayor sea la amistad con el Entrenador,\nmás poderoso será este ataque.",
-                "poder": null,
+                "poder": 60,
                 "pp": 20,
                 "prioridad": 0,
                 "tipo": "normal"
@@ -2441,7 +2441,7 @@
                 "nombre": "natural-gift",
                 "clase_daño": "physical",
                 "descripcion": "La baya que lleva presta su fuerza para atacar. El\ntipo de ataque y su fuerza dependen de la baya.",
-                "poder": null,
+                "poder": 60,
                 "pp": 15,
                 "prioridad": 0,
                 "tipo": "normal"
@@ -2552,7 +2552,7 @@
                 "nombre": "return",
                 "clase_daño": "physical",
                 "descripcion": "Cuanto mayor sea la amistad con el Entrenador,\nmás poderoso será este ataque.",
-                "poder": null,
+                "poder": 60,
                 "pp": 20,
                 "prioridad": 0,
                 "tipo": "normal"
@@ -2631,7 +2631,7 @@
                 "nombre": "seismic-toss",
                 "clase_daño": "physical",
                 "descripcion": "La gravedad derriba al objetivo. Se restarán tantos\nPS como nivel tenga el agresor.",
-                "poder": null,
+                "poder": 60,
                 "pp": 20,
                 "prioridad": 0,
                 "tipo": "fighting"
@@ -2641,7 +2641,7 @@
                 "nombre": "flail",
                 "clase_daño": "physical",
                 "descripcion": "Ataque frenético. Cuantos menos PS tenga el\nusuario, más daño producirá.",
-                "poder": null,
+                "poder": 60,
                 "pp": 15,
                 "prioridad": 0,
                 "tipo": "normal"
@@ -2671,7 +2671,7 @@
                 "nombre": "return",
                 "clase_daño": "physical",
                 "descripcion": "Cuanto mayor sea la amistad con el Entrenador,\nmás poderoso será este ataque.",
-                "poder": null,
+                "poder": 60,
                 "pp": 20,
                 "prioridad": 0,
                 "tipo": "normal"
@@ -2691,7 +2691,7 @@
                 "nombre": "hard-press",
                 "clase_daño": "physical",
                 "descripcion": "Null",
-                "poder": 0,
+                "poder": 80,
                 "pp": 10,
                 "prioridad": 0,
                 "tipo": "steel"
@@ -3075,7 +3075,7 @@
                 "nombre": "electro-ball",
                 "clase_daño": "special",
                 "descripcion": "Lanza una bola eléctrica. Cuanto mayor sea la\nVelocidad del usuario en comparación con la del\nobjetivo, mayor será el daño causado.",
-                "poder": null,
+                "poder": 60,
                 "pp": 10,
                 "prioridad": 0,
                 "tipo": "electric"
@@ -3125,7 +3125,7 @@
                 "nombre": "endeavor",
                 "clase_daño": "physical",
                 "descripcion": "Reduce los PS del objetivo para que igualen a los\ndel atacante.",
-                "poder": null,
+                "poder": 60,
                 "pp": 5,
                 "prioridad": 0,
                 "tipo": "normal"
@@ -3209,7 +3209,7 @@
                 "nombre": "frustration",
                 "clase_daño": "physical",
                 "descripcion": "Cuanto menor sea la amistad con el Entrenador,\nmás poderoso será este ataque.",
-                "poder": null,
+                "poder": 60,
                 "pp": 20,
                 "prioridad": 0,
                 "tipo": "normal"
@@ -3219,7 +3219,7 @@
                 "nombre": "electro-ball",
                 "clase_daño": "special",
                 "descripcion": "Lanza una bola eléctrica. Cuanto mayor sea la\nVelocidad del usuario en comparación con la del\nobjetivo, mayor será el daño causado.",
-                "poder": null,
+                "poder": 60,
                 "pp": 10,
                 "prioridad": 0,
                 "tipo": "electric"
@@ -3333,7 +3333,7 @@
                 "nombre": "return",
                 "clase_daño": "physical",
                 "descripcion": "Cuanto mayor sea la amistad con el Entrenador,\nmás poderoso será este ataque.",
-                "poder": null,
+                "poder": 60,
                 "pp": 20,
                 "prioridad": 0,
                 "tipo": "normal"
@@ -3373,7 +3373,7 @@
                 "nombre": "bide",
                 "clase_daño": "physical",
                 "descripcion": "Espera dos turnos para atacar con el doble de\npotencia del daño recibido.",
-                "poder": null,
+                "poder": 60,
                 "pp": 10,
                 "prioridad": 1,
                 "tipo": "normal"
@@ -3437,7 +3437,7 @@
                 "nombre": "frustration",
                 "clase_daño": "physical",
                 "descripcion": "Cuanto menor sea la amistad con el Entrenador,\nmás poderoso será este ataque.",
-                "poder": null,
+                "poder": 60,
                 "pp": 20,
                 "prioridad": 0,
                 "tipo": "normal"
@@ -3497,7 +3497,7 @@
                 "nombre": "low-kick",
                 "clase_daño": "physical",
                 "descripcion": "Patada baja. Cuanto más pesa el objetivo, más\ndaño causa.",
-                "poder": null,
+                "poder": 60,
                 "pp": 20,
                 "prioridad": 0,
                 "tipo": "fighting"
@@ -3575,7 +3575,7 @@
                 "nombre": "night-shade",
                 "clase_daño": "special",
                 "descripcion": "Produce un espejismo ante el objetivo, que pierde\ntantos PS como nivel tenga el agresor.",
-                "poder": null,
+                "poder": 60,
                 "pp": 15,
                 "prioridad": 0,
                 "tipo": "ghost"
@@ -3665,7 +3665,7 @@
                 "nombre": "seismic-toss",
                 "clase_daño": "physical",
                 "descripcion": "La gravedad derriba al objetivo. Se restarán tantos\nPS como nivel tenga el agresor.",
-                "poder": null,
+                "poder": 60,
                 "pp": 20,
                 "prioridad": 0,
                 "tipo": "fighting"
@@ -3779,7 +3779,7 @@
                 "nombre": "bide",
                 "clase_daño": "physical",
                 "descripcion": "Espera dos turnos para atacar con el doble de\npotencia del daño recibido.",
-                "poder": null,
+                "poder": 60,
                 "pp": 10,
                 "prioridad": 1,
                 "tipo": "normal"
@@ -3847,7 +3847,7 @@
                 "nombre": "seismic-toss",
                 "clase_daño": "physical",
                 "descripcion": "La gravedad derriba al objetivo. Se restarán tantos\nPS como nivel tenga el agresor.",
-                "poder": null,
+                "poder": 60,
                 "pp": 20,
                 "prioridad": 0,
                 "tipo": "fighting"
@@ -3981,7 +3981,7 @@
                 "nombre": "grass-knot",
                 "clase_daño": "special",
                 "descripcion": "Enreda al objetivo con hierba y lo derriba.\nCuanto más pesado es el objetivo, más daño\ninflige.",
-                "poder": null,
+                "poder": 60,
                 "pp": 20,
                 "prioridad": 0,
                 "tipo": "grass"
@@ -3991,7 +3991,7 @@
                 "nombre": "counter",
                 "clase_daño": "physical",
                 "descripcion": "Devuelve un golpe físico por duplicado.",
-                "poder": null,
+                "poder": 60,
                 "pp": 20,
                 "prioridad": -5,
                 "tipo": "fighting"
@@ -4021,7 +4021,7 @@
                 "nombre": "return",
                 "clase_daño": "physical",
                 "descripcion": "Cuanto mayor sea la amistad con el Entrenador,\nmás poderoso será este ataque.",
-                "poder": null,
+                "poder": 60,
                 "pp": 20,
                 "prioridad": 0,
                 "tipo": "normal"
@@ -4071,7 +4071,7 @@
                 "nombre": "frustration",
                 "clase_daño": "physical",
                 "descripcion": "Cuanto menor sea la amistad con el Entrenador,\nmás poderoso será este ataque.",
-                "poder": null,
+                "poder": 60,
                 "pp": 20,
                 "prioridad": 0,
                 "tipo": "normal"

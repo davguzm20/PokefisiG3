@@ -126,6 +126,11 @@ class Combate:
                         self._emit(f"Hace {round(daño, 2)} de daño a {defensor.name}")
                     
                     nueva_vida_rival = establecer_vida(defensor, daño)
+
+                    if nueva_vida_rival <= 0 :
+                        if not self.es_simulado:
+                            self._emit(f"¡{defensor.name} se ha debilitado!")
+                        pokemon_rival_desvanecido = True
                     
                     #Si el rival se queda sin pokemones tras el turno ya no hace falta seguir ejecutando movimientos ni intercambios
                     if self.estado_del_equipo.conteo_vivos(ctx["id_rival"]) == 0:
@@ -137,12 +142,10 @@ class Combate:
                         return   
 
                     if nueva_vida_rival <= 0 :
-                        if not self.es_simulado:
-                            self._emit(f"¡{defensor.name} se ha debilitado!")
-                        pokemon_rival_desvanecido = True
-
-                        self.hay_intercambioP1 = True if ctx["id_rival"] == 1 else False
-                        self.hay_intercambioP2 = True if ctx["id_rival"] == 2 else False                
+                        if ctx["id_rival"] == 1:
+                            self.hay_intercambioP1 = True
+                        elif ctx["id_rival"] == 2:
+                            self.hay_intercambioP2 = True
                 else:
  
                     self.resolver_movimiento_de_status(accion, atacante, defensor)
@@ -157,8 +160,8 @@ class Combate:
                 self.estado_del_equipo.intercambiarPokemon(ctx["accion"], ctx["id_player"])
 
         #Revisión de efectos, entornos y habilidades que tienen consecuencias tardías
-        self.resolver_efecto_END(pokemonP1)
-        self.resolver_efecto_END(pokemonP2)
+        #self.resolver_efecto_END(pokemonP1)
+        #self.resolver_efecto_END(pokemonP2)
     
     def generar_intercambio_aleatorio(self, equipo: int):
         

@@ -14,6 +14,7 @@ from config.controls import Controls
 from config.colors import Colors
 from pokemon.motor.bus_de_eventos import bus_de_eventos_global
 from pokemon.motor.juego_interfaz import Acciones
+from ui.components.pokemon_card import PokemonCard
 
 class CombatScene(Scene):
     def __init__(self, scene_manager):
@@ -32,7 +33,10 @@ class CombatScene(Scene):
 
         self.combat_messages = []
         bus_de_eventos_global.escuchar("MENSAJE_COMBATE", self.combat_messages.append)
-        bus_de_eventos_global.escuchar("ELEGIR_INTERCAMBIO", self.elegir_intercambio)
+
+        self._esperando_intercambio = False
+        self._equipo_intercambio = 0
+        self._swap_cards = []
         
 
         self.placeholders = [
@@ -96,11 +100,10 @@ class CombatScene(Scene):
 
     def on_exit(self):
         bus_de_eventos_global.desuscribir("MENSAJE_COMBATE", self.combat_messages.append)
-        bus_de_eventos_global.desuscribir("ELEGIR_INTERCAMBIO", self.elegir_intercambio)
 
     def handle_event(self, event):
         
-        if not self.generando_acciones and not self.acciones.acciones_escogidas:
+        if not self._esperando_intercambio and not self.showing_messages and not self.generando_acciones and not self.acciones.acciones_escogidas:
             bus_de_eventos_global.disparar("GENERAR_ACCIONES_IA", self.acciones, self)
             self.generando_acciones = True
 
@@ -134,9 +137,26 @@ class CombatScene(Scene):
                     if not self.combat_messages:
                         self.showing_messages = False
                         self._rebuild_pokemon_layout()
+                        if self._gestionar_swaps():
+                            return
                         self._rebuild_move_buttons()
                         self.generando_acciones = False
 
+                return
+
+            if self._esperando_intercambio:
+                if event.key == Controls.LEFT.value and self._swap_cards:
+                    self.selected_index = (self.selected_index - 1) % len(self._swap_cards)
+                elif event.key == Controls.RIGHT.value and self._swap_cards:
+                    self.selected_index = (self.selected_index + 1) % len(self._swap_cards)
+                elif event.key == Controls.UP.value and self._swap_cards and self.selected_index >= 2:
+                    self.selected_index -= 2
+                elif event.key == Controls.DOWN.value and self._swap_cards:
+                    new_index = self.selected_index + 2
+                    if new_index < len(self._swap_cards):
+                        self.selected_index = new_index
+                elif event.key in Controls.SELECT.value and self._swap_cards:
+                    self._confirmar_intercambio()
                 return
 
             if event.key == Controls.LEFT.value:
@@ -158,6 +178,13 @@ class CombatScene(Scene):
                     self.select_move()
             elif event.key in Controls.BACK.value:
                 self.scene_manager.change_scene(SceneType.MENU)
+
+        elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1 and self._esperando_intercambio:
+            for index, card in enumerate(self._swap_cards):
+                if card.rect.collidepoint(event.pos):
+                    self.selected_index = index
+                    self._confirmar_intercambio()
+                    return
 
         elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
             if self._game_over and not self.combat_messages:
@@ -254,6 +281,8 @@ class CombatScene(Scene):
             game_over = juego.iniciar_turno(accionP1=move, accionP2=accion_P2)
         if game_over:
             self._game_over = True
+        else:
+            self._ejecutar_swaps_ia()
         self._turn_count += 1
         self.turn_placeholder.label = f"Turno {self._turn_count}"
         
@@ -275,6 +304,8 @@ class CombatScene(Scene):
                     if not self._game_over:
                         self.showing_messages = False
                         self._rebuild_pokemon_layout()
+                        if self._gestionar_swaps():
+                            return
                         self._rebuild_move_buttons()
                         self._message_timer = pygame.time.get_ticks() + 1000
             elif not self._game_over:
@@ -292,10 +323,16 @@ class CombatScene(Scene):
 
         for i, bar in enumerate(self.health_bars):
             bar.draw(screen)
-        for index, move_button in enumerate(self.move_buttons):
-            move_button.draw(screen, is_selected=(index == self.selected_index))
+        if self._esperando_intercambio:
+            for index, card in enumerate(self._swap_cards):
+                card.draw(screen, is_selected=(index == self.selected_index))
+        else:
+            for index, move_button in enumerate(self.move_buttons):
+                move_button.draw(screen, is_selected=(index == self.selected_index))
 
-        if self.combat_messages:
+        if self._esperando_intercambio:
+            self.move_description.label = "Elige un Pokémon:"
+        elif self.combat_messages:
             msg = self.combat_messages[0]
             if msg == "IA pensando..." and not self._is_ai_vs_ai:
                 msg = "Tu turno"
@@ -355,9 +392,54 @@ class CombatScene(Scene):
         elif "gana" in msg:
             self._winner = "player" if "Jugador 1" in msg else "opponent"
 
-    def elegir_intercambio(self, elegibles, idJugador):
-        juego = self.scene_manager.juego
+    def _ejecutar_swaps_ia(self):
+        combate = self.scene_manager.juego.combate
+        if combate.estado_del_equipo.esTerminal:
+            return
+        if combate.hay_intercambioP2:
+            idx = combate.generar_intercambio_aleatorio(2)
+            if idx is not None:
+                combate.ejecutar_intercambio_por_debilitamiento(idx, 2)
+        if combate.hay_intercambioP1 and self._is_ai_vs_ai:
+            idx = combate.generar_intercambio_aleatorio(1)
+            if idx is not None:
+                combate.ejecutar_intercambio_por_debilitamiento(idx, 1)
 
-        idx_nuevo = random.choice(elegibles)[0]
+    def _gestionar_swaps(self):
+        combate = self.scene_manager.juego.combate
+        if combate.estado_del_equipo.esTerminal:
+            return False
+        if combate.hay_intercambioP1 and not self._is_ai_vs_ai:
+            self._mostrar_intercambio(1)
+            return True
+        return False
 
-        juego.estado.intercambiarPokemon(idx_nuevo, idJugador)
+    def _mostrar_intercambio(self, equipo):
+        elegibles = self.scene_manager.juego.combate.estado_del_equipo.pokemonesElegibles(equipo)
+        self._swap_cards = []
+        card_size = PokemonCard.SIZE
+        gap_x = 10
+        gap_y = 10
+        cols = min(len(elegibles), 2)
+        total_width = cols * card_size + (cols - 1) * gap_x
+        start_x = (640 - total_width) // 2
+        start_y = self._button_start_y + (50 - card_size) // 2
+        for i, (_, pokemon) in enumerate(elegibles):
+            col = i % 2
+            row = i // 2
+            x = start_x + col * (card_size + gap_x)
+            y = start_y + row * (card_size + gap_y)
+            self._swap_cards.append(PokemonCard(x, y, pokemon, show_hp=True))
+        self._equipo_intercambio = equipo
+        self._esperando_intercambio = True
+        self.selected_index = 0
+
+    def _confirmar_intercambio(self):
+        if not self._swap_cards or not self._esperando_intercambio:
+            return
+        idx_real = self.scene_manager.juego.combate.estado_del_equipo.pokemonesElegibles(self._equipo_intercambio)[self.selected_index][0]
+        self.scene_manager.juego.combate.ejecutar_intercambio_por_debilitamiento(idx_real, self._equipo_intercambio)
+        self._rebuild_pokemon_layout()
+        self._esperando_intercambio = False
+        self._swap_cards = []
+        self.showing_messages = True

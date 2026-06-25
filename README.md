@@ -12,7 +12,7 @@ PokefisiG3 es un simulador de combates Pokémon donde se involucra Inteligencia 
 
 Minimax utiliza una función de evaluación heurística para averiguar y calificar un estado al que se llegó considerando las elecciones previas de la ia y su oponente. Está optimizado con poda alfa y beta para evitar generar opciones que no impacten en la toma de decisiones.
 
-La función de evaluación heuristica puntua un estado según número de pokemon vivos, velocidad del pokemon en batalla, ventaja de tipos del pokemon en batalla y la diferencia de vida entre los pokemon en batalla.
+La función de evaluación heuristica puntua un estado según número de pokemon vivos, velocidad del pokemon en batalla, ventaja de tipos del pokemon en batalla y la diferencia de vida entre los pokemon en batalla. Cada uno de estos criterios está ponderado bajo un peso.
 
 La naturaleza configurable de los pesos permite explorar el uso de algoritmos genéticos para obtener una configuración de pesos ideal para minimax. En contraste también se presenta una configuración de pesos manual. En este simulador Minimax puede configurarse o con los pesos manuales o con los pesos derivados del algoritmo genético.
 

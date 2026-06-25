@@ -140,7 +140,7 @@ def heuristica_avanzada(estado_juego, movimiento, pesos):
     
         
 
-    return (
+    return +(
         pesos["hp"] * hp_ratio +
         pesos["velocidad"] * velocidad +
         pesos["tipo"] * ventaja_tipo +
@@ -908,10 +908,10 @@ def minimax_simplificado(nodo: NodoV2, profundidad, acciones, lado_ia, alfa, bet
     #print(nodo.profundidad, alfa, beta, acciones)
     
     if estado_actual.conteo_vivos(id_oponente) == 0:
-        #print(f"------ > Este nodo fue puntuado con: {puntaje}")
+        #print(f"------ > Este nodo fue puntuado con: 99999")
         return 99999
     if estado_actual.conteo_vivos(id_ia) == 0:
-        #print(f"------ > Este nodo fue puntuado con: {puntaje}")
+        #print(f"------ > Este nodo fue puntuado con: -99999")
         return -99999
     
     if nodo.profundidad == profundidad:
@@ -940,9 +940,9 @@ def minimax_simplificado(nodo: NodoV2, profundidad, acciones, lado_ia, alfa, bet
             mejor_valor = max(mejor_valor, valor)
 
             if nodo.profundidad == 0:
-                ##print(f"Rama explorada para max es: {mejor_accion} con {valor}")
+                ###print(f"Rama explorada para max es: {mejor_accion} con {valor}")
                 if mejor_valor == valor:
-                    ##print("Se encontro algun nuevo candidato para Max")
+                    ###print("Se encontro algun nuevo candidato para Max")
                     mejor_accion = accion
             
             alfa = max (alfa, mejor_valor)
@@ -951,7 +951,7 @@ def minimax_simplificado(nodo: NodoV2, profundidad, acciones, lado_ia, alfa, bet
                 break
         
         if nodo.profundidad == 0:
-            print(f"Puntaje final escogido es: {mejor_valor}")
+            #print(f"Puntaje final escogido es: {mejor_valor}")
             return mejor_accion
         return mejor_valor
     

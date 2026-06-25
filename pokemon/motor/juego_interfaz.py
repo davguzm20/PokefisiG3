@@ -110,14 +110,11 @@ class Juego:
     def set_num_pokemones(self, num_pokemones):
         self.num_pokemones = num_pokemones
     
-    # Configura un jugador a IA o Humano: num_jugador se refiere a si es Jugador 1 o Jugador 2. 
-    #tipo_jugador se refiere a si es una IA: 2 para IA, 1 para humano
-    #nivel_ia se maneja como 1: (movimiento aleatorio) 2: (heurística de diferencia de HP) 3: Minimax
-    def configurar_jugador_como_IA(self, num_jugador, nivel_ia, pokemones_disponibles, profundidad = 4, pesos = pesos_mock):
+
+    def configurar_equipo_aleatoriamente(self, num_jugador, pokemones_disponibles):
         equipo = []
 
         
-
         for i in range(self.num_pokemones):
             p_sel = copy.deepcopy(random.choice(pokemones_disponibles))
             random.shuffle(p_sel.moves)
@@ -144,9 +141,15 @@ class Juego:
             equipo.append(p_sel)
         
             print(f"IA {num_jugador} eligió a {p_sel.name} con movimientos aleatorios.")
-        print(f"Nivel de IA seleccionado: {nivel_ia}")
-
+        
         self.estado.setEquipo(equipo, num_jugador)
+
+    # Configura un jugador a IA o Humano: num_jugador se refiere a si es Jugador 1 o Jugador 2. 
+    #tipo_jugador se refiere a si es una IA: 2 para IA, 1 para humano
+    #nivel_ia se maneja como 1: (movimiento aleatorio) 2: (heurística de diferencia de HP) 3: Minimax
+    def configurar_jugador_como_IA(self, num_jugador, nivel_ia, pokemones_disponibles, profundidad = 4, pesos = pesos_mock):
+        
+        print(f"Nivel de IA seleccionado: {nivel_ia}")
         if num_jugador == 1:
             self.jugador1 = IA(nivel_ia, num_jugador, profundidad_minimax = profundidad, pesos= pesos)
         else:

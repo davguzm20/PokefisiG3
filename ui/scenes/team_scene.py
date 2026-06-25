@@ -79,6 +79,7 @@ class TeamScene(Scene):
         bus_de_eventos_global.disparar("ESTABLECER_NUM_POKEMONES", 4)
         bus_de_eventos_global.disparar("ESTABLECER_JUGADOR_COMO_HUMANO", 1, self.team_pokemons)
         bus_de_eventos_global.disparar("ESTABLECER_JUGADOR_COMO_IA", 2, self.scene_manager.difficulty_config[2], PokemonFactory.pokemons)
+        self.scene_manager.juego.configurar_equipo_aleatoriamente(2, PokemonFactory.pokemons)
         bus_de_eventos_global.disparar("INICIALIZAR_COMBATE")
         self.scene_manager.change_scene(SceneType.COMBAT)
 

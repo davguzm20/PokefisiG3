@@ -26,7 +26,7 @@ pesos_optimos = {
 
 
 def configurar_juego(juego: Juego):
-    juego.configurar_jugador_como_IA(1, 3, pokemones_disponibles, 4, pesos_mock)
+    juego.configurar_jugador_como_IA(1, 3, pokemones_disponibles, 4, pesos_optimos)
     juego.configurar_jugador_como_IA(2, 2, pokemones_disponibles, 4, pesos_mock)
 
     juego.configurar_equipo_aleatoriamente(1, pokemones_disponibles)
@@ -117,4 +117,10 @@ def evaluar_fitness(num_juegos): #obtener el win rate de 30 partidasS
 
 print(evaluar_fitness(1))
 
-print(tiempos)
+it = 0
+sum = 0
+for tiempo in tiempos:
+    sum += tiempo
+    it += 1
+
+print(f"Tiempo promedio de {sum/it}")

@@ -162,7 +162,10 @@ def funcion_heuristica_avanzada(estado_juego, operador, pesos, lado_ia, estado_a
         hp_ratio = (hp_poke_ia - hp_poke_oponente) / max(hp_poke_ia + hp_poke_oponente, 1)
 
         if isinstance(movimiento, Move):
-            if movimiento.power == 0: return 0.0 #Por ahora no hay movs de soporte 
+            if movimiento.power == 0: 
+                if movimiento.name in ["wish", "synthesis", "rest"] and hp_poke_ia >= pokemon_lado_ia.max_hp - (pokemon_lado_ia.max_hp/6) :
+                    return -1.0
+                ventaja_tipo = -0.2
             multiplicador = obtener_multiplicador_tipos(movimiento, estado_juego.pokemonActivoP1, estado_juego.pokemonActivoP2)
             if multiplicador > 2:
                 ventaja_tipo = 2
@@ -175,9 +178,15 @@ def funcion_heuristica_avanzada(estado_juego, operador, pesos, lado_ia, estado_a
             else:
                 ventaja_tipo = -2
         else:
-            ventaja_tipo = 0.5
+            ventaja_tipo = -0.5
 
-        pokemons_vivos = (estado_juego.conteo_vivos(2) - estado_juego.conteo_vivos(1)) / max(len(estado_juego.equipoP1), len(estado_juego.equipoP2), 1)
+        lado_oponente = 2 if lado_ia == 1 else 1
+
+        vivos_ia = estado_juego.conteo_vivos(lado_ia)
+        vivos_op = estado_juego.conteo_vivos(lado_oponente)
+        
+        max_equipo = max(len(estado_juego.equipoP1), len(estado_juego.equipoP2), 1)
+        pokemons_vivos = (vivos_ia - vivos_op) / max_equipo
     
     return (
         pesos["hp"] * hp_ratio +

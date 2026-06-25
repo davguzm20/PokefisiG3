@@ -95,7 +95,7 @@ class Combate:
         for indice in orden:
             
             ctx = contexto[indice]           
-            #Si el pokemon se desvaneció por el turno anterior
+           # Paso A: Verificar si el rival ya se desvaneció en este mismo turno
             if pokemon_rival_desvanecido:
                 ## Considerando efectos, entornos y habilidades. No olvidar que debería chequearse la consecuencia que tienen sobre este pokemon ========================= !!!!!!!! <===== !!!!!!!! <===== !!!!!!!! <===== !!!!!!!! <=====
                 continue
@@ -103,7 +103,7 @@ class Combate:
             atacante = self.estado_del_equipo.pokemonActivoP1 if ctx["id_player"] == 1 else self.estado_del_equipo.pokemonActivoP2
             defensor = self.estado_del_equipo.pokemonActivoP2 if ctx["id_player"] == 1 else self.estado_del_equipo.pokemonActivoP1
             
-            #Revisión de efectos, entornos y habilidades antes del ataque
+           # Paso B: Resolver efectos de estados ANTES de atacar (START y MID)
             self.resolver_efecto_START(atacante)
 
             accion = ctx["accion"]
@@ -116,7 +116,7 @@ class Combate:
                 self.resolver_efecto_MID(atacante) ### También es posible que hayan habilidades que se ejecuten después de atacar. Pero por el momento no consideremos habilidades
                 if not atacante.puede_atacar:
                     continue
-
+                # Paso C: Calcular Daño numérico o aplicar Estado
                 if accion.damage_class != DamageClass.STATUS:
                     
                     #Sería mejor si fuera accion.ejecutar()

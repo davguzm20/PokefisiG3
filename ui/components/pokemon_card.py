@@ -8,11 +8,13 @@ class PokemonCard:
     SIZE = 75
 
     def __init__(self, position_x: int, position_y: int, pokemon: Pokemon | None = None,
-                 selected_color: Colors = Colors.GOLD):
+                 selected_color: Colors = Colors.GOLD,
+                 show_hp: bool = False):
         self.position_x = position_x
         self.position_y = position_y
         self.pokemon = pokemon
         self.selected_color = selected_color.value
+        self.show_hp = show_hp
 
     @property
     def rect(self):
@@ -44,17 +46,26 @@ class PokemonCard:
             screen.blit(shadow, (name_rect.x + 1, name_rect.y + 1))
             screen.blit(name_surface, name_rect)
 
-            type_icons = [
-                Assets.load_image(f"assets/ui/type-mini/{t.value}.png", 32, 14)
-                for t in self.pokemon.types
-            ]
-            if type_icons:
-                total_width = len(type_icons) * 32 + (len(type_icons) - 1) * 3
-                start_x = center_x - total_width // 2
+            if self.show_hp:
+                hp_text = f"{self.pokemon.hp}/{self.pokemon.max_hp}"
+                hp_font = Fonts.get_font(14)
+                hp_surface = hp_font.render(hp_text, False, Colors.WHITE.value)
+                hp_rect = hp_surface.get_rect(centerx=center_x, y=rect.y + 53)
+                hp_shadow = hp_font.render(hp_text, False, Colors.BLACK.value)
+                screen.blit(hp_shadow, (hp_rect.x + 1, hp_rect.y + 1))
+                screen.blit(hp_surface, hp_rect)
+            else:
+                type_icons = [
+                    Assets.load_image(f"assets/ui/type-mini/{t.value}.png", 32, 14)
+                    for t in self.pokemon.types
+                ]
+                if type_icons:
+                    total_width = len(type_icons) * 32 + (len(type_icons) - 1) * 3
+                    start_x = center_x - total_width // 2
 
-                for i, icon in enumerate(type_icons):
-                    if icon:
-                        screen.blit(icon, (start_x + i * 35, rect.y + 53))
+                    for i, icon in enumerate(type_icons):
+                        if icon:
+                            screen.blit(icon, (start_x + i * 35, rect.y + 53))
 
         if is_selected:
             pygame.draw.rect(screen, self.selected_color, rect, 3)

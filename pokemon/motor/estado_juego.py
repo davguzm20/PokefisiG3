@@ -85,6 +85,12 @@ class EstadoJuego:
 
         
         pokemonActivo = self.pokemonActivoP1 if equipo == 1 else self.pokemonActivoP2
+        
+        for indice_cambio, ref_pokemon in posibles_cambios:
+            acciones.append({
+                "intercambio_index": indice_cambio,
+                "movimiento": None
+            })
 
         if pokemonActivo.hp > 0:
             for movimiento in pokemonActivo.moves:
@@ -93,12 +99,7 @@ class EstadoJuego:
                     "movimiento": movimiento
                 })
     
-        for indice_cambio, ref_pokemon in posibles_cambios:
-            acciones.append({
-                "intercambio_index": indice_cambio,
-                "movimiento": None
-            })
-
+        
         return acciones
         
     

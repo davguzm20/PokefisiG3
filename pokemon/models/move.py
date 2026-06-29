@@ -16,3 +16,6 @@ class Move:
 
     def is_usable(self) -> bool:
         return self.current_power_points > 0
+
+    def __repr__(self):
+        return self.name

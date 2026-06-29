@@ -165,7 +165,7 @@ def funcion_heuristica_avanzada(estado_juego, operador, pesos, lado_ia, estado_a
             if movimiento.power == 0: 
                 if movimiento.name in ["wish", "synthesis", "rest"] and hp_poke_ia >= pokemon_lado_ia.max_hp - (pokemon_lado_ia.max_hp/6) :
                     return -1.0
-                ventaja_tipo = -0.2
+                ventaja_tipo = -0.8
             multiplicador = obtener_multiplicador_tipos(movimiento, estado_juego.pokemonActivoP1, estado_juego.pokemonActivoP2)
             if multiplicador > 2:
                 ventaja_tipo = 2
@@ -920,7 +920,7 @@ def minimax_simplificado(nodo: NodoV2, profundidad, acciones, lado_ia, alfa, bet
     id_ia = lado_ia
     id_oponente = lado_ia - 1
     if nodo.profundidad == 0: print(f"Se evalua para {estado_actual.getEquipo(id_ia)[0].name} con {estado_actual.getEquipo(id_ia)[0].hp}")
-    #print(nodo.profundidad, alfa, beta, acciones)
+    #Zprint(nodo.profundidad, alfa, beta, acciones)
     
     if estado_actual.conteo_vivos(id_oponente) == 0:
         #print(f"------ > Este nodo fue puntuado con: 99999")
